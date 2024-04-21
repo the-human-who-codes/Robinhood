@@ -37,11 +37,11 @@
     </div>
 
     <script type="module">
-        const dashboard=document.getElementById('dashboard');
-        const apps=document.getElementById('applications');
-        const usermanagement=document.getElementById('usermanagement');
+        const dashboard = document.getElementById('dashboard');
+        const apps = document.getElementById('applications');
+        const usermanagement = document.getElementById('usermanagement');
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
         
         const firebaseConfig = {
           apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
@@ -61,42 +61,42 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/fireba
 
         function createNewRow(data){
             let Table=document.getElementById('fundManagersTable');
-                let id='';
-                let name='';
-                let email=''; 
-                let date='';
-                let status='';
+            let id='';
+            let name='';
+            let email=''; 
+            let date='';
+            let status='';
             data.forEach(applicant => {
                     id=applicant.id;
-                   name=applicant.fundmanager;
-                   email=applicant.email; 
-                   date=applicant.deadline;
-                   status=applicant.status;
-                   let newTableRow=document.createElement('tr');
-                  // newTableRow.setAttribute('id',`${id}`);
+                    name=applicant.fundmanager;
+                    email=applicant.email; 
+                    date=applicant.deadline;
+                    status=applicant.status;
+                    let newTableRow=document.createElement('tr');
+                    // newTableRow.setAttribute('id',`${id}`);
 
-                   let ApplicantDetailsName=document.createElement('td');
-                   let ApplicantDetailsEmail=document.createElement('td');
-                   let ApplicantDetailsDate=document.createElement('td');
-                   let ApplicantView=document.createElement('td');
-                   let viewButton=document.createElement('button');
+                    let ApplicantDetailsName=document.createElement('td');
+                    let ApplicantDetailsEmail=document.createElement('td');
+                    let ApplicantDetailsDate=document.createElement('td');
+                    let ApplicantView=document.createElement('td');
+                    let viewButton=document.createElement('button');
 
-                   ApplicantDetailsName.textContent=name;
-                   ApplicantDetailsEmail.textContent=email;
-                   ApplicantDetailsDate.textContent=date;
-                   viewButton.setAttribute('id',`${id}`);
-                   viewButton.className='button-view';
-                   viewButton.textContent='view';
+                    ApplicantDetailsName.textContent=name;
+                    ApplicantDetailsEmail.textContent=email;
+                    ApplicantDetailsDate.textContent=date;
+                    viewButton.setAttribute('id',`${id}`);
+                    viewButton.className='button-view';
+                    viewButton.textContent='view';
                     ApplicantView.append(viewButton);
-                   viewButton.onclick=function(){
-                        let id=viewButton.id;
-                        viewUserDetails1(id);
-                    };
+                    viewButton.onclick=function(){
+                            let id=viewButton.id;
+                            viewUserDetails1(id);
+                        };
                     
 
-                   newTableRow.append(ApplicantDetailsName);
-                   newTableRow.append(ApplicantDetailsEmail);
-                   newTableRow.append(ApplicantDetailsDate);
+                    newTableRow.append(ApplicantDetailsName);
+                    newTableRow.append(ApplicantDetailsEmail);
+                    newTableRow.append(ApplicantDetailsDate);
                     newTableRow.append( ApplicantView);
 
                    Table.append(newTableRow);
@@ -118,14 +118,15 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/fireba
                             data.id=id1;
                             Students.push(data);
                         }
-                     });
-                     if(Students.length===0){
-                        const h2=document.getElementById('pending');
-                        h2.innerText="No Pending Applications"  
-                     }
-                     else{
-                        createNewRow(Students); 
-                     }  
+                    });
+
+                    if(Students.length===0){
+                    const h2=document.getElementById('pending');
+                    h2.innerText="No Pending Applications"  
+                    }
+                    else{
+                    createNewRow(Students); 
+                    }  
                 }else{
                     const h2=document.getElementById('pending');
                     h2.innerText="No Active Applications"

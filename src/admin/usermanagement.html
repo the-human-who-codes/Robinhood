@@ -19,7 +19,7 @@
     </div>
 
     <div id="dashboard" class="container">
-        <table>
+        <table id="usersTable">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -37,62 +37,140 @@
     </div>
 
     <script type="module">
-        const dashboard=document.getElementById('overview');
-        const apps=document.getElementById('applications');
-        const usermanagement=document.getElementById('user');
-        // Dummy JavaScript variables for user data
-        const users = [
-            { name: 'John Doe', email: 'john@example.com', role: 'Funder', status: 'Active' },
-            { name: 'Jane Smith', email: 'jane@example.com', role: 'User', status: 'Inactive' }
-            // Add more users as needed
-        ];
+        const dashboard = document.getElementById('dashboard');
+        const users = document.getElementById('users');
+        const usermanagement = document.getElementById('usermanagement');
 
-        // Populate user table with dummy data
-        const tbody = document.getElementById('user-table-body');
-        users.forEach(user => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${user.name}</td>
-                <td>${user.email}</td>
-                <td>${user.role}</td>
-                <td>${user.status}</td>
-                <td>
-                    <button class="button-view" onclick="viewUserDetails('${user.name}')">View</button>
-                    <button class="button-edit" onclick="editUserDetails('${user.name}')">Edit</button>
-                    <button class="button-toggle" onclick="toggleUserStatus('${user.name}', this)">Change Status</button>
-                    <button class="button-edit" onclick="blockUser('${user.name}', this)">Block</button>
-                </td>
-            `;
-            tbody.appendChild(row);
+        import {
+            initializeApp
+        } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
+            authDomain: "fir-sd-22d1a.firebaseapp.com",
+            databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
+            projectId: "fir-sd-22d1a",
+            storageBucket: "fir-sd-22d1a.appspot.com",
+            messagingSenderId: "526172429927",
+            appId: "1:526172429927:web:51ae427f7acfa1d925bec2"
+        };
+
+
+        const app = initializeApp(firebaseConfig);
+
+        import {getDatabase,ref,child,get,set,update,remove,onValue} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js"
+        const db = getDatabase();
+
+        function createNewRow(data) {
+            let Table = document.getElementById('usersTable');
+            let id = '';
+            let name = '';
+            let email = '';
+            let date = '';
+            let status = '';
+            let role = '';
+            data.forEach(applicant => {
+                id = applicant.id;
+                name = applicant.fundmanager;
+                email = applicant.email;
+                role = applicant.role;
+                date = applicant.deadline;
+                status = applicant.status;
+                let newTableRow = document.createElement('tr');
+
+                // newTableRow.setAttribute('id',`${id}`);
+
+                let ApplicantDetailsName = document.createElement('td');
+                let ApplicantDetailsEmail = document.createElement('td');
+                let ApplicantDetailsDate = document.createElement('td');
+                let ApplicantDetailsRole = document.createElement('td');
+                let ApplicantDetailsStatus = document.createAttribute('td');
+                let ApplicantView = document.createElement('td');
+                let viewButton = document.createElement('button');
+                let changeStatusBtn = document.createElement('button');
+                let blockBtn = document.createElement('button');
+
+
+                ApplicantDetailsName.textContent = name;
+                ApplicantDetailsEmail.textContent = email;
+                ApplicantDetailsRole.textContent = role;
+                ApplicantDetailsStatus.textContent = status;
+                viewButton.setAttribute('id', `${id}`);
+                viewButton.className = 'button-view';
+                changeStatusBtn.className = 'button-edit';
+                blockBtn.className = 'button-toggle'; 
+                viewButton.textContent = 'view';
+                changeStatusBtn.textContent = 'Change Status';
+                blockBtn.textContent = 'Block';
+
+                ApplicantView.append(viewButton);
+                ApplicantView.append(changeStatusBtn);
+                ApplicantView.append(blockBtn);
+
+                viewButton.onclick = function() {
+                    let id = viewButton.id;
+                    viewUserDetails1(id);
+                };
+
+
+                newTableRow.append(ApplicantDetailsName);
+                newTableRow.append(ApplicantDetailsEmail);
+                newTableRow.append(ApplicantDetailsRole);
+                newTableRow.append(ApplicantDetailsDate);
+                newTableRow.append(ApplicantView);
+
+                Table.append(newTableRow);
+            })
+        }
+        //function to get relevant info from students in our database
+        function getAllData() {
+            const dbref = ref(db);
+            get(child(dbref, "FundManagers/"))
+                .then((snapshot) => {
+                    if (snapshot.exists()) {
+                        let Students = [];
+                        // let pendingStudents=[];
+                        let id1 = '';
+                        snapshot.forEach(childSnapShot => {
+                            id1 = childSnapShot.key;
+                            if (childSnapShot.val().status == 'pending') {
+                                let data = childSnapShot.val();
+                                data.id = id1;
+                                Students.push(data);
+                            }
+                        });
+
+                        if (Students.length === 0) {
+                            const h2 = document.getElementById('pending');
+                            h2.innerText = "No Pending Applications"
+                        } else {
+                            createNewRow(Students);
+                        }
+                    } else {
+                        const h2 = document.getElementById('pending');
+                        h2.innerText = "No Active Applications"
+                    }
+
+
+                }).catch((error) => {
+                    console.log(error);
+                })
+
+        }
+
+        //eventlistner fetches relevant student data to display on fundManager Dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            getAllData();
         });
 
-        // JavaScript code for managing users
         function viewUserDetails(name) {
             window.location.href = 'applicant.html';
         }
 
-        function editUserDetails(name) {
-            alert(`Editing details of ${name}`);
+        function viewUserDetails1(id) {
+            sessionStorage.setItem('info', id);
+            window.location.href = 'applicant.html';
         }
-
-        function toggleUserStatus(name, button) {
-            const row = button.closest('tr');
-            const statusCell = row.querySelector('td:nth-child(4)');
-            const currentStatus = statusCell.textContent;
-            const newStatus = currentStatus === 'Active' ? 'Inactive' : 'Active';
-            statusCell.textContent = newStatus;
-            alert(`${name}'s status has been changed to ${newStatus}`);
-        }
-
-        function blockUser(name, button) {
-            const row = button.closest('tr');
-            const statusCell = row.querySelector('td:nth-child(4)');
-            const currentStatus = statusCell.textContent;
-            const newStatus = currentStatus === 'Blocked' ? 'Active' : 'Blocked';
-            statusCell.textContent = newStatus;
-            alert(`${name}'s status has been changed to ${newStatus}`);
-        }
-
     </script>
 </body>
 </html>
