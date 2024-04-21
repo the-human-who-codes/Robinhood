@@ -60,7 +60,7 @@
     </header>
 
     <div class="container">
-        <button class="go-back-btn" onclick="goBack()">Go Back</button>
+        <button class="go-back-btn" id="goBack" >Go Back</button>
 
         <h2>User Information</h2>
         <p><strong>Name:</strong> <span id="userName"></span></p>
@@ -69,24 +69,108 @@
         <p><strong>Status:</strong> <span id="userStatus"></span></p>
     </div>
 
-    <script>
-        // Retrieve user details from URL parameters
-        const urlParams = new URLSearchParams(window.location.search);
-        const name = urlParams.get('name');
-        const email = urlParams.get('email');
-        const role = urlParams.get('role');
-        const status = urlParams.get('status');
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        
+        const firebaseConfig = {
+          apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
+          authDomain: "fir-sd-22d1a.firebaseapp.com",
+          databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
+          projectId: "fir-sd-22d1a",
+          storageBucket: "fir-sd-22d1a.appspot.com",
+          messagingSenderId: "526172429927",
+          appId: "1:526172429927:web:51ae427f7acfa1d925bec2"
+        };
+      
+        
+        const app = initializeApp(firebaseConfig);
 
-        // Display user details on the page
-        document.getElementById('userName').textContent = name;
-        document.getElementById('userEmail').textContent = email;
-        document.getElementById('userRole').textContent = role;
-        document.getElementById('userStatus').textContent = status;
+        import {getDatabase,ref,child,get,set,update,remove,onValue} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js"
+        const db=getDatabase();
+        // // Retrieve user details from URL parameters
+        // const urlParams = new URLSearchParams(window.location.search);
+        // const name = urlParams.get('name');
+        // const email = urlParams.get('email');
+        // const role = urlParams.get('role');
+        // const status = urlParams.get('status');
+        const userName=document.getElementById('userName');
+        const userEmail=document.getElementById('userEmail');
+        const userRole=document.getElementById('userRole');
+        const userStatus= document.getElementById('userStatus');
+        const btnGoBack=document.getElementById('goBack');
+        
+        
+        const id=sessionStorage.getItem('info');
+            
+        
+
+       
+
+        function RetrieveData(){
+            const  dbRef=ref(db);
+            
+            
+            get(child(dbRef,'FundManagers/'+id)).then((snapshot)=>{
+                if(snapshot.exists()){
+                   const manager=snapshot.val().fundmanager;
+                   const eMail=snapshot.val().email;
+                    const role1=snapshot.val().role;
+                   
+                    //const status=snapshot.val().status;
+                    //const motivation=snapshot.val().motivation;
+                    const applicationStatus=snapshot.val().status;
+                    
+                    
+                   
+
+                    userName.textContent=manager;
+                    userEmail.textContent=eMail;
+                    userStatus.textContent= applicationStatus;
+                    userRole.textContent="Fund Manager"
+
+               
+                    // applicantDetails.innerHTML = `
+                    // <p><strong>Title:</strong> ${title}</p>
+                    //     <p><strong>Name:</strong> ${fName}</p>
+                    //     <p><strong>Surname:</strong> ${lName}</p>
+                    //     <p><strong>University:</strong> ${university}</p>
+                    //     <p><strong>Degree:</strong> ${degree}</p>
+                    //     <p><strong>Major:</strong> ${major}</p>
+                    //     <p><strong>Application Status:</strong> ${applicationStatus}</p>
+                    //     <p><strong>Transcript:</strong> <a href="#">Download Transcript</a></p>
+                    //     <div class="motivation">
+                    //         <h2>Motivation:</h2>
+                    //         <p>${motivation}</p>
+                    //     </div>
+                        
+                    // `;
+                }
+                else{
+                   alert("Employee does not exist") ;
+                }
+            }).catch((error)=>{
+                console.log(error);
+            })   
+        }
+
+        document.addEventListener('DOMContentLoaded',function(){
+            RetrieveData();
+        });
+
+        // // Display user details on the page
+        // document.getElementById('userName').textContent = name;
+        // document.getElementById('userEmail').textContent = email;
+        // document.getElementById('userRole').textContent = role;
+        // document.getElementById('userStatus').textContent = status;
 
         // Function to navigate back to the user management page
         function goBack() {
             window.history.back();
         }
+
+        btnGoBack.addEventListener('click',function(){
+            goBack();
+        })
     </script>
 </body>
 </html>

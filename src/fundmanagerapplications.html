@@ -139,14 +139,14 @@
 
     <div id="mySidebar" class="sidebar">
         <a href="#" onclick="closeNav()"><svg class="arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M17.3 5.71a.996.996 0 0 0-1.41 0L12 10.59 7.11 5.7A.996.996 0 1 0 5.7 7.11L10.59 12 5.7 16.89a.996.996 0 1 0 1.41 1.41L12 13.41l4.89 4.89a.996.996 0 1 0 1.41-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"/></svg></a>
-        <a href="#" onclick="overview()">Dashboard Overview</a>
-        <a href="#" onclick="applications()">Fund Manager Applications</a>
-        <a href="#" onclick="user()">User Management</a>
+        <a href="#" id="dashboard">Dashboard Overview</a>
+        <a href="#" id="applications">Fund Manager Applications</a>
+        <a href="#" id="usermanagement">User Management</a>
     </div>
 
     <div id="dashboard" class="container">
             <h2>Fund Manager Applications</h2>
-            <table>
+            <table id="fundManagersTable">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -162,44 +162,167 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        const dashboard=document.getElementById('dashboard');
+        const apps=document.getElementById('applications');
+        const usermanagement=document.getElementById('usermanagement');
 
-const users = [
-            { name: 'John Doe', email: 'john@example.com', date:'10-04-2024', status: 'Active' },
-            { name: 'Jane Smith', email: 'jane@example.com', date: '10-04-2024', status: 'Inactive' }
-            // Add more users as needed
-        ];
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        
+        const firebaseConfig = {
+          apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
+          authDomain: "fir-sd-22d1a.firebaseapp.com",
+          databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
+          projectId: "fir-sd-22d1a",
+          storageBucket: "fir-sd-22d1a.appspot.com",
+          messagingSenderId: "526172429927",
+          appId: "1:526172429927:web:51ae427f7acfa1d925bec2"
+        };
+      
+        
+        const app = initializeApp(firebaseConfig);
 
-        // Populate user table with dummy data
-        const tbody = document.getElementById('user-table-body');
-        users.forEach(user => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${user.name}</td>
-                <td>${user.email}</td>
-                <td>${user.date}</td>
-                <td>
-                    <button class="button-view" onclick="viewUserDetails('${user.name}')">View</button>
-                </td>
-            `;
-            tbody.appendChild(row);
+        import {getDatabase,ref,child,get,set,update,remove,onValue} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js"
+        const db=getDatabase();
+
+        function createNewRow(data){
+            let Table=document.getElementById('fundManagersTable');
+                let id='';
+                let name='';
+                let email=''; 
+                let date='';
+                let status='';
+            data.forEach(applicant => {
+                    id=applicant.id;
+                   name=applicant.fundmanager;
+                   email=applicant.email; 
+                   date=applicant.deadline;
+                   status=applicant.status;
+                   let newTableRow=document.createElement('tr');
+                  // newTableRow.setAttribute('id',`${id}`);
+
+                   let ApplicantDetailsName=document.createElement('td');
+                   let ApplicantDetailsEmail=document.createElement('td');
+                   let ApplicantDetailsDate=document.createElement('td');
+                   let ApplicantView=document.createElement('td');
+                   let viewButton=document.createElement('button');
+
+                   ApplicantDetailsName.textContent=name;
+                   ApplicantDetailsEmail.textContent=email;
+                   ApplicantDetailsDate.textContent=date;
+                   viewButton.setAttribute('id',`${id}`);
+                   viewButton.className='button-view';
+                   viewButton.textContent='view';
+                    ApplicantView.append(viewButton);
+                   viewButton.onclick=function(){
+                        let id=viewButton.id;
+                        viewUserDetails1(id);
+                    };
+                    
+
+                   newTableRow.append(ApplicantDetailsName);
+                   newTableRow.append(ApplicantDetailsEmail);
+                   newTableRow.append(ApplicantDetailsDate);
+                    newTableRow.append( ApplicantView);
+
+                   Table.append(newTableRow);
+        })
+    }
+        //function to get relevant info from students in our database
+        function getAllData(){
+            const dbref= ref(db);
+            get(child(dbref,"FundManagers/"))
+            .then((snapshot)=>{
+                if(snapshot.exists()){
+                    let Students=[];
+                   // let pendingStudents=[];
+                    let id1='';
+                    snapshot.forEach(childSnapShot=>{
+                        id1=childSnapShot.key;
+                        if(childSnapShot.val().status=='pending'){
+                            let data=childSnapShot.val();
+                            data.id=id1;
+                            Students.push(data);
+                        }
+                     });
+                     if(Students.length===0){
+                        const h2=document.getElementById('pending');
+                        h2.innerText="No Pending Applications"  
+                     }
+                     else{
+                        createNewRow(Students); 
+                     }  
+                }else{
+                    const h2=document.getElementById('pending');
+                    h2.innerText="No Active Applications"
+                }
+                
+                
+            }).catch((error)=>{
+                console.log(error);
+            })
+
+        }
+ 
+        //eventlistner fetches relevant student data to display on fundManager Dashboard
+        document.addEventListener('DOMContentLoaded',function(){
+            getAllData();
         });
+        
+
+// const users = [
+//             { name: 'John Doe', email: 'john@example.com', date:'10-04-2024', status: 'Active' },
+//             { name: 'Jane Smith', email: 'jane@example.com', date: '10-04-2024', status: 'Inactive' }
+//             // Add more users as needed
+//         ];
+
+//         // Populate user table with dummy data
+//         const tbody = document.getElementById('user-table-body');
+//         users.forEach(user => {
+//             const row = document.createElement('tr');
+//             row.innerHTML = `
+//                 <td>${user.name}</td>
+//                 <td>${user.email}</td>
+//                 <td>${user.date}</td>
+//                 <td>
+//                     <button class="button-view" onclick="viewUserDetails('${user.name}')">View</button>
+//                 </td>
+//             `;
+//             tbody.appendChild(row);
+//         });
 
         function viewUserDetails(name) {
-            window.location.href = 'http://127.0.0.1:5501/src/applicant.html';
+            window.location.href = 'applicant.html';
+        }
+
+        function viewUserDetails1(id) {
+            sessionStorage.setItem('info',id);
+            window.location.href = 'applicant.html';
         }
 
         function overview() {
-            window.location.href = 'http://127.0.0.1:5501/src/adminhome.html#';
+            window.location.href = 'adminhome.html';
         }
 
         function applications() {
-            window.location.href = 'http://127.0.0.1:5501/src/fundmanagerapplications.html#';
+            window.location.href = 'fundmanagerapplications.html';
         }
 
         function user() {
-            window.location.href = 'http://127.0.0.1:5501/src/usermanagement.html';
+            window.location.href = 'usermanagement.html';
         }
+
+        dashboard.addEventListener('click',function(){
+            overview();   
+        });
+
+        apps.addEventListener('click',function(){
+                applications();
+        })
+
+        usermanagement.addEventListener('click',function(){
+            user();
+        })
     </script>
 </body>
 </html>

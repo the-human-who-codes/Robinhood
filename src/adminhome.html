@@ -123,9 +123,9 @@
 
     <div id="mySidebar" class="sidebar">
         <a href="#" onclick="closeNav()"><svg class="arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M17.3 5.71a.996.996 0 0 0-1.41 0L12 10.59 7.11 5.7A.996.996 0 1 0 5.7 7.11L10.59 12 5.7 16.89a.996.996 0 1 0 1.41 1.41L12 13.41l4.89 4.89a.996.996 0 1 0 1.41-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"/></svg></a>
-        <a href="#" onclick="overview()">Dashboard Overview</a>
-        <a href="#" onclick="applications()">Fund Manager Applications</a>
-        <a href="#" onclick="user()">User Management</a>
+        <a href="#" id="overview" >Dashboard Overview</a>
+        <a href="#" id="fundManagerApplications">Fund Manager Applications</a>
+        <a href="#" id="user" >User Management</a>
     </div>
 
     <div class="container">
@@ -148,18 +148,22 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        const fundApplications=document.getElementById('fundManagerApplications');
+
+        const dashboard=document.getElementById('overview');
+        const usermanagement=document.getElementById('user');
 
         function overview() {
-            window.location.href = 'http://127.0.0.1:5501/src/adminhome.html';
+            window.location.href = 'adminhome.html';
         }
 
         function applications() {
-            window.location.href = 'http://127.0.0.1:5501/src/fundmanagerapplications.html';
+            window.location.href = 'fundmanagerapplications.html';
         }
 
         function user() {
-            window.location.href = 'http://127.0.0.1:5501/src/usermanagement.html';
+            window.location.href = 'usermanagement.html';
         }
 
         // Dummy data for pie charts
@@ -205,6 +209,18 @@
             type: 'pie',
             data: applicantStatusData,
         });
+
+        fundApplications.addEventListener('click',function(){
+            applications();
+        });
+
+        dashboard.addEventListener('click',function(){
+            overview();
+        });
+
+        usermanagement.addEventListener('click',function(){
+            user();
+        })
     </script>
 </body>
 </html>

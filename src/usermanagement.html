@@ -118,9 +118,9 @@
     </header>
 
     <div id="mySidebar" class="sidebar">
-        <a href="#" onclick="overview()">Dashboard Overview</a>
-        <a href="#" onclick="applications()">Fund Manager Applications</a>
-        <a href="#" onclick="user()">User Management</a>
+        <a href="#" id="overview" >Dashboard Overview</a>
+        <a href="#" id="applications" >Fund Manager Applications</a>
+        <a href="#" id="user" >User Management</a>
     </div>
 
     <main>
@@ -142,7 +142,10 @@
         </section>
     </main>
 
-    <script>
+    <script type="module">
+        const dashboard=document.getElementById('overview');
+        const apps=document.getElementById('applications');
+        const usermanagement=document.getElementById('user');
         // Dummy JavaScript variables for user data
         const users = [
             { name: 'John Doe', email: 'john@example.com', role: 'Funder', status: 'Active' },
@@ -171,7 +174,7 @@
 
         // JavaScript code for managing users
         function viewUserDetails(name) {
-            window.location.href = 'http://127.0.0.1:5501/src/applicant.html';
+            window.location.href = 'applicant.html';
         }
 
         function editUserDetails(name) {
@@ -198,16 +201,30 @@
 
         // Sidebar navigation functions
         function overview() {
-            window.location.href = 'http://127.0.0.1:5501/src/adminhome.html#';
+            window.location.href = 'adminhome.html#';
         }
 
         function applications() {
-            window.location.href = 'http://127.0.0.1:5501/src/fundmanagerapplications.html#';
+            window.location.href = 'fundmanagerapplications.html#';
         }
 
         function user() {
-            window.location.href = 'http://127.0.0.1:5501/src/usermanagement.html#';
+            window.location.href = 'usermanagement.html#';
         }
+
+        dashboard.addEventListener('click',function(){
+            overview();
+        });
+
+        apps.addEventListener('click',function(){
+            applications();
+        })
+
+        usermanagement.addEventListener('click',function(){
+            user();
+        })
+
+
     </script>
 </body>
 </html>
