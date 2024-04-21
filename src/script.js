@@ -30,7 +30,7 @@ function goBack() {
 
 function showForm(formType) {
     if (formType === 'applicant') {
-        window.location.href = './applicant/applicant.html';
+        window.location.href = './fundApplicant/applicant.html';
     } else if (formType === 'fundManager') {
         window.location.href = './fundManager/fundmanager.html';
     }
