@@ -4,133 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fund Manager Applications</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-        }
-
-        header {
-            background-color: #347576;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            position: fixed;
-            width: 100%;
-            z-index: 2;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            transition: left 0.5s;
-        }
-
-        #dashboard {
-            z-index: 3; /* Ensure the dashboard is above other elements */
-        }
-
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 100px;
-            margin-left: 250px;
-            transition: margin-left 0.5s;
-        }
-
-        .content {
-            width: 80%;
-            max-width: 1200px;
-            padding: 20px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        .container h2 {
-            margin-bottom: 20px;
-            color: #347576;
-        }
-
-        table {
-            width: 90%;
-            border-collapse: collapse;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #347576;
-            color: white;
-        }
-
-        tr:hover {
-            background-color: #f2f2f2;
-        }
-
-        td:last-child button {
-            margin-right: 5px;
-            padding: 8px 12px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        td:last-child button:hover {
-            background-color: #ddd;
-        }
-
-        .button-view {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .sidebar {
-            height: 100%;
-            width: 250px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background-color: #347576;
-            padding-top: 20px;
-            transition: left 0.5s;
-            overflow-x: hidden;
-            z-index: 1;
-            border-radius: 0 10px 10px 0;
-        }
-
-        .sidebar a {
-            padding: 10px;
-            text-decoration: none;
-            font-size: 18px;
-            color: white;
-            display: block;
-            transition: 0.3s;
-            border-radius: 5px;
-            margin: 5px 0;
-            text-align: center;
-        }
-        .sidebar a:hover {
-            background-color: #3e8e41;
-            transform: scale(1.05);
-        }
-
-        .arrow {
-            width: 20px;
-            height: 20px;
-            fill: white;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
@@ -139,9 +13,9 @@
 
     <div id="mySidebar" class="sidebar">
         <a href="#" onclick="closeNav()"><svg class="arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M17.3 5.71a.996.996 0 0 0-1.41 0L12 10.59 7.11 5.7A.996.996 0 1 0 5.7 7.11L10.59 12 5.7 16.89a.996.996 0 1 0 1.41 1.41L12 13.41l4.89 4.89a.996.996 0 1 0 1.41-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"/></svg></a>
-        <a href="#" id="dashboard">Dashboard Overview</a>
-        <a href="#" id="applications">Fund Manager Applications</a>
-        <a href="#" id="usermanagement">User Management</a>
+        <a href="./adminhome.html" id="overview" >Dashboard Overview</a>
+        <a href="./fundmanagerapplications.html" id="fundManagerApplications">Fund Manager Applications</a>
+        <a href="./usermanagement.html" id="user" >User Management</a>
     </div>
 
     <div id="dashboard" class="container">
@@ -299,30 +173,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/fireba
             sessionStorage.setItem('info',id);
             window.location.href = 'applicant.html';
         }
-
-        function overview() {
-            window.location.href = 'adminhome.html';
-        }
-
-        function applications() {
-            window.location.href = 'fundmanagerapplications.html';
-        }
-
-        function user() {
-            window.location.href = 'usermanagement.html';
-        }
-
-        dashboard.addEventListener('click',function(){
-            overview();   
-        });
-
-        apps.addEventListener('click',function(){
-                applications();
-        })
-
-        usermanagement.addEventListener('click',function(){
-            user();
-        })
     </script>
 </body>
 </html>
