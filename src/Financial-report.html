@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        header {
+            background-color: #347576;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            width: 100%;
+        }
+
+        main {
+            padding-top: 80px; /* Adjusted to accommodate the fixed header */
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            max-width: 1200px;
+        }
+
+        .card {
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            width: calc(33% - 40px); /* Adjusted for spacing */
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        .card h2 {
+            color: #347576;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .card ul {
+            padding-left: 20px;
+        }
+
+        .card a {
+            display: block;
+            text-align: center;
+            color: #347576;
+            text-decoration: none;
+            border: 1px solid #347576;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .card a:hover {
+            background-color: #347576;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Financial Report</h1>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="card">
+                <h2>Income Statement</h2>
+                <p>An income statement for the year ending 2023:</p>
+                <ul>
+                    <li>Total Revenue: $1,000,000</li>
+                    <li>Total Expenses: $800,000</li>
+                    <li>Net Income: $200,000</li>
+                </ul>
+                <a href="#">View Details</a>
+            </div>
+            <div class="card">
+                <h2>Balance Sheet</h2>
+                <p>A balance sheet as of December 31, 2023:</p>
+                <ul>
+                    <li>Total Assets: $2,500,000</li>
+                    <li>Total Liabilities: $1,000,000</li>
+                    <li>Total Equity: $1,500,000</li>
+                </ul>
+                <a href="#">View Details</a>
+            </div>
+            <div class="card">
+                <h2>Cash Flow Statement</h2>
+                <p>A cash flow statement for the year 2023:</p>
+                <ul>
+                    <li>Cash from Operating Activities: $300,000</li>
+                    <li>Cash from Investing Activities: $-100,000</li>
+                    <li>Cash from Financing Activities: $100,000</li>
+                </ul>
+                <a href="#">View Details</a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
+
