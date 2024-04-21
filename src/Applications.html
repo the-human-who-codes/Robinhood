@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Status Tracker</title>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js"></script>
+    <style>
+        /* CSS styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color:  #347576;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        textarea,
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color:  #347576;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .hidden {
+            display: none;
+        }
+.funding-opportunity-item {
+    padding: 15px;
+    margin-bottom: 10px;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.6s ease;
+    box-shadow: 0px 0px 3px rgba(0,0,0,0.5);
+}
+
+.funding-opportunity-item:hover {
+    background-color:  #7a9fa0;
+}
+
+.funding-opportunity-item h3 {
+    margin: 0 0 5px;
+    font-size: 18px;
+    color: #333;
+}
+
+.funding-opportunity-item p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+}
+
+.funding-opportunity-item .metadata {
+    font-size: 12px;
+    color: #888;
+}
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Application Status Tracker</h1>
+    </header>
+
+    <main>
+        <form id="status-form">
+            <label for="application-status">Select Application Status:</label>
+            <select id="application-status" name="application-status">
+                <option value="in-progress">In Progress</option>
+                <option value="submitted">Submitted</option>
+            </select>
+            <br>
+            <button type="button" id="check-status-button">Check Status</button>
+        </form>
+        
+        <article id="applications-table">
+            <h1>Funding Opportunities</h1>
+            <br>
+            <ul id="fundingOpportunitiesList">
+                <!-- Funding opportunities will be displayed here -->
+            </ul>
+        </article>
+        <article id="detailedFundingOpportunity">
+            <!-- Detailed funding opportunity information will be displayed here -->
+        </article>
+    </main>
+    
+    <!-- Include the JavaScript file -->
+    
+    
+    <script type="module" src="checkStatus.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funding Opportunities</title>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js"></script>
+<script type="module" src="https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        header {
+            background-color:#347576;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        div {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: vertical; /* Allow vertical resizing of textarea */
+        }
+
+        button {
+            background-color: #347576;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        button[type="submit"] {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Funding Application</h1>
+    </header>
+    <main>
+        <form id="fundingOpportunityForm">
+            <div>
+                <label for="title">Name of Company:</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+            <div>
+                <label for="description">Description of Funding Opportunity:</label>
+                <textarea id="description" name="description" rows="4" required></textarea>
+            </div>
+            <div>
+                <label for="deadline">Deadline of Funding Opportunity:</label>
+                <input type="date" id="deadline" name="deadline" required>
+            </div>
+            <div>
+                <label for="motivation">Motivation:</label>
+                <input type="text" id="motivation" name="motivation" required>
+            </div>
+            <a href="#" onclick="Create()"><button type="submit">Create Funding Opportunity</button> </a>
+        </form>
+    </main>
+
+    <footer>
+        <!-- Footer content here -->
+    </footer>
+ <!-- Firebase scripts -->
+
+
+<!-- Your JavaScript file -->
+<script type="module" src="createFundingOpportunity.js" defer></script>
+<script>
+    function Create() {
+        window.location.href = 'fundingmenager.html';
+    }
+</script>
+
+</body>
+</html>

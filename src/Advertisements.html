@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advertise Your Bursary</title>
+    <style>
+        /* CSS styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        header {
+            background-color: #347576;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        main {
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        textarea,
+        input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #347576;
+            color: white;
+            padding: 14px 20px;
+            margin: 20px 0 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        footer {
+            color: black;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Advertise Your Bursary</h1>
+    </header>
+
+    <main>
+        <form id="bursary-form">
+            <label for="bursary-title">Bursary Title:</label>
+            <input type="text" id="bursary-title" name="bursary-title" required><br><br>
+
+            <label for="description">Description:</label><br>
+            <textarea id="description" name="description" rows="4" required></textarea><br><br>
+
+            <label for="criteria">Criteria:</label><br>
+            <textarea id="criteria" name="criteria" rows="4" required></textarea><br><br>
+
+            <label for="deadline">Deadline:</label>
+            <input type="date" id="deadline" name="deadline" required><br><br>
+
+            <label for="contact">Contact Information:</label><br>
+            <input type="text" id="contact" name="contact" required><br><br>
+
+            <button type="submit">Advertise Bursary</button>
+        </form>
+    </main>
+    
+    <footer>
+        &copy; 2024 Advertise Your Bursary. All rights reserved.
+    </footer>
+    
+    <script>
+        document.getElementById('bursary-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const bursaryData = {};
+            formData.forEach((value, key) => {
+                bursaryData[key] = value;
+            });
+            console.log(bursaryData);
+            this.reset();
+        });
+    </script>
+</body>
+</html>
