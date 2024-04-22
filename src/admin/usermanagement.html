@@ -61,40 +61,42 @@
         import {getDatabase,ref,child,get,set,update,remove,onValue} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js"
         const db = getDatabase();
 
-        function createNewRow(data) {
-            let Table = document.getElementById('usersTable');
-            let id = '';
-            let name = '';
-            let email = '';
-            let date = '';
-            let status = '';
-            let role = '';
-            data.forEach(applicant => {
-                id = applicant.id;
-                name = applicant.fundmanager;
-                email = applicant.email;
-                role = applicant.role;
-                date = applicant.deadline;
-                status = applicant.status;
+        
+        function createNewRowFundManager(data) {
+            let Table = document.getElementById('usersTable'); // Assuming there's a table with the ID 'usersTable'
+            data.forEach(manager => {
+                let id = manager.id;
+                let company = manager.company;
+                let deadline = manager.deadline;
+                let description = manager.description;
+                let email = manager.email;
+                let fundManager = manager.fundmanager;
+                let motivation = manager.motivation;
+                let status = manager.status;
+
                 let newTableRow = document.createElement('tr');
 
-                // newTableRow.setAttribute('id',`${id}`);
-
-                let ApplicantDetailsName = document.createElement('td');
-                let ApplicantDetailsEmail = document.createElement('td');
-                let ApplicantDetailsDate = document.createElement('td');
-                let ApplicantDetailsRole = document.createElement('td');
-                let ApplicantDetailsStatus = document.createAttribute('td');
+                let companyCell = document.createElement('td');
+                let deadlineCell = document.createElement('td');
+                let descriptionCell = document.createElement('td');
+                let emailCell = document.createElement('td');
+                let fundManagerCell = document.createElement('td');
+                let motivationCell = document.createElement('td');
+                let statusCell = document.createElement('td');
+                let roleCell = document.createElement('td');
                 let ApplicantView = document.createElement('td');
                 let viewButton = document.createElement('button');
                 let changeStatusBtn = document.createElement('button');
                 let blockBtn = document.createElement('button');
 
-
-                ApplicantDetailsName.textContent = name;
-                ApplicantDetailsEmail.textContent = email;
-                ApplicantDetailsRole.textContent = role;
-                ApplicantDetailsStatus.textContent = status;
+                roleCell.textContent = 'Fund Manager';
+                companyCell.textContent = company;
+                deadlineCell.textContent = deadline;
+                descriptionCell.textContent = description;
+                emailCell.textContent = email;
+                fundManagerCell.textContent = fundManager;
+                motivationCell.textContent = motivation;
+                statusCell.textContent = status;
                 viewButton.setAttribute('id', `${id}`);
                 viewButton.className = 'button-view';
                 changeStatusBtn.className = 'button-edit';
@@ -112,16 +114,87 @@
                     viewUserDetails1(id);
                 };
 
-
-                newTableRow.append(ApplicantDetailsName);
-                newTableRow.append(ApplicantDetailsEmail);
-                newTableRow.append(ApplicantDetailsRole);
-                newTableRow.append(ApplicantDetailsDate);
+                newTableRow.append(fundManagerCell);
+                newTableRow.append(emailCell);
+                newTableRow.append(roleCell);
+                newTableRow.append(statusCell);
                 newTableRow.append(ApplicantView);
 
                 Table.append(newTableRow);
-            })
+            });
+}
+
+
+        function createNewRowStudent(data) {
+            let Table = document.getElementById('usersTable'); // Assuming there's a table with the ID 'usersTable'
+            data.forEach(student => {
+                let id = student.id;
+                let date = student.date;
+                let degree = student.degree;
+                let email = student.email;
+                let major = student.major;
+                let motivation = student.motivation;
+                let name = student.name;
+                let status = student.status;
+                let surname = student.surname;
+                let title = student.title;
+                let university = student.university;
+
+                let newTableRow = document.createElement('tr');
+
+                let dateCell = document.createElement('td');
+                let degreeCell = document.createElement('td');
+                let emailCell = document.createElement('td');
+                let majorCell = document.createElement('td');
+                let motivationCell = document.createElement('td');
+                let nameCell = document.createElement('td');
+                let statusCell = document.createElement('td');
+                let surnameCell = document.createElement('td');
+                let titleCell = document.createElement('td');
+                let universityCell = document.createElement('td');
+                let roleCell = document.createElement('td');
+                let ApplicantView = document.createElement('td');
+                let viewButton = document.createElement('button');
+                let changeStatusBtn = document.createElement('button');
+                let blockBtn = document.createElement('button');
+
+
+                roleCell.textContent = 'Student';
+                dateCell.textContent = date;
+                degreeCell.textContent = degree;
+                emailCell.textContent = email;
+                majorCell.textContent = major;
+                motivationCell.textContent = motivation;
+                nameCell.textContent = `${title} ${name} ${surname}`;
+                statusCell.textContent = status;
+                universityCell.textContent = university;
+                viewButton.setAttribute('id', `${id}`);
+                viewButton.className = 'button-view';
+                changeStatusBtn.className = 'button-edit';
+                blockBtn.className = 'button-toggle'; 
+                viewButton.textContent = 'view';
+                changeStatusBtn.textContent = 'Change Status';
+                blockBtn.textContent = 'Block';
+
+                ApplicantView.append(viewButton);
+                ApplicantView.append(changeStatusBtn);
+                ApplicantView.append(blockBtn);
+
+                viewButton.onclick = function() {
+                    let id = viewButton.id;
+                    viewUserDetails2(id);
+                };
+
+                newTableRow.append(nameCell);
+                newTableRow.append(emailCell);
+                newTableRow.append(roleCell);
+                newTableRow.append(statusCell);
+                newTableRow.append(ApplicantView);
+
+                Table.append(newTableRow);
+            });
         }
+
         //function to get relevant info from students in our database
         function getAllData() {
             const dbref = ref(db);
@@ -144,7 +217,7 @@
                             const h2 = document.getElementById('pending');
                             h2.innerText = "No Pending Applications"
                         } else {
-                            createNewRow(Students);
+                            createNewRowFundManager(Students);
                         }
                     } else {
                         const h2 = document.getElementById('pending');
@@ -154,7 +227,33 @@
 
                 }).catch((error) => {
                     console.log(error);
-                })
+                });
+            
+            // Populate table with students data
+            get(child(dbref, "Students/"))
+                .then((snapshot) => {
+                    if (snapshot.exists()) {
+                        let studentsData = [];
+                        let id1 = '';
+                        snapshot.forEach(childSnapShot => {
+                            id1 = childSnapShot.key;
+                            let data = childSnapShot.val();
+                            data.id = id1;
+                            studentsData.push(data);
+                        });
+
+                        if (studentsData.length === 0) {
+                            const h2 = document.getElementById('students');
+                            h2.innerText = "No Students Found"
+                        } else {
+                            createNewRowStudent(studentsData); // Assuming createNewRow function populates the table
+                        }
+                    } else {
+                        const h2 = document.getElementById('students');
+                        h2.innerText = "No Students Found"
+                    }
+                });
+
 
         }
 
@@ -164,12 +263,17 @@
         });
 
         function viewUserDetails(name) {
-            window.location.href = 'applicant.html';
+            window.location.href = 'fundManager.html';
         }
 
         function viewUserDetails1(id) {
             sessionStorage.setItem('info', id);
-            window.location.href = 'applicant.html';
+            window.location.href = 'fundManagerProfile.html';
+        }
+
+        function viewUserDetails2(id) {
+            sessionStorage.setItem('info', id);
+            window.location.href = 'student.html';
         }
     </script>
 </body>
