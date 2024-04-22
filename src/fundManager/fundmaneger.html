@@ -80,7 +80,6 @@
         <h1>Funding Application</h1>
     </header>
     <main>
-        
         <form id="fundingOpportunityForm">
             <div>
                 <label for="title">Name of Company:</label>
@@ -98,11 +97,8 @@
                 <label for="motivation">Motivation:</label>
                 <input type="text" id="motivation" name="motivation" required>
             </div>
-            <button type="submit" onclick="submitForm();">Create Funding Opportunity</button>
+            <a href="#" onclick="Create()"><button type="submit">Create Funding Opportunity</button> </a>
         </form>
-        
-        
-        
     </main>
 
     <footer>
@@ -114,60 +110,11 @@
 <!-- Your JavaScript file -->
 <script type="module" src="createFundingOpportunity.js" defer></script>
 <script>
-    
-    //initalize the db and have reference to the db
-
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-        
-    const firebaseConfig = {
-        apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
-        authDomain: "fir-sd-22d1a.firebaseapp.com",
-        databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
-        projectId: "fir-sd-22d1a",
-        storageBucket: "fir-sd-22d1a.appspot.com",
-        messagingSenderId: "526172429927",
-        appId: "1:526172429927:web:51ae427f7acfa1d925bec2"
-    };
-    
-    
-    const app = initializeApp(firebaseConfig);
-
-    import {getDatabase,ref,child,get,set,update,remove,onValue} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js"
-    const db = getDatabase();
-
-
-    function submitForm() {
-
-        //do nothing for now until i initialize the db
+    function Create() {
         window.location.href = 'fundingmenager.html';
-
-        /*
-        var title = document.getElementById("title").value;
-        var description = document.getElementById("description").value;
-        var deadline = document.getElementById("deadline").value;
-        var motivation = document.getElementById("motivation").value;
-
-        // Assuming you have initialized Firebase app and have a reference to your database
-        var database = firebase.database();
-        var ref = database.ref("fundingOpportunities");
-
-        // Push the form data to Firebase
-        ref.push({
-            title: title,
-            description: description,
-            deadline: deadline,
-            motivation: motivation
-        }).then(function() {
-            // Success message or any other action you want to take after submission
-            console.log("Form submitted successfully!");
-        }).catch(function(error) {
-            // Handle any errors
-            console.error("Error submitting form:", error);
-        });
-        */
-
-}
+    }
 </script>
 
 </body>
 </html>
+
