@@ -45,6 +45,7 @@
 
         input[type="text"],
         input[type="date"],
+        input[type="url"],
         textarea {
             width: 100%;
             padding: 10px;
@@ -83,22 +84,42 @@
         
         <form id="fundingOpportunityForm">
             <div>
-                <label for="title">Name of Company:</label>
+                <label for="title">Name of Company/Organisation:</label>
                 <input type="text" id="title" name="title" required>
             </div>
             <div>
-                <label for="description">Description of Funding Opportunity:</label>
+                <label for="description">Motivation:</label>
                 <textarea id="description" name="description" rows="4" required></textarea>
             </div>
+            
             <div>
+                <label for="year_established">Year Established:</label><br>
+                <input type="number" id="year_established" name="year_established" min="1900" max="2024" required><br><br>
+            </div>
+
+            <div>
+                <label for="focus_area">Focus Area:</label><br>
+                <select id="focus_area" name="focus_area" required>
+                    <option value="">Select Focus Area</option>
+                    <option value="Students">Students</option>
+                    <option value="Events">Events</option>
+                    <option value="Startup Businesses">Startup Business</option>
+                </select><br><br>
+            </div>
+
+            <div>
+                <label for="website_url">Website URL:</label><br>
+                <input type="url" id="website_url" name="website_url" required><br><br>
+            </div>
+            <!-- <div>
                 <label for="deadline">Deadline of Funding Opportunity:</label>
                 <input type="date" id="deadline" name="deadline" required>
             </div>
             <div>
                 <label for="motivation">Motivation:</label>
                 <input type="text" id="motivation" name="motivation" required>
-            </div>
-            <button type="submit" onclick="submitForm();">Create Funding Opportunity</button>
+            </div> -->
+            <button type="submit" onclick="submitForm();">Submit Application</button>
         </form>
         
         
