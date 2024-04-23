@@ -36,6 +36,4 @@ function showForm(formType) {
     }
 }
 
-document.getElementById('continueWithGoogle').addEventListener('click', function() {
-    window.location.href = 'createacc.html';
-});
+
