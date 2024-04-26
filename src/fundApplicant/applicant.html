@@ -67,7 +67,7 @@
         }
 
         button {
-            background-color: #4CAF50;
+            background-color: #347576;
             color: white;
             padding: 10px 20px;
             border: none;
@@ -88,13 +88,13 @@
             <h2>Funding Application</h2>
             <form id="fundingForm">
                 <section class="form-group">
-                    <label for="faculty">University Faculty:</label>
-                    <input type="text" id="faculty" name="faculty" required>
-                </section>
-                <section class="form-group">
-                    <label for="type">Type of Funding:</label>
-                    <input type="text" id="type" name="type" required>
-                </section>
+                    <label for="options">Type of Applicant:</label>
+                    <select id="type">
+                        <option value="educational">Educational</option>
+                        <option value="business">Business</option>
+                        <option value="events">Events</option>
+                    </select>
+                </section>               
                 <section class="form-group">
                     <label for="contacts">Contacts:</label>
                     <input type="tel" id="contacts" name="contacts" required>
@@ -132,25 +132,30 @@
 
         const fundingForm = document.getElementById('fundingForm');
         
+        
         fundingForm.addEventListener('submit', (e) => {
             e.preventDefault();
-
+        
             const formData = new FormData(fundingForm);
             let user = JSON.parse(sessionStorage.getItem("user"));
             let uid = user.uid;
             
             const applicantData = {};
-
-            applicantData.name = user.displayName ;
-            applicantData.email = user.email ;
+        
+            applicantData.name = user.displayName;
+            applicantData.email = user.email;
+        
+            // Get the value of the "Type of Applicant" field
+            const typeOfApplicant = document.getElementById('type').value;
+            // Add the "Type of Applicant" field to the data
+            applicantData.type = typeOfApplicant;
+        
             formData.forEach((value, key) => {
                 applicantData[key] = value;
             });
-            
-            
-
+        
             // Post the new applicant to the database
-            set(ref(db, 'Students/'+uid), applicantData)
+            set(ref(db, 'Applicants/' + uid), applicantData)
                 .then(() => {
                     alert('Application submitted successfully!');
                     // Clear the form after submission
@@ -160,6 +165,20 @@
                     console.error('Error submitting application:', error);
                 });
         });
+        
+            
+
+            // Post the new applicant to the database
+            set(ref(db, 'Applicants/'+uid), applicantData)
+                .then(() => {
+                    alert('Application submitted successfully!');
+                    // Clear the form after submission
+                    fundingForm.reset();
+                })
+                .catch((error) => {
+                    console.error('Error submitting application:', error);
+                });
+        
     </script>
 
 </body>
