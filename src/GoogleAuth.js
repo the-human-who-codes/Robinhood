@@ -45,11 +45,11 @@ googleLogin.addEventListener("click", function () {
               .then((snapshot) => {
                 if (snapshot.exists()) {
                   // User is a student, redirect to the student dashboard
-                  alert('I am a student!');
+                
                   window.location.href = "./fundApplicant/dashboard.html";
                 } else {
                   // User not found, redirect to registration page
-                  alert('You are not yet registered with us');
+                  console.log('please register');
                   window.location.href = "createacc.html";
                 }
               })
