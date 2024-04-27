@@ -154,6 +154,10 @@
             formData.forEach((value, key) => {
                 applicantData[key] = value;
             });
+
+            // Add status indicating not approved
+            applicantData.status = "pending";
+
         
             // Post the new applicant to the database
             set(ref(db, 'FundManagers/' + uid), applicantData)
