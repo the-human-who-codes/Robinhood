@@ -38,10 +38,10 @@ googleLogin.addEventListener("click", function () {
         .then((snapshot) => {
           if (snapshot.exists()) {
             // User is a fund manager, redirect to the fund manager dashboard
-            window.location.href = "./fundManager/fundingmanager.html";
+            window.location.href = "./fundManager/fundingmenager.html";
           } else {
             // Check if the user exists in the Students table
-            get(child(dbref, "Students/" + uid))
+            get(child(dbref, "Applicants/" + uid))
               .then((snapshot) => {
                 if (snapshot.exists()) {
                   // User is a student, redirect to the student dashboard
