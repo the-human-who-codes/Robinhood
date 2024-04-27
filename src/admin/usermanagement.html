@@ -206,7 +206,7 @@
                         let id1 = '';
                         snapshot.forEach(childSnapShot => {
                             id1 = childSnapShot.key;
-                            if (childSnapShot.val().status == 'pending') {
+                            if (childSnapShot.val().status == 'accepted') {
                                 let data = childSnapShot.val();
                                 data.id = id1;
                                 Students.push(data);
