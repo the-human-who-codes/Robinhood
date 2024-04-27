@@ -1,14 +1,8 @@
 
-const adminButton = document.querySelector('.admin');
-const adminInput = document.querySelector('.admin-input');
-const submitPinButton = document.querySelector('.submit-pin');
+var user = JSON.parse(sessionStorage.getItem('user'));
 
-adminButton.addEventListener('click', function() {
-    
-    adminInput.style.display = 'block';
-    
-    submitPinButton.style.display = 'block';
-});
+console.log(user.displayName);
+
 
 function showForm(formType) {
     var formWrapper = document.getElementById('formWrapper');
@@ -36,6 +30,4 @@ function showForm(formType) {
     }
 }
 
-document.getElementById('continueWithGoogle').addEventListener('click', function() {
-    window.location.href = 'createacc.html';
-});
+

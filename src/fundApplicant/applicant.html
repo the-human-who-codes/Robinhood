@@ -3,36 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Applicant</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Funding Application</title>
+    <style>
+        /* Reset CSS */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .Wrapper2 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .form-box {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .form-box h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #347576;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: none;
+        }
+
+        button {
+            background-color: #347576;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-    <section class="Wrapper2" id="apllicant">
-    <section class="form-box Applicant">
-        <h2> Applicant Manager</h2>
-        <form>
-            <section class="form-group">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" required>
-            </section>
-            <section class="form-group">
-                <label for="surname">Surname:</label>
-                <input type="text" id="surname" name="surname" required>
-            </section>
-            <section class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-            </section>
-            <section class="form-group">
-                <label for="phone">Phone No:</label>
-                <input type="tel" id="phone" name="phone" required>
-            </section>
-            <section class="form-group">
-                <label for="address">Address:</label>
-                <input type="text" id="address" name="address" required>
-            </section>
-            <button type="submit">Create Account</button>
-        </form>
-    </section></section>
+    <section class="Wrapper2">
+        <section class="form-box Applicant">
+            <h2>Funding Application</h2>
+            <form id="fundingForm">
+                <section class="form-group">
+                    <label for="options">Type of Applicant:</label>
+                    <select id="type">
+                        <option value="educational">Educational</option>
+                        <option value="business">Business</option>
+                        <option value="events">Events</option>
+                    </select>
+                </section>               
+                <section class="form-group">
+                    <label for="contacts">Contacts:</label>
+                    <input type="tel" id="contacts" name="contacts" required>
+                </section>
+                <section class="form-group">
+                    <label for="address">Address:</label>
+                    <textarea id="address" name="address" rows="4" required></textarea>
+                </section>
+                <button type="submit">Submit Application</button>
+            </form>
+        </section>
+    </section>
+
+    <script type="module">
+        import {
+            initializeApp
+        } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
+            authDomain: "fir-sd-22d1a.firebaseapp.com",
+            databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
+            projectId: "fir-sd-22d1a",
+            storageBucket: "fir-sd-22d1a.appspot.com",
+            messagingSenderId: "526172429927",
+            appId: "1:526172429927:web:51ae427f7acfa1d925bec2"
+        };
+
+
+        const app = initializeApp(firebaseConfig);
+
+        import {getDatabase,ref,child,get,set,update,remove,onValue} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js"
+        const db = getDatabase();
+        const dbref = ref(db);
+
+        const fundingForm = document.getElementById('fundingForm');
+        
+        
+        fundingForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+        
+            const formData = new FormData(fundingForm);
+            let user = JSON.parse(sessionStorage.getItem("user"));
+            let uid = user.uid;
+            
+            const applicantData = {};
+        
+            applicantData.name = user.displayName;
+            applicantData.email = user.email;
+        
+            // Get the value of the "Type of Applicant" field
+            const typeOfApplicant = document.getElementById('type').value;
+            // Add the "Type of Applicant" field to the data
+            applicantData.type = typeOfApplicant;
+        
+            formData.forEach((value, key) => {
+                applicantData[key] = value;
+            });
+        
+            // Post the new applicant to the database
+            set(ref(db, 'Applicants/' + uid), applicantData)
+                .then(() => {
+                    alert('Application submitted successfully!');
+                    // Clear the form after submission
+                    fundingForm.reset();
+                })
+                .catch((error) => {
+                    console.error('Error submitting application:', error);
+                });
+        });
+        
+            
+
+            // Post the new applicant to the database
+            set(ref(db, 'Applicants/'+uid), applicantData)
+                .then(() => {
+                    alert('Application submitted successfully!');
+                    // Clear the form after submission
+                    fundingForm.reset();
+                })
+                .catch((error) => {
+                    console.error('Error submitting application:', error);
+                });
+        
+    </script>
+
 </body>
 </html>
