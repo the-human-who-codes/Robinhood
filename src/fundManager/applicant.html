@@ -133,15 +133,16 @@
 
         const fundingForm = document.getElementById('fundingForm');
         
-        
+        let user = JSON.parse(sessionStorage.getItem("user"));
+        let uid = user.uid;
+        const applicantData = {};
         fundingForm.addEventListener('submit', (e) => {
             e.preventDefault();
         
             const formData = new FormData(fundingForm);
-            let user = JSON.parse(sessionStorage.getItem("user"));
-            let uid = user.uid;
             
-            const applicantData = {};
+            alert(uid);
+            
         
             applicantData.name = user.displayName;
             applicantData.email = user.email;
@@ -157,32 +158,18 @@
 
             // Add status indicating not approved
             applicantData.status = "pending";
-
-        
             // Post the new applicant to the database
             set(ref(db, 'FundManagers/' + uid), applicantData)
                 .then(() => {
-                    alert('Application submitted successfully!');
+                    
                     // Clear the form after submission
                     fundingForm.reset();
-                })
-                .catch((error) => {
+                    window.location.href = './fundingmenager.html';
+                }).catch((error) => {
                     console.error('Error submitting application:', error);
                 });
         });
-        
-            
 
-            // Post the new applicant to the database
-            set(ref(db, 'Applicants/'+uid), applicantData)
-                .then(() => {
-                    alert('Application submitted successfully!');
-                    // Clear the form after submission
-                    fundingForm.reset();
-                })
-                .catch((error) => {
-                    console.error('Error submitting application:', error);
-                });
         
     </script>
 
