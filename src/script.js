@@ -26,7 +26,7 @@ function showForm(formType) {
     if (formType === 'applicant') {
         window.location.href = './fundApplicant/applicant.html';
     } else if (formType === 'fundManager') {
-        window.location.href = './fundManager/fundmanager.html';
+        window.location.href = './fundManager/applicant.html';
     }
 }
 

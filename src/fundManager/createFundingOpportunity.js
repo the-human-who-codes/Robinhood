@@ -1,30 +1,31 @@
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js';
-import { getDatabase, ref, push, set } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js';
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js";
+import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js";
 
-// Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyCdFoWKRZQuKnjv20ry0tfdF-N70Pe5JiQ",
-    authDomain: "letsgo-946e6.firebaseapp.com",
-    databaseURL: "https://letsgo-946e6-default-rtdb.firebaseio.com",
-    projectId: "letsgo-946e6",
-    storageBucket: "letsgo-946e6.appspot.com",
-    messagingSenderId: "41559700737",
-    appId: "1:41559700737:web:ea3c57df878a3826281700",
-    measurementId: "G-6W1NY2T4DW"
+    apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
+    authDomain: "fir-sd-22d1a.firebaseapp.com",
+    databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
+    projectId: "fir-sd-22d1a",
+    storageBucket: "fir-sd-22d1a.appspot.com",
+    messagingSenderId: "526172429927",
+    appId: "1:526172429927:web:51ae427f7acfa1d925bec2"
   };
+
+
 
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getDatabase(firebaseApp);
 const fundingOpportunitiesRef = ref(db, 'funding-opportunities');
 
-async function createFundingOpportunity(title, description, deadline, motivation) {
+async function createFundingOpportunity(title, description, deadline, motivation, uid) {
     try {
         const newFundingOpportunity = {
             title,
             description,
             deadline,
             motivation,
+            uid // Add UID to the funding opportunity
         };
 
         const newFundingRef = push(fundingOpportunitiesRef);
@@ -35,17 +36,25 @@ async function createFundingOpportunity(title, description, deadline, motivation
     }
 }
 
+// Handle form submission
 async function handleSubmit(event) {
     event.preventDefault();
     const title = document.getElementById('title').value;
     const description = document.getElementById('description').value;
     const deadline = document.getElementById('deadline').value;
     const motivation = document.getElementById('motivation').value;
-    await createFundingOpportunity(title, description, deadline, motivation);
+    
+    // Get UID from session storage
+    let user = JSON.parse(sessionStorage.getItem("user"));
+    const uid = user.uid;
+
+    await createFundingOpportunity(title, description, deadline, motivation, uid);
 }
 
+// Add event listener to form submission
 document.getElementById('fundingOpportunityForm').addEventListener('submit', handleSubmit);
 
+// Redirect function
 function Create() {
     window.location.href = 'fundingmenager.html';
 }
