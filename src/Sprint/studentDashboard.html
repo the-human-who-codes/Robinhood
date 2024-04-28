@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="studentDash.css">
+</head>
+<body>
+    <header>
+        <h1>Student Dashboard</h1>
+        <nav>
+            <ul>
+                <li><a href="studentDashboard.html" class="active" id="Dash">Dashboard</a></li>
+                <li><a href="Bursaries.html" id="opportunities">Bursaries</a></li>
+                <li><a href="applications.html" id="applications">Applications</a></li>
+                <li><a href="profile.html" id="profile">Profile</a></li>
+                <li><a href="logout.html" id="logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="summary">
+            <h2>Summary</h2>
+            <p>Welcome to your student dashboard. Here's a summary of your bursary applications:</p>
+            <!-- Display summary of applications -->
+            <dl class="application-summary">
+                <dt>Total Applications:</dt>
+                <dd>10</dd>
+                <dt>Approved Applications:</dt>
+                <dd>5</dd>
+                <dt>Pending Applications:</dt>
+                <dd>3</dd>
+                <dt>Rejected Applications:</dt>
+                <dd>2</dd>
+            </dl>
+        </section>
+
+        <section class="notifications">
+            <h2>Notifications</h2>
+            <p>You have 2 new notifications. Check them out!</p>
+            <!-- Display notifications -->
+            <ul>
+                <li>New bursary opportunity available!</li>
+                <li>Application status updated for Bursary XYZ.</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Student Bursary Portal</p>
+    </footer>
+    <script defer>
+        const Dashboard=document.getElementById("Dash");
+        const opportunities=document.getElementById("opportunities");
+        const applications=document.getElementById("applications");
+        const profile=document.getElementById("profile");
+        const logout=document.getElementById("logout");
+
+
+      
+
+        function Opportunity(){
+            window.location.href = 'Bursaries.html';
+        }
+
+        function Application(){
+            window.location.href = 'Applications.html';
+        }
+
+        function Profile(){
+            window.location.href = 'Profile.html';
+        }
+
+        function LogOut(){
+            window.location.href = 'BasicLogin.html';
+        }
+
+        function DashBoard(){
+            window.location.href = 'studentDashboard.html';
+        }
+
+        Dashboard.addEventListener('click',()=>{
+            DashBoard();
+        });
+
+        opportunities.addEventListener('click',()=>{
+            Opportunity();
+        });
+
+        applications.addEventListener('click',()=>{
+            Application();
+        });
+
+        profile.addEventListener('click',()=>{
+            Profile();
+        });
+
+        logout.addEventListener('click',()=>{
+            LogOut();
+        });
+
+        
+    </script>
+</body>
+</html>
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+    <h2>Welcome</h2>
+    <p>Welcome to the secure area of the website.</p>
+    
+    <script>
+        // Retrieve user data from session storage
+        var userDataString = sessionStorage.getItem("studentData");
+        if (!userDataString) {
+            // If user data is not found, redirect to the login page
+            window.location.href = "BasicLogin.html";
+        } else {
+            // Parse the JSON string to retrieve user data
+            var userData = JSON.parse(userDataString);
+            console.log(userData);
+
+            // Display user-specific content based on userData
+        }
+    </script>
+</body>
+</html> -->

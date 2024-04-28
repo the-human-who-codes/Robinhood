@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Form</title>
+    <link rel="stylesheet" href="Application.css">
+</head>
+<body>
+    <section id="ApplicationForm">
+        <artice>
+            <h2>Application Form</h2>
+            <form  id="uploadForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required><br>
+
+            <label for="surname">Surname:</label>
+            <input type="text" id="surname" name="surname" required><br>
+
+            <label for="university">University:</label>
+            <input type="text" id="university" name="university" required><br>
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br>
+            
+            <label for="phone">Phone:</label>
+            <input type="tel" id="phone" name="phone" required><br>
+
+            <label for="payslip">Financial Documnets:</label>
+            <input type="file" id="fileInput1" name="fileInput" required accept=".pdf"></input><br>
+            <!-- <input type="file" id="fileInput1" name="fileInput" style="display: none;">
+             -->
+            <label for="transcript">Academic Record:</label>
+            <!-- <button>Attach Transcript</button><br> -->
+            <input type="file" id="fileInput2" name="fileInput" required accept=".pdf"></input><br>
+            
+            <label for="comments">Comments:</label><br>
+            <textarea id="comments" name="comments" rows="4" cols="50"></textarea><br>
+            
+            <button type="submit">Submit Application</button>
+        </artice>
+        
+    </form>
+
+    </section>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js"></script>
+    <script type=""module>
+         //import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+         
+        
+         const firebaseConfig = {
+           apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
+           authDomain: "fir-sd-22d1a.firebaseapp.com",
+           databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
+           projectId: "fir-sd-22d1a",
+           storageBucket: "fir-sd-22d1a.appspot.com",
+           messagingSenderId: "526172429927",
+           appId: "1:526172429927:web:51ae427f7acfa1d925bec2"
+         };
+       
+         
+         firebase.initializeApp(firebaseConfig);
+ 
+         const uploadForm = document.getElementById('uploadForm');
+         uploadForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const surname = document.getElementById('suname').value;
+            const university = document.getElementById('university').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const file1 = document.getElementById('fileInput1').files[0];
+            const file2 = document.getElementById('fileInput2').files[0];
+
+            const storageRef = firebase.storage().ref();
+            const file1Ref = storageRef.child(`files/${file1.name}`);
+            file1Ref.put(file1).then((snapshot1)) => {
+                console.log('File 1 uploaded successfully:', snapshot1.metadata.name);
+
+                const file2Ref = storageRef.child(`files/${file2.name}`);
+                file2Ref.put(file2).then((snapshot2) => {
+                    console.log('File 2 uploaded successfully:', snapshot2.metadata.name);
+                    Promise.all([file1Ref.getDownloadURL(), file2Ref.getDownloadURL()]).then((downloadURLs) => {
+                        const file1Url = downloadURLs[0];
+                        const file2Url = downloadURLs[1];
+
+                        // Add data to the Firebase Realtime Database
+                        database.ref('Students').child(2560230).set({
+                            name: name,
+                            surname:surname
+                            university:university,
+                            email:email,
+                            phone:phone,
+                            file1Url: file1Url,
+                            file2Url: file2Url
+                        }).then(() => {
+                            console.log('Data added to the database successfully');
+                        }).catch((error) => {
+                            console.error('Error adding data to the database:', error);
+                        });
+                    }).catch((error) => {
+                        console.error('Error getting download URLs:', error);
+                    });
+            }).catch((error) => {
+                console.error('Error uploading file:', error);
+            });
+            }
+        });
+    </script>
+</body>
+</html>
