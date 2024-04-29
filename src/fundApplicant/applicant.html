@@ -90,9 +90,9 @@
                 <section class="form-group">
                     <label for="options">Type of Applicant:</label>
                     <select id="type">
-                        <option value="educational" id="edu">Educational</option>
-                        <option value="business" id="biz">Business</option>
-                        <option value="events" id="events">Events</option>
+                        <option value="educational">Educational</option>
+                        <option value="business">Business</option>
+                        <option value="events">Events</option>
                     </select>
                 </section>               
                 <section class="form-group">
@@ -131,9 +131,7 @@
         const dbref = ref(db);
 
         const fundingForm = document.getElementById('fundingForm');
-        const edu=document.getElementById("edu");
-        const biz=document.getElementById("biz");
-        const event=document.getElementById("events");
+        
         
         fundingForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -162,7 +160,6 @@
                     
                     // Clear the form after submission
                     fundingForm.reset();
-                    if()
                     window.location.href = './dashboard.html'
                 })
                 .catch((error) => {
