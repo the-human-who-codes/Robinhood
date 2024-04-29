@@ -60,7 +60,7 @@
             
             get(child(dbRef,'FundManagers/'+id)).then((snapshot)=>{
                 if(snapshot.exists()){
-                   const manager=snapshot.val().fundmanager;
+                   const manager=snapshot.val().name;
                    const eMail=snapshot.val().email;
                     const role1="Fund Manager";
                    
