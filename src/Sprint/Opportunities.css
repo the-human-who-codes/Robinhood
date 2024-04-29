@@ -1,5 +1,5 @@
 header {
-    background-color: #007bff;
+    background-color: #347576;
     color: #fff;
     padding: 20px;
     text-align: center;
@@ -37,7 +37,7 @@ table{
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 thead{
-    background-color: #007bff;
+    background-color: #347576;
     color: white;
 }
 #headings{
@@ -118,7 +118,7 @@ section {
 }
 
 footer {
-    background-color: #007bff;
+    background-color: #347576 ;
     color: #fff;
     text-align: center;
     padding: 10px;
