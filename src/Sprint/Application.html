@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="Application.css">
 </head>
 <body>
-    <section id="ApplicationForm">
+    <section id="ApplicationForm" >
         <artice>
             <h2>Application Form</h2>
             <form  id="uploadForm">
@@ -28,13 +28,11 @@
 
             <label for="payslip">Financial Documnets:</label>
             <input type="file" id="fileInput1" name="fileInput" required accept=".pdf"></input><br>
-            <!-- <input type="file" id="fileInput1" name="fileInput" style="display: none;">
-             -->
+            
             <label for="transcript">Academic Record:</label>
-            <!-- <button>Attach Transcript</button><br> -->
             <input type="file" id="fileInput2" name="fileInput" required accept=".pdf"></input><br>
             
-            <label for="comments">Comments:</label><br>
+            <label for="Tell Us About Yourself:">Comments:</label><br>
             <textarea id="comments" name="comments" rows="4" cols="50"></textarea><br>
             
             <button type="submit">Submit Application</button>
@@ -43,71 +41,119 @@
     </form>
 
     </section>
-    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-storage.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js"></script>
-    <script type=""module>
-         //import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-         
+  
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+        //import storage
+         import { getStorage,ref as ref1,uploadBytes,getDownloadURL} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-storage.js";
         
          const firebaseConfig = {
-           apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
-           authDomain: "fir-sd-22d1a.firebaseapp.com",
-           databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
-           projectId: "fir-sd-22d1a",
-           storageBucket: "fir-sd-22d1a.appspot.com",
-           messagingSenderId: "526172429927",
-           appId: "1:526172429927:web:51ae427f7acfa1d925bec2"
-         };
-       
+
+            apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
+
+            authDomain: "fir-sd-22d1a.firebaseapp.com",
+
+            databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
+
+            projectId: "fir-sd-22d1a",
+
+            storageBucket: "fir-sd-22d1a.appspot.com",
+
+            messagingSenderId: "526172429927",
+
+        appId: "1:526172429927:web:51ae427f7acfa1d925bec2"
+
+        };
+
+
+         import {getDatabase,ref,child,get,set,update,remove,onValue} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
          
-         firebase.initializeApp(firebaseConfig);
- 
+         const app=initializeApp(firebaseConfig);
+         const db=getDatabase();
+         const storage1=getStorage();
+
+         const uniqueId = Date.now();
+        let trans='';
+        let pay='';
          const uploadForm = document.getElementById('uploadForm');
          uploadForm.addEventListener('submit', function(event) {
             event.preventDefault();
-            
             const name = document.getElementById('name').value;
-            const surname = document.getElementById('suname').value;
+            const surname = document.getElementById('surname').value;
             const university = document.getElementById('university').value;
             const email = document.getElementById('email').value;
             const phone = document.getElementById('phone').value;
             const file1 = document.getElementById('fileInput1').files[0];
             const file2 = document.getElementById('fileInput2').files[0];
+            const aboutMe=document.getElementById('comments').value;
 
-            const storageRef = firebase.storage().ref();
-            const file1Ref = storageRef.child(`files/${file1.name}`);
-            file1Ref.put(file1).then((snapshot1)) => {
-                console.log('File 1 uploaded successfully:', snapshot1.metadata.name);
-
-                const file2Ref = storageRef.child(`files/${file2.name}`);
-                file2Ref.put(file2).then((snapshot2) => {
-                    console.log('File 2 uploaded successfully:', snapshot2.metadata.name);
-                    Promise.all([file1Ref.getDownloadURL(), file2Ref.getDownloadURL()]).then((downloadURLs) => {
-                        const file1Url = downloadURLs[0];
-                        const file2Url = downloadURLs[1];
-
-                        // Add data to the Firebase Realtime Database
-                        database.ref('Students').child(2560230).set({
-                            name: name,
-                            surname:surname
-                            university:university,
-                            email:email,
-                            phone:phone,
-                            file1Url: file1Url,
-                            file2Url: file2Url
-                        }).then(() => {
-                            console.log('Data added to the database successfully');
-                        }).catch((error) => {
-                            console.error('Error adding data to the database:', error);
-                        });
-                    }).catch((error) => {
-                        console.error('Error getting download URLs:', error);
-                    });
+            // User information
+            let userInfo = {
+                 name :name,
+                 surname :surname,
+                 university :university,
+                 email :email,
+                phone :phone,
+                about:aboutMe
+            };
+        
+            
+            const StoragePath=`Students/${uniqueId}/`;
+            Promise.all([
+                //uploading files to Students storage
+                uploadFile(file1, file1.name),
+                uploadFile(file2, file2.name)
+            ]).then(() => {
+                Promise.all([
+                    getDownloadURL(ref1(storage1, StoragePath + file1.name)),
+                    getDownloadURL(ref1(storage1, StoragePath + file2.name))
+                ]).then((urls) => {
+            // store urls in userInfo object
+            userInfo['transcript']=urls[0];
+            userInfo['payslips']=urls[1];
+            // Output the URLs
+            // console.log('Uploaded both PDF files with unique ID:', uniqueId);
+                    addToDatabase(userInfo);
+                }).catch((error) => {
+                    console.error('Error getting PDF URLs:', error);
+                });
+                
             }).catch((error) => {
-                console.error('Error uploading file:', error);
+                console.error('Error uploading PDF files:', error);
             });
+
+            //uploads pdf files and ensures they are stored in the same folder i.e Students/UniqueID/
+            function uploadFile(file,fileName){
+                const fileStorageRef = ref1(storage1, StoragePath + fileName);
+                // Upload the file to Firebase Storage
+                return uploadBytes(fileStorageRef, file);
             }
+
+            //add user to DB with associated pdfs
+            function addToDatabase(userInfo){
+                console.log(userInfo);
+                set(ref(db,'StudentApplicant/'+uniqueId),{
+                    name :userInfo.name,
+                    surname :userInfo.surname,
+                    university :userInfo.university,
+                    email :userInfo.email,
+                    phone :userInfo.phone,
+                    about:userInfo.about,
+                    transcript:userInfo.transcript,
+                    payslips:userInfo.payslips 
+                }).then(()=>{
+                    alert("Submission Recieved");
+                }).catch((error)=>{
+                    alert("Issue with Submission try again")  ;
+                    console.log(error);  
+                })
+            }
+
+            
+
+          
+
+    
         });
     </script>
 </body>
