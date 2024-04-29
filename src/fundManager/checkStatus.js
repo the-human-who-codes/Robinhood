@@ -1,21 +1,22 @@
+// checkStatus.js
+
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js';
-import { getDatabase, ref, push, set, get,update,remove } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js';
+import { getDatabase, ref, push, set, get, update, remove } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCdFoWKRZQuKnjv20ry0tfdF-N70Pe5JiQ",
-    authDomain: "letsgo-946e6.firebaseapp.com",
-    databaseURL: "https://letsgo-946e6-default-rtdb.firebaseio.com",
-    projectId: "letsgo-946e6",
-    storageBucket: "letsgo-946e6.appspot.com",
-    messagingSenderId: "41559700737",
-    appId: "1:41559700737:web:ea3c57df878a3826281700",
-    measurementId: "G-6W1NY2T4DW"
+    apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
+    authDomain: "fir-sd-22d1a.firebaseapp.com",
+    databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
+    projectId: "fir-sd-22d1a",
+    storageBucket: "fir-sd-22d1a.appspot.com",
+    messagingSenderId: "526172429927",
+    appId: "1:526172429927:web:51ae427f7acfa1d925bec2"
   };
 
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getDatabase(firebaseApp);
-const fundingOpportunitiesRef = ref(db, 'funding-opportunities');
+const fundingOpportunitiesRef = ref(db, 'fund_manager-applications');
 
 async function createFundingOpportunity(title, description, deadline, motivation) {
     try {
@@ -31,15 +32,6 @@ async function createFundingOpportunity(title, description, deadline, motivation
     } catch (error) {
         console.error('Error creating funding opportunity:', error);
     }
-}
-
-async function handleSubmit(event) {
-    event.preventDefault();
-    const title = document.getElementById('title').value;
-    const description = document.getElementById('description').value;
-    const deadline = document.getElementById('deadline').value;
-    const motivation = document.getElementById('motivation').value;
-    await createFundingOpportunity(title, description, deadline, motivation);
 }
 
 async function displayAllFundingOpportunities() {
@@ -60,6 +52,46 @@ async function displayAllFundingOpportunities() {
     }
 }
 
+async function displaySubmittedFundingOpportunities() {
+    try {
+        const snapshot = await get(fundingOpportunitiesRef);
+        if (snapshot.exists()) {
+            const fundingOpportunities = snapshot.val();
+            const fundingOpportunitiesList = document.getElementById('fundingOpportunitiesList');
+            fundingOpportunitiesList.innerHTML = ''; 
+            for (const [id, opportunity] of Object.entries(fundingOpportunities || {})) {
+                if (opportunity.status && (opportunity.status === 'rejected' || opportunity.status === 'accepted')) {
+                    displayFundingOpportunity({ id, ...opportunity });
+                }
+            }
+        } else {
+            console.log('No funding opportunities found.');
+        }
+    } catch (error) {
+        console.error('Error fetching funding opportunities:', error);
+    }
+}
+async function displayInProgressFundingOpportunities() {
+    try {
+        const snapshot = await get(fundingOpportunitiesRef);
+        if (snapshot.exists()) {
+            const fundingOpportunities = snapshot.val();
+            const fundingOpportunitiesList = document.getElementById('fundingOpportunitiesList');
+            fundingOpportunitiesList.innerHTML = ''; 
+            for (const [id, opportunity] of Object.entries(fundingOpportunities || {})) {
+                if (!opportunity.status) {
+                    displayFundingOpportunity({ id, ...opportunity });
+                }
+            }
+        } else {
+            console.log('No funding opportunities found.');
+        }
+    } catch (error) {
+        console.error('Error fetching funding opportunities:', error);
+    }
+}
+
+
 
 async function displayFundingOpportunity(fundingOpportunity) {
     const fundingList = document.getElementById('fundingOpportunitiesList');
@@ -79,7 +111,7 @@ async function displayFundingOpportunity(fundingOpportunity) {
 }
 
 async function displayDetailedFundingOpportunity(fundingOpportunity) {
-    const { id, title, description, deadline, motivation } = fundingOpportunity;
+    const { id, title, description, deadline, motivation, status } = fundingOpportunity;
     const detailedContainer = document.getElementById('detailedFundingOpportunity');
     detailedContainer.innerHTML = '';
 
@@ -90,6 +122,10 @@ async function displayDetailedFundingOpportunity(fundingOpportunity) {
     const descriptionInput = createInputField('description', 'Description:', 'textarea', description);
     const deadlineInput = createInputField('deadline', 'Deadline:', 'date', deadline);
     const motivationInput = createInputField('motivation', 'Motivation:', 'text', motivation);
+
+    // Display status
+    const statusInput = createInputField('status', 'Status:', 'text', status || 'Pending');
+
     const updateButton = document.createElement('button');
     updateButton.type = 'submit';
     updateButton.textContent = 'Update Funding Opportunity';
@@ -105,7 +141,17 @@ async function displayDetailedFundingOpportunity(fundingOpportunity) {
     form.appendChild(descriptionInput);
     form.appendChild(deadlineInput);
     form.appendChild(motivationInput);
-    form.appendChild(updateButton);
+    form.appendChild(statusInput);
+    
+    // Check status to determine buttons to display
+    if (status === 'Pending') {
+        form.appendChild(updateButton);
+    }
+    
+    if (status === 'In Progress' || !status) {
+        form.appendChild(updateButton);
+    }
+
     form.appendChild(deleteButton);
 
     detailedContainer.appendChild(form);
@@ -129,9 +175,11 @@ async function displayDetailedFundingOpportunity(fundingOpportunity) {
         }
     });
 }
+
+
 async function updateFundingOpportunity(id, updatedData) {
     try {
-        const fundingRef = ref(db, `funding-opportunities/${id}`);
+        const fundingRef = ref(db, `fund_manager-applications/${id}`);
         await set(fundingRef, updatedData);
         console.log('Funding opportunity updated successfully');
     } catch (error) {
@@ -141,7 +189,7 @@ async function updateFundingOpportunity(id, updatedData) {
 
 async function deleteFundingOpportunity(id) {
     try {
-        const fundingRef = ref(db, `funding-opportunities/${id}`);
+        const fundingRef = ref(db, `fund_manager-applications/${id}`);
         await set(fundingRef, null); // Set to null to delete the entry
         console.log('Funding opportunity deleted');
     } catch (error) {
@@ -169,8 +217,14 @@ function createInputField(id, label, type, value) {
 
     return div;
 }
-
-
 document.getElementById('check-status-button').addEventListener('click', async () => {
-    await displayAllFundingOpportunities();
+    const selectedStatus = document.getElementById('application-status').value;
+
+    if (selectedStatus === 'submitted') {
+        await displaySubmittedFundingOpportunities();
+    } else if (selectedStatus === 'in-progress') {
+        await displayInProgressFundingOpportunities();
+    } else {
+        await displayAllFundingOpportunities();
+    }
 });

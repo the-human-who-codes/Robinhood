@@ -123,18 +123,78 @@
     <footer>
         &copy; 2024 Advertise Your Bursary. All rights reserved.
     </footer>
-    
-    <script>
-        document.getElementById('bursary-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const formData = new FormData(this);
-            const bursaryData = {};
-            formData.forEach((value, key) => {
-                bursaryData[key] = value;
-            });
-            console.log(bursaryData);
-            this.reset();
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js';
+        import { getDatabase, ref, push,get } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js';
+
+            // Firebase configuration
+            const firebaseConfig = {
+          apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
+          authDomain: "fir-sd-22d1a.firebaseapp.com",
+          databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
+          projectId: "fir-sd-22d1a",
+          storageBucket: "fir-sd-22d1a.appspot.com",
+          messagingSenderId: "526172429927",
+          appId: "1:526172429927:web:51ae427f7acfa1d925bec2"
+        };
+      
+        const firebaseApp = initializeApp(firebaseConfig);
+        const db = getDatabase(firebaseApp);
+        const fundingOpportunitiesRef = ref(db, 'fund_manager-applications');
+        const fundingAdvertisementsRef = ref(db, 'funding-advertisements');
+
+        async function createAdvertisement(event) {
+    event.preventDefault();
+    const status = await checkFundManagerStatus();
+    console.log('Fund manager status:', status);
+    if (status === 'accepted') {
+        const formData = new FormData(document.getElementById('bursary-form'));
+        const bursaryData = {};
+        formData.forEach((value, key) => {
+            bursaryData[key] = value;
         });
-    </script>
+        console.log(bursaryData);
+        saveAdvertisementToDatabase(bursaryData);
+        alert('Bursary advertisement created successfully!');
+        document.getElementById('bursary-form').reset();
+    } else if (status === 'pending') {
+        alert('Your application is still pending. Please wait for approval.');
+    } else {
+        alert('Your application has been rejected. You cannot create advertisements.');
+    }
+}
+
+async function checkFundManagerStatus() {
+    try {
+        const snapshot = await get(fundingOpportunitiesRef);
+        if (snapshot.exists()) {
+            const applications = snapshot.val();
+            for (const key in applications) {
+                if (applications.hasOwnProperty(key)) {
+                    const application = applications[key];
+                    const status = application.status ? application.status : 'pending';
+                    console.log('Status:', status);
+                    return status;
+                }
+            }
+        } else {
+            console.log("No data available");
+            return 'pending';
+        }
+    } catch (error) {
+        console.error("Error getting fund manager status: ", error);
+        return 'pending';
+    }
+}
+
+
+
+        function saveAdvertisementToDatabase(advertisementData) {
+            push(fundingAdvertisementsRef, advertisementData);
+        }
+
+        document.getElementById('bursary-form').addEventListener('submit', createAdvertisement);
+    </script>  
 </body>
 </html>
