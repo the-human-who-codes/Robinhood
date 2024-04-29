@@ -54,8 +54,15 @@ googleLogin.addEventListener("click", function () {
                   }
                   else{
                   // User is a student, redirect to the student dashboard
-                
-                  window.location.href = "./fundApplicant/dashboard.html";}
+                  if(snapshot.val().type=="educational"){
+                    window.location.href="./fundApplicant/dashboard.html";
+                  }
+                  // else if(snapshot.val().type=="events"){
+                  //   //window.location.href="./Sprint/Dashboard.html";
+                  // }
+
+                }
+                  //window.location.href = "./fundApplicant/dashboard.html";}
                 } else {
                   // User not found, redirect to registration page
                   console.log('please register');
