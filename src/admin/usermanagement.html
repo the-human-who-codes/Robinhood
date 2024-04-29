@@ -1,285 +1,346 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User Management</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
     <header>
-        <h1>Admin Dashboard</h1>
+      <h1>Admin Dashboard</h1>
     </header>
 
     <div id="mySidebar" class="sidebar">
-        <a href="#" onclick="closeNav()"><svg class="arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M17.3 5.71a.996.996 0 0 0-1.41 0L12 10.59 7.11 5.7A.996.996 0 1 0 5.7 7.11L10.59 12 5.7 16.89a.996.996 0 1 0 1.41 1.41L12 13.41l4.89 4.89a.996.996 0 1 0 1.41-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"/></svg></a>
-        <a href="adminhome.html" id="overview" >Dashboard Overview</a>
-        <a href="fundmanagerapplications.html" id="fundManagerApplications">Fund Manager Applications</a>
-        <a href="usermanagement.html" id="user" >User Management</a>
+      <a href="#" onclick="closeNav()"
+        ><svg
+          class="arrow"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+        >
+          <path d="M0 0h24v24H0V0z" fill="none" />
+          <path
+            d="M17.3 5.71a.996.996 0 0 0-1.41 0L12 10.59 7.11 5.7A.996.996 0 1 0 5.7 7.11L10.59 12 5.7 16.89a.996.996 0 1 0 1.41 1.41L12 13.41l4.89 4.89a.996.996 0 1 0 1.41-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"
+          /></svg
+      ></a>
+      <a href="adminhome.html" id="overview">Dashboard Overview</a>
+      <a href="fundmanagerapplications.html" id="fundManagerApplications"
+        >Fund Manager Applications</a
+      >
+      <a href="usermanagement.html" id="user">User Management</a>
     </div>
 
     <div id="dashboard" class="container">
-        <table id="usersTable">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="user-table-body">
-                <!-- User data will be populated here -->
-            </tbody>
-        </table>
-        
+      <table id="usersTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="user-table-body">
+          <!-- User data will be populated here -->
+        </tbody>
+      </table>
     </div>
 
     <script type="module">
-        const dashboard = document.getElementById('dashboard');
-        const users = document.getElementById('users');
-        const usermanagement = document.getElementById('usermanagement');
+      const dashboard = document.getElementById("dashboard");
+      const users = document.getElementById("users");
+      const usermanagement = document.getElementById("usermanagement");
 
-        import {
-            initializeApp
-        } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
-            authDomain: "fir-sd-22d1a.firebaseapp.com",
-            databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
-            projectId: "fir-sd-22d1a",
-            storageBucket: "fir-sd-22d1a.appspot.com",
-            messagingSenderId: "526172429927",
-            appId: "1:526172429927:web:51ae427f7acfa1d925bec2"
-        };
+      const firebaseConfig = {
+        apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
+        authDomain: "fir-sd-22d1a.firebaseapp.com",
+        databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
+        projectId: "fir-sd-22d1a",
+        storageBucket: "fir-sd-22d1a.appspot.com",
+        messagingSenderId: "526172429927",
+        appId: "1:526172429927:web:51ae427f7acfa1d925bec2",
+      };
 
+      const app = initializeApp(firebaseConfig);
 
-        const app = initializeApp(firebaseConfig);
+      import {
+        getDatabase,
+        ref,
+        child,
+        get,
+        set,
+        update,
+        remove,
+        onValue,
+      } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+      const db = getDatabase();
 
-        import {getDatabase,ref,child,get,set,update,remove,onValue} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js"
-        const db = getDatabase();
+      function createNewRowFundManager(data) {
+        let Table = document.getElementById("usersTable"); // Assuming there's a table with the ID 'usersTable'
+        data.forEach((manager) => {
+          let id = manager.id;
+          let company = manager.company;
+          let deadline = manager.deadline;
+          let description = manager.description;
+          let email = manager.email;
+          let fundManager = manager.fundmanager;
+          let motivation = manager.motivation;
+          let status = manager.status;
 
-        
-        function createNewRowFundManager(data) {
-            let Table = document.getElementById('usersTable'); // Assuming there's a table with the ID 'usersTable'
-            data.forEach(manager => {
-                let id = manager.id;
-                let company = manager.company;
-                let deadline = manager.deadline;
-                let description = manager.description;
-                let email = manager.email;
-                let fundManager = manager.fundmanager;
-                let motivation = manager.motivation;
-                let status = manager.status;
+          let newTableRow = document.createElement("tr");
 
-                let newTableRow = document.createElement('tr');
+          let companyCell = document.createElement("td");
+          let deadlineCell = document.createElement("td");
+          let descriptionCell = document.createElement("td");
+          let emailCell = document.createElement("td");
+          let fundManagerCell = document.createElement("td");
+          let motivationCell = document.createElement("td");
+          let statusCell = document.createElement("td");
+          let roleCell = document.createElement("td");
+          let ApplicantView = document.createElement("td");
+          let viewButton = document.createElement("button");
+          let changeStatusBtn = document.createElement("button");
+          let blockBtn = document.createElement("button");
 
-                let companyCell = document.createElement('td');
-                let deadlineCell = document.createElement('td');
-                let descriptionCell = document.createElement('td');
-                let emailCell = document.createElement('td');
-                let fundManagerCell = document.createElement('td');
-                let motivationCell = document.createElement('td');
-                let statusCell = document.createElement('td');
-                let roleCell = document.createElement('td');
-                let ApplicantView = document.createElement('td');
-                let viewButton = document.createElement('button');
-                let changeStatusBtn = document.createElement('button');
-                let blockBtn = document.createElement('button');
+          roleCell.textContent = "Fund Manager";
+          companyCell.textContent = company;
+          deadlineCell.textContent = deadline;
+          descriptionCell.textContent = description;
+          emailCell.textContent = email;
+          fundManagerCell.textContent = fundManager;
+          motivationCell.textContent = motivation;
+          statusCell.textContent = status;
+          viewButton.setAttribute("id", `${id}`);
+          viewButton.className = "button-view";
+          changeStatusBtn.className = "button-edit";
+          blockBtn.className = "button-toggle";
+          viewButton.textContent = "view";
+          changeStatusBtn.textContent = "Change Status";
+          blockBtn.textContent = "Block";
 
-                roleCell.textContent = 'Fund Manager';
-                companyCell.textContent = company;
-                deadlineCell.textContent = deadline;
-                descriptionCell.textContent = description;
-                emailCell.textContent = email;
-                fundManagerCell.textContent = fundManager;
-                motivationCell.textContent = motivation;
-                statusCell.textContent = status;
-                viewButton.setAttribute('id', `${id}`);
-                viewButton.className = 'button-view';
-                changeStatusBtn.className = 'button-edit';
-                blockBtn.className = 'button-toggle'; 
-                viewButton.textContent = 'view';
-                changeStatusBtn.textContent = 'Change Status';
-                blockBtn.textContent = 'Block';
+          ApplicantView.append(viewButton);
+          ApplicantView.append(changeStatusBtn);
+          ApplicantView.append(blockBtn);
 
-                ApplicantView.append(viewButton);
-                ApplicantView.append(changeStatusBtn);
-                ApplicantView.append(blockBtn);
+          viewButton.onclick = function () {
+            let id = viewButton.id;
+            viewUserDetails1(id);
+          };
+          blockBtn.onclick = function () {
+            if (statusCell.textContent != "Blocked") {
+              statusCell.textContent = "Blocked";
+            }
+            update(ref(db, "FundManagers/" + id), {
+              status: statusCell.textContent,
+            })
+              .then(() => {
+                alert("Data updated succesfully");
+              })
+              .catch((error) => {
+                alert("unsuccesful");
+              });
+          };
+          changeStatusBtn.onclick = function () {
+            if (statusCell.textContent == "Blocked") {
+              statusCell.textContent = "Active";
+            }
+            update(ref(db, "FundManagers/" + id), {
+              status: statusCell.textContent,
+            })
+              .then(() => {
+                alert("Data updated succesfully");
+              })
+              .catch((error) => {
+                alert("unsuccesful");
+              });
+          };
 
-                viewButton.onclick = function() {
-                    let id = viewButton.id;
-                    viewUserDetails1(id);
-                };
+          newTableRow.append(fundManagerCell);
+          newTableRow.append(emailCell);
+          newTableRow.append(roleCell);
+          newTableRow.append(statusCell);
+          newTableRow.append(ApplicantView);
 
-                newTableRow.append(fundManagerCell);
-                newTableRow.append(emailCell);
-                newTableRow.append(roleCell);
-                newTableRow.append(statusCell);
-                newTableRow.append(ApplicantView);
-
-                Table.append(newTableRow);
-            });
-}
-
-
-        function createNewRowStudent(data) {
-            let Table = document.getElementById('usersTable'); // Assuming there's a table with the ID 'usersTable'
-            data.forEach(student => {
-                let id = student.id;
-                let date = student.date;
-                let degree = student.degree;
-                let email = student.email;
-                let major = student.major;
-                let motivation = student.motivation;
-                let name = student.name;
-                let status = student.status;
-                let surname = student.surname;
-                let title = student.title;
-                let university = student.university;
-
-                let newTableRow = document.createElement('tr');
-
-                let dateCell = document.createElement('td');
-                let degreeCell = document.createElement('td');
-                let emailCell = document.createElement('td');
-                let majorCell = document.createElement('td');
-                let motivationCell = document.createElement('td');
-                let nameCell = document.createElement('td');
-                let statusCell = document.createElement('td');
-                let surnameCell = document.createElement('td');
-                let titleCell = document.createElement('td');
-                let universityCell = document.createElement('td');
-                let roleCell = document.createElement('td');
-                let ApplicantView = document.createElement('td');
-                let viewButton = document.createElement('button');
-                let changeStatusBtn = document.createElement('button');
-                let blockBtn = document.createElement('button');
-
-
-                roleCell.textContent = 'Student';
-                dateCell.textContent = date;
-                degreeCell.textContent = degree;
-                emailCell.textContent = email;
-                majorCell.textContent = major;
-                motivationCell.textContent = motivation;
-                nameCell.textContent = `${title} ${name} ${surname}`;
-                statusCell.textContent = status;
-                universityCell.textContent = university;
-                viewButton.setAttribute('id', `${id}`);
-                viewButton.className = 'button-view';
-                changeStatusBtn.className = 'button-edit';
-                blockBtn.className = 'button-toggle'; 
-                viewButton.textContent = 'view';
-                changeStatusBtn.textContent = 'Change Status';
-                blockBtn.textContent = 'Block';
-
-                ApplicantView.append(viewButton);
-                ApplicantView.append(changeStatusBtn);
-                ApplicantView.append(blockBtn);
-
-                viewButton.onclick = function() {
-                    let id = viewButton.id;
-                    viewUserDetails2(id);
-                };
-
-                newTableRow.append(nameCell);
-                newTableRow.append(emailCell);
-                newTableRow.append(roleCell);
-                newTableRow.append(statusCell);
-                newTableRow.append(ApplicantView);
-
-                Table.append(newTableRow);
-            });
-        }
-
-        //function to get relevant info from students in our database
-        function getAllData() {
-            const dbref = ref(db);
-            get(child(dbref, "FundManagers/"))
-                .then((snapshot) => {
-                    if (snapshot.exists()) {
-                        let Students = [];
-                        // let pendingStudents=[];
-                        let id1 = '';
-                        snapshot.forEach(childSnapShot => {
-                            id1 = childSnapShot.key;
-                            if (childSnapShot.val().status == 'Active' || 'pending') {
-                                let data = childSnapShot.val();
-                                data.id = id1;
-                                Students.push(data);
-                            }
-                        });
-
-                        if (Students.length === 0) {
-                            const h2 = document.getElementById('pending');
-                            h2.innerText = "No Pending Applications"
-                        } else {
-                            createNewRowFundManager(Students);
-                        }
-                    } else {
-                        const h2 = document.getElementById('pending');
-                        h2.innerText = "No Active Applications"
-                    }
-
-
-                }).catch((error) => {
-                    console.log(error);
-                });
-            
-            // Populate table with students data
-            get(child(dbref, "Students/"))
-                .then((snapshot) => {
-                    if (snapshot.exists()) {
-                        let studentsData = [];
-                        let id1 = '';
-                        snapshot.forEach(childSnapShot => {
-                            id1 = childSnapShot.key;
-                            let data = childSnapShot.val();
-                            data.id = id1;
-                            studentsData.push(data);
-                        });
-
-                        if (studentsData.length === 0) {
-                            const h2 = document.getElementById('students');
-                            h2.innerText = "No Students Found"
-                        } else {
-                            createNewRowStudent(studentsData); // Assuming createNewRow function populates the table
-                        }
-                    } else {
-                        const h2 = document.getElementById('students');
-                        h2.innerText = "No Students Found"
-                    }
-                });
-
-
-        }
-
-        //eventlistner fetches relevant student data to display on fundManager Dashboard
-        document.addEventListener('DOMContentLoaded', function() {
-            getAllData();
+          Table.append(newTableRow);
         });
+      }
 
-        function viewUserDetails(name) {
-            window.location.href = 'fundManager.html';
-        }
+      function createNewRowStudent(data) {
+        let Table = document.getElementById("usersTable"); // Assuming there's a table with the ID 'usersTable'
+        data.forEach((student) => {
+          let id = student.id;
+          let date = student.date;
+          let degree = student.degree;
+          let email = student.email;
+          let major = student.major;
+          let motivation = student.motivation;
+          let name = student.name;
+          let status = student.status;
+          let surname = student.surname;
+          let title = student.title;
+          let university = student.university;
 
-        function viewUserDetails1(id) {
-            sessionStorage.setItem('info', id);
-            window.location.href = 'fundManagerProfile.html';
-        }
+          let newTableRow = document.createElement("tr");
 
-        function viewUserDetails2(id) {
-            sessionStorage.setItem('info', id);
-            window.location.href = 'student.html';
-        }
+          let dateCell = document.createElement("td");
+          let degreeCell = document.createElement("td");
+          let emailCell = document.createElement("td");
+          let majorCell = document.createElement("td");
+          let motivationCell = document.createElement("td");
+          let nameCell = document.createElement("td");
+          let statusCell = document.createElement("td");
+          let surnameCell = document.createElement("td");
+          let titleCell = document.createElement("td");
+          let universityCell = document.createElement("td");
+          let roleCell = document.createElement("td");
+          let ApplicantView = document.createElement("td");
+          let viewButton = document.createElement("button");
+          let changeStatusBtn = document.createElement("button");
+          let blockBtn = document.createElement("button");
+
+          roleCell.textContent = "Student";
+          dateCell.textContent = date;
+          degreeCell.textContent = degree;
+          emailCell.textContent = email;
+          majorCell.textContent = major;
+          motivationCell.textContent = motivation;
+          nameCell.textContent = `${title} ${name} ${surname}`;
+          statusCell.textContent = status;
+          universityCell.textContent = university;
+          viewButton.setAttribute("id", `${id}`);
+          viewButton.className = "button-view";
+          changeStatusBtn.className = "button-edit";
+          blockBtn.className = "button-toggle";
+          viewButton.textContent = "view";
+          changeStatusBtn.textContent = "Change Status";
+          blockBtn.textContent = "Block";
+
+          ApplicantView.append(viewButton);
+          ApplicantView.append(changeStatusBtn);
+          ApplicantView.append(blockBtn);
+
+          viewButton.onclick = function () {
+            let id = viewButton.id;
+            viewUserDetails2(id);
+          };
+          blockBtn.onclick = function () {
+            if (statusCell.textContent != "Blocked") {
+              statusCell.textContent = "Blocked";
+            }
+            update(ref(db, "Applicants/" + id), {
+              status: statusCell.textContent,
+            })
+              .then(() => {
+                alert("Data updated succesfully");
+              })
+              .catch((error) => {
+                alert("unsuccesful");
+              });
+          };
+          changeStatusBtn.onclick = function () {
+            if (statusCell.textContent == "Blocked") {
+              statusCell.textContent = "Active";
+            }
+            update(ref(db, "Applicants/" + id), {
+              status: statusCell.textContent,
+            })
+              .then(() => {
+                alert("Data updated succesfully");
+              })
+              .catch((error) => {
+                alert("unsuccesful");
+              });
+          };
+
+          newTableRow.append(nameCell);
+          newTableRow.append(emailCell);
+          newTableRow.append(roleCell);
+          newTableRow.append(statusCell);
+          newTableRow.append(ApplicantView);
+
+          Table.append(newTableRow);
+        });
+      }
+
+      //function to get relevant info from students in our database
+      function getAllData() {
+        const dbref = ref(db);
+        get(child(dbref, "FundManagers/"))
+          .then((snapshot) => {
+            if (snapshot.exists()) {
+              let Students = [];
+              // let pendingStudents=[];
+              let id1 = "";
+              snapshot.forEach((childSnapShot) => {
+                id1 = childSnapShot.key;
+                if (childSnapShot.val().status == "Active" || "pending") {
+                  let data = childSnapShot.val();
+                  data.id = id1;
+                  Students.push(data);
+                }
+              });
+
+              if (Students.length === 0) {
+                const h2 = document.getElementById("pending");
+                h2.innerText = "No Pending Applications";
+              } else {
+                createNewRowFundManager(Students);
+              }
+            } else {
+              const h2 = document.getElementById("pending");
+              h2.innerText = "No Active Applications";
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+
+        // Populate table with students data
+        get(child(dbref, "Applicants/")).then((snapshot) => {
+          if (snapshot.exists()) {
+            let studentsData = [];
+            let id1 = "";
+            snapshot.forEach((childSnapShot) => {
+              id1 = childSnapShot.key;
+              let data = childSnapShot.val();
+              data.id = id1;
+              studentsData.push(data);
+            });
+
+            if (studentsData.length === 0) {
+              const h2 = document.getElementById("students");
+              h2.innerText = "No Students Found";
+            } else {
+              createNewRowStudent(studentsData); // Assuming createNewRow function populates the table
+            }
+          } else {
+            const h2 = document.getElementById("students");
+            h2.innerText = "No Students Found";
+          }
+        });
+      }
+
+      //eventlistner fetches relevant student data to display on fundManager Dashboard
+      document.addEventListener("DOMContentLoaded", function () {
+        getAllData();
+      });
+
+      function viewUserDetails(name) {
+        window.location.href = "fundManager.html";
+      }
+
+      function viewUserDetails1(id) {
+        sessionStorage.setItem("info", id);
+        window.location.href = "fundManagerProfile.html";
+      }
+
+      function viewUserDetails2(id) {
+        sessionStorage.setItem("info", id);
+        window.location.href = "student.html";
+      }
     </script>
-</body>
+  </body>
 </html>
-
-
-
-
-
