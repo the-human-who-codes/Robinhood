@@ -1,3 +1,4 @@
+import e from "cors";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
 import {
   getAuth,
@@ -36,17 +37,30 @@ googleLogin.addEventListener("click", function () {
       // Check if the user exists in the FundManagers table
       get(child(dbref, "FundManagers/" + uid))
         .then((snapshot) => {
+
           if (snapshot.exists()) {
+            if(snapshot.val().status=="Blocked"){
+              alert("user blocked cannot access this page")
+              window.location.href="./blocked.html";
+            }else{
             // User is a fund manager, redirect to the fund manager dashboard
-            window.location.href = "./fundManager/fundingmenager.html";
+                  window.location.href = "./fundManager/fundingmenager.html";
+                }
           } else {
             // Check if the user exists in the Students table
             get(child(dbref, "Applicants/" + uid))
               .then((snapshot) => {
+
+
                 if (snapshot.exists()) {
+                  if(snapshot.val().status=="Blocked"){
+                   alert("user blocked cannot access this page")
+                   window.location.href="./blocked.html";
+                 }
                   // User is a student, redirect to the student dashboard
-                
+                else{
                   window.location.href = "./fundApplicant/dashboard.html";
+                }
                 } else {
                   // User not found, redirect to registration page
                   console.log('please register');
