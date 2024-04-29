@@ -92,6 +92,16 @@
             height: 20px;
             fill: white;
         }
+
+        .profileCard{
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+
+        
     </style>
 </head>
 
@@ -114,7 +124,7 @@
     <div class="container">
         <div class="content">
             <h2>My Profile</h2>
-            <div class="profile" id="profile">
+            <div class="profileCard" id="profileDisplay">
                 <!-- Your profile information will be displayed here -->
             </div>
         </div>
@@ -147,16 +157,16 @@
         
         // Function to fetch and display user profile
         function fetchAndDisplayProfile() {
-            const profileContainer = document.getElementById("profile");
+            const profileContainer = document.getElementById("profileDisplay");
 
-            get(child(ref(db), "StudentApplicant/"+user.uid))
+            get(child(ref(db), "Applicants/"+user.uid))
                 .then((snapshot) => {
                     if (snapshot.exists()) {
                         const profileData = snapshot.val();
 
                         // Create profile HTML elements
                         const profileDiv = document.createElement("div");
-                        profileDiv.classList.add("profile");
+                        
 
                         for (const key in profileData) {
                             const detail = document.createElement("p");

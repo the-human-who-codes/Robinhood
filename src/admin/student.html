@@ -52,13 +52,13 @@
         const btnGoBack=document.getElementById('goBack');
         
         
-        const id = sessionStorage.getItem('info');
+        const uid = sessionStorage.getItem('info');
                    
 
         function RetrieveData(){
             const  dbRef=ref(db);
             
-            get(child(dbRef,'Students/'+id)).then((snapshot)=>{
+            get(child(dbRef,'StudentApplicant/'+iud)).then((snapshot)=>{
                 if(snapshot.exists()){
                    const name =snapshot.val().name+snapshot.val().surname;
                    const eMail=snapshot.val().email;
@@ -78,7 +78,7 @@
     
                 }
                 else{
-                   alert("Employee does not exist") ;
+                   alert("User does not exist") ;
                 }
             }).catch((error)=>{
                 console.log(error);

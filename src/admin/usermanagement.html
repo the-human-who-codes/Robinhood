@@ -165,7 +165,7 @@
                 emailCell.textContent = email;
                 majorCell.textContent = major;
                 motivationCell.textContent = motivation;
-                nameCell.textContent = `${title} ${name} ${surname}`;
+                nameCell.textContent = `${name} ${surname}`;
                 statusCell.textContent = status;
                 universityCell.textContent = university;
                 viewButton.setAttribute('id', `${id}`);
@@ -184,7 +184,7 @@
                     let id = viewButton.id;
                     viewUserDetails2(id);
                 };
-
+                
                 newTableRow.append(nameCell);
                 newTableRow.append(emailCell);
                 newTableRow.append(roleCell);
@@ -230,7 +230,7 @@
                 });
             
             // Populate table with students data
-            get(child(dbref, "Students/"))
+            get(child(dbref, "StudentApplicant/"))
                 .then((snapshot) => {
                     if (snapshot.exists()) {
                         let studentsData = [];
