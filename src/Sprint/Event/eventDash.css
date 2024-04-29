@@ -1,0 +1,80 @@
+/* Reset default margin and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* Header styles */
+header {
+    background-color: #007bff;
+    color: #fff;
+    padding: 20px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+nav ul {
+    list-style-type: none;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+nav ul li a.active {
+    font-weight: bold;
+}
+
+/* Main styles */
+main {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+section {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 20px;
+    flex-basis: 48%;
+}
+
+.summary h2, .notifications h2 {
+    margin-bottom: 10px;
+}
+
+.summary dl, .notifications ul {
+    list-style-type: none;
+}
+
+.summary dl dt, .notifications ul li {
+    margin-bottom: 5px;
+}
+
+/* Footer styles */
+footer {
+    background-color: #007bff;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
