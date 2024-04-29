@@ -54,13 +54,16 @@ async function displayAllFundingOpportunities() {
 
 async function displaySubmittedFundingOpportunities() {
     try {
+        let user = JSON.parse(sessionStorage.getItem("user"));
+        const uid = user.uid;
+
         const snapshot = await get(fundingOpportunitiesRef);
         if (snapshot.exists()) {
             const fundingOpportunities = snapshot.val();
             const fundingOpportunitiesList = document.getElementById('fundingOpportunitiesList');
             fundingOpportunitiesList.innerHTML = ''; 
             for (const [id, opportunity] of Object.entries(fundingOpportunities || {})) {
-                if (opportunity.status && (opportunity.status === 'rejected' || opportunity.status === 'accepted')) {
+                if (opportunity.status && (opportunity.status === 'rejected' || opportunity.status === 'accepted') && opportunity.uid === uid) {
                     displayFundingOpportunity({ id, ...opportunity });
                 }
             }
@@ -71,15 +74,18 @@ async function displaySubmittedFundingOpportunities() {
         console.error('Error fetching funding opportunities:', error);
     }
 }
+
 async function displayInProgressFundingOpportunities() {
     try {
+        let user = JSON.parse(sessionStorage.getItem("user"));
+        const uid = user.uid;
         const snapshot = await get(fundingOpportunitiesRef);
         if (snapshot.exists()) {
             const fundingOpportunities = snapshot.val();
             const fundingOpportunitiesList = document.getElementById('fundingOpportunitiesList');
             fundingOpportunitiesList.innerHTML = ''; 
             for (const [id, opportunity] of Object.entries(fundingOpportunities || {})) {
-                if (!opportunity.status) {
+                if (!opportunity.status && opportunity.uid ===uid) {
                     displayFundingOpportunity({ id, ...opportunity });
                 }
             }
@@ -180,12 +186,13 @@ async function displayDetailedFundingOpportunity(fundingOpportunity) {
 async function updateFundingOpportunity(id, updatedData) {
     try {
         const fundingRef = ref(db, `fund_manager-applications/${id}`);
-        await set(fundingRef, updatedData);
+        await update(fundingRef, updatedData); // Use update method instead of set
         console.log('Funding opportunity updated successfully');
     } catch (error) {
         console.error('Error updating funding opportunity:', error);
     }
 }
+
 
 async function deleteFundingOpportunity(id) {
     try {

@@ -16,7 +16,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getDatabase(firebaseApp);
-const fundingOpportunitiesRef = ref(db, 'funding-opportunities');
+const fundingOpportunitiesRef = ref(db, 'fund_manager-applications');
 
 async function createFundingOpportunity(title, description, deadline, motivation, uid) {
     try {
