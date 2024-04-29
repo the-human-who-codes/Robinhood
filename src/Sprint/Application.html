@@ -72,9 +72,8 @@
          const db=getDatabase();
          const storage1=getStorage();
 
-         const uniqueId = Date.now();
-        let trans='';
-        let pay='';
+         const uniqueId = Date.now();//user ID for testing only
+        
          const uploadForm = document.getElementById('uploadForm');
          uploadForm.addEventListener('submit', function(event) {
             event.preventDefault();
