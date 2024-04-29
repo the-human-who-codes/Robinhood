@@ -37,16 +37,25 @@ googleLogin.addEventListener("click", function () {
       get(child(dbref, "FundManagers/" + uid))
         .then((snapshot) => {
           if (snapshot.exists()) {
+            if(snapshot.val().status=="Blocked"){
+              alert("User is blocked")
+              window.location.href="./blocked.html";
+            }else{
             // User is a fund manager, redirect to the fund manager dashboard
-            window.location.href = "./fundManager/fundingmenager.html";
+            window.location.href = "./fundManager/fundingmenager.html";}
           } else {
             // Check if the user exists in the Students table
             get(child(dbref, "Applicants/" + uid))
               .then((snapshot) => {
                 if (snapshot.exists()) {
+                  if(snapshot.val().status=="Blocked"){
+                    alert("User is blocked")
+                    window.location.href="./blocked.html";
+                  }
+                  else{
                   // User is a student, redirect to the student dashboard
                 
-                  window.location.href = "./fundApplicant/dashboard.html";
+                  window.location.href = "./fundApplicant/dashboard.html";}
                 } else {
                   // User not found, redirect to registration page
                   console.log('please register');
