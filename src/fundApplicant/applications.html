@@ -3,14 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Applicant Dashboard</title>
+    <title>My Applications</title>
     <style>
       /* Reset CSS */
       * {
         box-sizing: border-box;
         margin: 0;
         padding: 0;
-        text-align: center;
       }
 
       /* Global styles */
@@ -229,15 +228,15 @@
 
   <body>
     <header>
-      <h1>Applicant Dashboard</h1>
+      <h1>My Applications</h1>
       <nav>
         <ul>
           <li>
-            <a href="dashboard.html" class="active" id="Dash">Dashboard</a>
+            <a href="dashboard.html"  id="Dash">Dashboard</a>
           </li>
           <li><a href="bursaries.html" id="opportunities">Bursaries</a></li>
           <li>
-            <a href="applications.html" id="applications">Applications</a>
+            <a href="applications.html" class="active" id="applications">Applications</a>
           </li>
           <li><a href="profile.html" id="profile">Profile</a></li>
           <li><a href="../index.html" id="logout">Logout</a></li>
@@ -245,108 +244,13 @@
       </nav>
     </header>
 
-    <main>
-      <section class="summary">
-        <h2>Summary</h2>
-        <p>
-          Welcome to your student dashboard. Here's a summary of your bursary
-          applications:
-        </p>
-        <!-- Display summary of applications -->
-        <dl class="application-summary">
-          <dt>Total Applications:</dt>
-          <dd>10</dd>
-          <dt>Approved Applications:</dt>
-          <dd>5</dd>
-          <dt>Pending Applications:</dt>
-          <dd>3</dd>
-          <dt>Rejected Applications:</dt>
-          <dd>2</dd>
-        </dl>
-      </section>
-
-      <section class="notifications">
-        <h2>Notifications</h2>
-        <p>You have 2 new notifications. Check them out!</p>
-        <!-- Display notifications -->
-        <ul>
-          <li>New bursary opportunity available!</li>
-          <li>Application status updated for Bursary XYZ.</li>
-        </ul>
-      </section>
-    </main>
-
-    <footer>
-      <p>&copy; 2024 Applicant Dashboard. All rights reserved.</p>
-    </footer>
-
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-
-      const firebaseConfig = {
-        apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
-        authDomain: "fir-sd-22d1a.firebaseapp.com",
-        databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
-        projectId: "fir-sd-22d1a",
-        storageBucket: "fir-sd-22d1a.appspot.com",
-        messagingSenderId: "526172429927",
-        appId: "1:526172429927:web:51ae427f7acfa1d925bec2",
-      };
-
-      const app = initializeApp(firebaseConfig);
-
-      import {
-        getDatabase,
-        ref,
-        child,
-        get,
-      } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
-      const db = getDatabase();
-
-      function fetchAndPopulateOpportunities() {
-        const fundingOpportunitiesContainer = document.getElementById(
-          "funding-opportunities"
-        );
-
-        get(child(ref(db), "funding-advertisements/"))
-          .then((snapshot) => {
-            if (snapshot.exists()) {
-              snapshot.forEach((childSnapshot) => {
-                const opportunityData = childSnapshot.val();
-
-                const opportunityDiv = document.createElement("div");
-                opportunityDiv.classList.add("opportunity");
-
-                const opportunityTitle = document.createElement("h3");
-                opportunityTitle.textContent = opportunityData["bursary-title"];
-
-                const opportunityDescription = document.createElement("p");
-                opportunityDescription.textContent =
-                  "Description: " + opportunityData.description;
-
-                const opportunityDeadline = document.createElement("p");
-                opportunityDeadline.textContent =
-                  "Deadline: " + opportunityData.deadline;
-
-                opportunityDiv.appendChild(opportunityTitle);
-                opportunityDiv.appendChild(opportunityDescription);
-                opportunityDiv.appendChild(opportunityDeadline);
-
-                fundingOpportunitiesContainer.appendChild(opportunityDiv);
-              });
-            } else {
-              const noOpportunitiesMessage = document.createElement("p");
-              noOpportunitiesMessage.textContent =
-                "No funding opportunities available";
-              fundingOpportunitiesContainer.appendChild(noOpportunitiesMessage);
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
-
-      fetchAndPopulateOpportunities();
-    </script>
+    <div class="container">
+      <div class="content">
+        <h2>My Applications</h2>
+        <div class="applications" id="applications">
+          <!-- Your past applications will be displayed here -->
+        </div>
+      </div>
+    </div>
   </body>
 </html>

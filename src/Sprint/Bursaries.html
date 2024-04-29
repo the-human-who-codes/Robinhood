@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bursaries</title>
+    <link rel="stylesheet" href="Opportunities.css">
+</head>
+<body>
+    <header>
+        <h1>Student Dashboard</h1>
+        <nav>
+            <ul>
+                <li><a href="studentDashboard.html" class="active" id="Dash">Dashboard</a></li>
+                <li><a href="Bursaries.html" id="opportunities">Bursaries</a></li>
+                <li><a href="applications.html" id="applications">Applications</a></li>
+                <li><a href="profile.html" id="profile">Profile</a></li>
+                <li><a href="logout.html" id="logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h2 id="pending">Available Bursaries</h2>
+                <table id="BursaryTable">
+                    <thead id="BursaryHead">
+                        <tr id="headings">
+                            <th >Bursary</th>
+                            <th>Contact</th>
+                            <th>Deadline</th>
+                        </tr>    
+                    </thead>
+                    <tbody id="BursaryData">
+                        <!-- Bursary Data Displayed Here -->
+                    </tbody>
+                </table>
+        </section>
+        <article id="BursaryInfo">
+
+        </article>
+    
+    </main>
+    
+    <script type="module" defer>
+         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        
+        const firebaseConfig = {
+          apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
+          authDomain: "fir-sd-22d1a.firebaseapp.com",
+          databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
+          projectId: "fir-sd-22d1a",
+          storageBucket: "fir-sd-22d1a.appspot.com",
+          messagingSenderId: "526172429927",
+          appId: "1:526172429927:web:51ae427f7acfa1d925bec2"
+        };
+      
+        
+        const app = initializeApp(firebaseConfig);
+
+        import {getDatabase,ref,child,get,set,update,remove,onValue} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js"
+        const db=getDatabase();
+
+        const Dashboard=document.getElementById("Dash");
+        const opportunities=document.getElementById("opportunities");
+        const applications=document.getElementById("applications");
+        const profile=document.getElementById("profile");
+        const logout=document.getElementById("logout");
+        const section1=document.getElementById("BursaryInfo")
+        
+
+        
+       
+
+        //get all bursary
+    function RetrieveAllBursaries(){
+        const dbref=ref(db);
+        get(child(dbref,'funding-advertisements')).then((snapshot)=>{
+             let bursaries=[];
+            snapshot.forEach(childSnapshot=>{
+                var burs=childSnapshot.val();
+                burs['id']=childSnapshot.key;
+                bursaries.push(burs);
+            
+            })
+
+            AddRow(bursaries);
+            console.log(bursaries);
+        }).catch((error)=>{
+            alert("A network issue is causing some errors with the operation")  ;
+            console.log(error);  
+         })
+    };
+
+        //basic page nav
+        function DashBoard(){
+            window.location.href = 'studentDashboard.html';
+        }
+
+        function Application(){
+            window.location.href = 'Applications.html';
+        }
+
+        function Profile(){
+            window.location.href = 'Profile.html';
+        }
+
+        function LogOut(){
+            window.location.href = 'BasicLogin.html';
+        }
+
+        function ApplicationForm(){
+            window.location.href = 'Application.html';
+        }
+
+        function rowEventListner(bursary){
+                var dynamicSection = document.getElementById("BursaryInfo");
+            
+           
+                var rows = document.querySelectorAll("#BursaryTable tbody tr");
+                rows.forEach(function(row, index) {
+                 row.addEventListener("click", function() {
+                    if(dynamicSection.childElementCount!=0){
+                        while (dynamicSection.firstChild) {
+                            dynamicSection.removeChild(dynamicSection.firstChild);
+                        }
+                    }
+                        let BursaryInfo=document.createElement('h3');
+                        let Title=document.createElement('h1');
+                        let Title1=document.createElement('h2');
+                        let Description=document.createElement('p');
+                        let Description1=document.createElement('p');
+                        let Criterea=document.createElement('p');
+                        let Criterea1=document.createElement('p');
+                        //Title.innerText="Bursary:"
+                        Title1.innerText=bursary["title"];
+                        Description.innerText="About:"
+                        Description1.innerText=bursary.description;
+                        Criterea.innerText="Criteria:"
+                        Criterea1.innerText=bursary.criteria;
+                  
+                        let viewButton=document.createElement('button');
+                        viewButton.addEventListener('click',()=>{
+                            ApplicationForm();
+                        })
+                        section1.append(Title);
+                        section1.append(Title1);
+                         section1.append(Description);
+                         section1.append(Description1);
+                         section1.append(Criterea);
+                         section1.append(Criterea1);
+                         BursaryInfo.textContent="Hello";
+                         viewButton.textContent="Apply";
+                         section1.append(viewButton);
+                    });
+                });
+      
+        }
+
+        function AddRow(bursaries){
+            let THead=document.getElementById('BursaryData');
+                let Deadline='';
+                let Bursary='';
+                let Contact='';
+                let Criteria='';
+                let Desc='';
+                let id=''; 
+             let burs={};   
+            bursaries.forEach(bursary => {
+                    id=bursary.id;
+                   Bursary=bursary["bursary-title"];
+                   Contact=bursary.contact; 
+                   Deadline=bursary.deadline;
+                   Criteria=bursary.criteria;
+                   Desc=bursary.description;
+                   burs['id']=id;
+                  burs['title']=Bursary;
+                  burs['contact']=Contact;
+                  burs['deadline']=Deadline;
+                  burs['criteria']=Criteria;
+                  burs['description']=Desc;
+                   let newTableRow=document.createElement('tr');
+                   newTableRow.setAttribute('id','row');
+                  // newTableRow.setAttribute('id',`${id}`);
+
+                   let BursaryName=document.createElement('td');
+                   let BursaryContact=document.createElement('td');
+                   let BursaryDeadline=document.createElement('td');
+                   //let BursaryInfo=document.createElement('h3');
+                   let BursaryView=document.createElement('td');
+                   //let viewButton=document.createElement('button');
+
+                   BursaryName.textContent=Bursary;
+                   BursaryContact.textContent=Contact;
+                   BursaryDeadline.textContent=Deadline;
+                  
+                    
+
+                   newTableRow.append(BursaryName);
+                   newTableRow.append(BursaryContact);
+                   newTableRow.append(BursaryDeadline);
+                   THead.append(newTableRow);
+                   
+
+            })
+           rowEventListner(burs);
+        }
+
+           // Get all the rows in the table
+        
+
+        // Loop through each row and add a click event listener
+        
+
+        Dashboard.addEventListener('click',()=>{
+            DashBoard();
+        });
+
+        applications.addEventListener('click',()=>{
+            Application();
+        })
+
+        profile.addEventListener('click',()=>{
+            Profile();
+        })
+
+        logout.addEventListener('click',()=>{
+            LogOut();
+        })
+
+        //display bursary info when page loaded
+        document.addEventListener("DOMContentLoaded", function() {
+            // Your code to be executed after the DOM content is fully loaded
+            RetrieveAllBursaries();
+        });
+
+
+        
+    </script>
+    
+</body>
+</html>

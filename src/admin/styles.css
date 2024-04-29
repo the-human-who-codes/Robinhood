@@ -1,4 +1,3 @@
-
 * {
     box-sizing: border-box;
     margin: 0;
@@ -81,6 +80,7 @@ body {
     margin: 5px 0;
     text-align: center;
 }
+
 .sidebar a:hover {
     background-color: #3e8e41;
     transform: scale(1.05);
@@ -91,12 +91,15 @@ body {
     height: 20px;
     fill: white;
 }
+
 canvas {
-    width: 100%; /* Adjust width as needed */
-    height: auto; /* Let the browser maintain aspect ratio */
+    width: 100%;
+    /* Adjust width as needed */
+    height: auto;
+    /* Let the browser maintain aspect ratio */
 }
 
-        
+
 h2 {
     margin-bottom: 10px;
     color: #347576;
@@ -123,9 +126,11 @@ p {
 }
 
 main {
-    margin-top: 10px; /* Adjust based on header height */
+    margin-top: 10px;
+    /* Adjust based on header height */
     padding: 20px;
-    margin-left: 250px; /* Adjust based on sidebar width */
+    margin-left: 250px;
+    /* Adjust based on sidebar width */
 }
 
 table {
@@ -135,10 +140,19 @@ table {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
-th, td {
+th,
+td {
     padding: 12px;
     text-align: left;
     border-bottom: 1px solid #ddd;
+    max-width: fit-content;
+}
+
+th:nth-child(5),
+td:nth-child(5) {
+    /* Target the second column */
+    width: 300px;
+    /* Set the width of the second column */
 }
 
 th {
@@ -222,7 +236,8 @@ header {
 }
 
 #dashboard {
-    z-index: 3; /* Ensure the dashboard is above other elements */
+    z-index: 3;
+    /* Ensure the dashboard is above other elements */
 }
 
 .container {
@@ -255,7 +270,8 @@ table {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
-th, td {
+th,
+td {
     padding: 12px;
     text-align: left;
     border-bottom: 1px solid #ddd;
@@ -308,6 +324,7 @@ td:last-child button:hover {
     margin: 5px 0;
     text-align: center;
 }
+
 .sidebar a:hover {
     background-color: #3e8e41;
     transform: scale(1.05);
