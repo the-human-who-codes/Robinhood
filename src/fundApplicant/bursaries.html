@@ -10,13 +10,13 @@
         box-sizing: border-box;
         margin: 0;
         padding: 0;
-        text-align: center;
       }
 
       /* Global styles */
       body {
         font-family: Arial, sans-serif;
         background-color: #f4f4f4;
+        
       }
 
       header {
@@ -26,7 +26,7 @@
         text-align: center;
         position: fixed;
         width: 100%;
-        position: static;
+        position:static;
         z-index: 2;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         transition: left 0.5s;
@@ -143,6 +143,10 @@
         padding: 0; /* Remove default padding */
       }
 
+      nav ul li a.active {
+        font-weight: bold;
+      }
+
       header nav li {
         margin-right: 10px; /* Adjust spacing between list items */
       }
@@ -160,70 +164,6 @@
         background-color: #3e8e41;
         transform: scale(1.05);
       }
-
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-      }
-
-      header {
-        background-color: #347576;
-        color: #fff;
-        padding: 20px;
-        text-align: center;
-      }
-
-      header h1 {
-        margin: 0;
-      }
-
-      nav ul {
-        list-style-type: none;
-        padding: 0;
-      }
-
-      nav ul li {
-        display: inline;
-        margin-right: 20px;
-      }
-
-      nav ul li a {
-        color: #fff;
-        text-decoration: none;
-      }
-
-      nav ul li a.active {
-        font-weight: bold;
-      }
-
-      main {
-        padding: 20px;
-      }
-
-      section {
-        margin-bottom: 30px;
-      }
-
-      .summary {
-        background-color: #f0f0f0;
-        padding: 20px;
-      }
-
-      .notifications {
-        background-color: #eaeaea;
-        padding: 20px;
-      }
-
-      footer {
-        background-color: #347576;
-        color: #fff;
-        text-align: center;
-        padding: 10px;
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-      }
     </style>
   </head>
 
@@ -233,9 +173,9 @@
       <nav>
         <ul>
           <li>
-            <a href="dashboard.html" class="active" id="Dash">Dashboard</a>
+            <a href="dashboard.html"  id="Dash">Dashboard</a>
           </li>
-          <li><a href="bursaries.html" id="opportunities">Bursaries</a></li>
+          <li><a href="bursaries.html" class="active" id="opportunities">Bursaries</a></li>
           <li>
             <a href="applications.html" id="applications">Applications</a>
           </li>
@@ -245,36 +185,12 @@
       </nav>
     </header>
 
-    <main>
-      <section class="summary">
-        <h2>Summary</h2>
-        <p>
-          Welcome to your student dashboard. Here's a summary of your bursary
-          applications:
-        </p>
-        <!-- Display summary of applications -->
-        <dl class="application-summary">
-          <dt>Total Applications:</dt>
-          <dd>10</dd>
-          <dt>Approved Applications:</dt>
-          <dd>5</dd>
-          <dt>Pending Applications:</dt>
-          <dd>3</dd>
-          <dt>Rejected Applications:</dt>
-          <dd>2</dd>
-        </dl>
-      </section>
-
-      <section class="notifications">
-        <h2>Notifications</h2>
-        <p>You have 2 new notifications. Check them out!</p>
-        <!-- Display notifications -->
-        <ul>
-          <li>New bursary opportunity available!</li>
-          <li>Application status updated for Bursary XYZ.</li>
-        </ul>
-      </section>
-    </main>
+    <div class="container">
+      <div class="content">
+        <h2>Funding Opportunities</h2>
+        <div class="funding-opportunities" id="funding-opportunities"></div>
+      </div>
+    </div>
 
     <footer>
       <p>&copy; 2024 Applicant Dashboard. All rights reserved.</p>

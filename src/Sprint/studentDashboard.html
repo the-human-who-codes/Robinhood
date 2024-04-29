@@ -51,58 +51,7 @@
     <footer>
         <p>&copy; 2024 Student Bursary Portal</p>
     </footer>
-    <script defer>
-        const Dashboard=document.getElementById("Dash");
-        const opportunities=document.getElementById("opportunities");
-        const applications=document.getElementById("applications");
-        const profile=document.getElementById("profile");
-        const logout=document.getElementById("logout");
 
-
-      
-
-        function Opportunity(){
-            window.location.href = 'Bursaries.html';
-        }
-
-        function Application(){
-            window.location.href = 'Applications.html';
-        }
-
-        function Profile(){
-            window.location.href = 'Profile.html';
-        }
-
-        function LogOut(){
-            window.location.href = 'BasicLogin.html';
-        }
-
-        function DashBoard(){
-            window.location.href = 'studentDashboard.html';
-        }
-
-        Dashboard.addEventListener('click',()=>{
-            DashBoard();
-        });
-
-        opportunities.addEventListener('click',()=>{
-            Opportunity();
-        });
-
-        applications.addEventListener('click',()=>{
-            Application();
-        });
-
-        profile.addEventListener('click',()=>{
-            Profile();
-        });
-
-        logout.addEventListener('click',()=>{
-            LogOut();
-        });
-
-        
-    </script>
 </body>
 </html>
 
