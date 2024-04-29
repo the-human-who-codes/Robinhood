@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Funding Dashboard</title>
+    <link rel="stylesheet" href="eventDash.css">
+</head>
+<body>
+    <header>
+        <h1>Event Funding Dashboard</h1>
+        <nav>
+            <ul>
+                <li><a href="EventDashboard.html" class="active" id="Dash">Dashboard</a></li>
+                <li><a href="eventOpportunities.html" id="opportunities">Event Opportunities</a></li>
+                <li><a  id="applications">Applications</a></li>
+                <li><a  id="profile">Profile</a></li>
+                <li><a  id="logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="summary">
+            <h2>Summary</h2>
+            <p>Welcome to your event funding dashboard. Here's a summary of your event funding applications:</p>
+            <!-- Display summary of applications -->
+            <dl class="application-summary">
+                <dt>Total Applications:</dt>
+                <dd>10</dd>
+                <dt>Approved Applications:</dt>
+                <dd>5</dd>
+                <dt>Pending Applications:</dt>
+                <dd>3</dd>
+                <dt>Rejected Applications:</dt>
+                <dd>2</dd>
+            </dl>
+        </section>
+
+        <section class="notifications">
+            <h2>Notifications</h2>
+            <p>You have 2 new notifications. Check them out!</p>
+            <!-- Display notifications -->
+            <ul>
+                <li>New event funding opportunity available!</li>
+                <li>Application status updated for Event Funding XYZ.</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Event Funding Portal</p>
+    </footer>
+
+</body>
+</html>
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+    <h2>Welcome</h2>
+    <p>Welcome to the secure area of the website.</p>
+    
+    <script>
+        // Retrieve user data from session storage
+        var userDataString = sessionStorage.getItem("studentData");
+        if (!userDataString) {
+            // If user data is not found, redirect to the login page
+            window.location.href = "BasicLogin.html";
+        } else {
+            // Parse the JSON string to retrieve user data
+            var userData = JSON.parse(userDataString);
+            console.log(userData);
+
+            // Display user-specific content based on userData
+        }
+    </script>
+</body>
+</html> -->

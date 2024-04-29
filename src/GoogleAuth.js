@@ -57,9 +57,9 @@ googleLogin.addEventListener("click", function () {
                   if(snapshot.val().type=="educational"){
                     window.location.href="./fundApplicant/dashboard.html";
                   }
-                  // else if(snapshot.val().type=="events"){
-                  //   //window.location.href="./Sprint/Dashboard.html";
-                  // }
+                  else if(snapshot.val().type=="events"){
+                    window.location.href="./Event/EventDashboard.html";
+                  }
 
                 }
                   //window.location.href = "./fundApplicant/dashboard.html";}
