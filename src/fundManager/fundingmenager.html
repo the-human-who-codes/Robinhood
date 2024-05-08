@@ -132,11 +132,29 @@
         button{
             padding: 0px 30px;
         }
+        .notification {
+    position: absolute;
+    top: 70px;
+    right: 20px;
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: none;
+    animation: slideIn 0.5s ease-in-out;
+}
+
+@keyframes slideIn {
+    0% { transform: translateY(-50px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
     </style>
 </head>
 <body>
     <header>
         <h1>Fund Manager Dashboard</h1>
+    <div id="notification" class="notification"></div>
     </header>
 
     <div id="mySidebar" class="sidebar">
@@ -195,7 +213,7 @@
         
         const app = initializeApp(firebaseConfig);
 
-        import {getDatabase,ref,child,get,set,update,remove,onValue} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js"
+        import {getDatabase,ref,child,get,set,update,remove,onValue,query} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js"
         const db=getDatabase();
 
         function openNav() {
@@ -213,11 +231,10 @@
             window.location.href = 'Applicant1.html';
         }
 
-        function view1(applicantID){
-            sessionStorage.setItem('info',applicantID);//securly passsing applicant id between pages
-            window.location.href = 'Applicant1.html';
-        }
-        
+        function view1(applicantID) {
+    window.location.href = `Applicant1.html?id=${applicantID}`;
+}
+
 
         function navigateToApplyPage() {
             window.location.href = 'fundmaneger.html';
@@ -288,40 +305,37 @@
         })
     }
         //function to get relevant info from students in our database
-        function getAllData(){
-            const dbref= ref(db);
-            get(child(dbref,"Students/"))
-            .then((snapshot)=>{
-                if(snapshot.exists()){
-                    let Students=[];
-                   // let pendingStudents=[];
-                    let id1='';
-                    snapshot.forEach(childSnapShot=>{
-                        id1=childSnapShot.key;
-                        if(childSnapShot.val().status=='pending'){
-                            let data=childSnapShot.val();
-                            data.id=id1;
-                            Students.push(data);
-                        }
-                     });
-                     if(Students.length===0){
-                        const h2=document.getElementById('pending');
-                        h2.innerText="No Pending Applications"  
-                     }
-                     else{
-                        createNewRow(Students); 
-                     }  
-                }else{
-                    const h2=document.getElementById('pending');
-                    h2.innerText="No Active Applications"
+        // Function to get relevant info from students in our database
+function getAllData() {
+    const dbref = ref(db);
+    get(child(dbref, "StudentApplicant/"))
+        .then((snapshot) => {
+            if (snapshot.exists()) {
+                let Students = [];
+                let id1 = '';
+                snapshot.forEach(childSnapShot => {
+                    id1 = childSnapShot.key;
+                    let data = childSnapShot.val();
+                    if (!data.hasOwnProperty('status') || data.status === 'pending') {
+                        data.id = id1;
+                        Students.push(data);
+                    }
+                });
+                if (Students.length === 0) {
+                    const h2 = document.getElementById('pending');
+                    h2.innerText = "No Pending Applications"
+                } else {
+                    createNewRow(Students);
                 }
-                
-                
-            }).catch((error)=>{
-                console.log(error);
-            })
+            } else {
+                const h2 = document.getElementById('pending');
+                h2.innerText = "No Active Applications"
+            }
+        }).catch((error) => {
+            console.log(error);
+        })
+}
 
-        }
  
         //eventlistner fetches relevant student data to display on fundManager Dashboard
         document.addEventListener('DOMContentLoaded',function(){
@@ -346,6 +360,54 @@
         recipients.addEventListener('click',function(){
                 showRecipients();
         });
+    // Function to get current user ID from session storage
+function getCurrentUserID() {
+    let user = JSON.parse(sessionStorage.getItem("user"));
+    const uid = user.uid;
+    return uid;
+}
+
+// Function to show notification
+function showNotification(message) {
+    const notification = document.getElementById("notification");
+    notification.innerText = message;
+    notification.style.display = "block";
+    setTimeout(() => {
+        notification.style.display = "none";
+    }, 5000); // Hide notification after 5 seconds
+}
+
+// Function to check fund manager application status
+// Function to check fund manager application status
+function checkApplicationStatus() {
+    const userId = getCurrentUserID();
+    if (userId) {
+        const applicationsRef = ref(db, "fund_manager-applications");
+
+        onValue(applicationsRef, (snapshot) => {
+            if (snapshot.exists()) {
+                snapshot.forEach((childSnapshot) => {
+                    const application = childSnapshot.val();
+                    if (application.uid === userId) {
+                        const status = application.status;
+                        if (status === "accepted") {
+                            showNotification("Your application has been approved!");
+                        } else if (status === "rejected") {
+                            showNotification("Your application has been rejected. Please contact the admin for more details.");
+                        }
+                    }
+                });
+            }
+        });
+    } else {
+        console.log("User ID not found in session storage.");
+    }
+}
+
+// Call the function to check application status when the page loads
+document.addEventListener('DOMContentLoaded', function () {
+    checkApplicationStatus();
+});
     </script>
 </body>
 </html>

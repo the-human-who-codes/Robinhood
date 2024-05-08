@@ -3,227 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Applicant Details</title>
+    <title>Application Details</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #347576;
-        }
-        article {
-            margin-top: 20px;
-        }
-        section {
-            margin-bottom: 20px;
-        }
-        section p {
-            margin: 10px 0;
-        }
-        .btn-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        .btn {
-            padding: 10px 20px;
-            background-color: #347576;
-            color: #fff;
-            text-decoration: none;
-            border: none;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-            cursor: pointer;
-            margin: 0 10px;
-        }
-        .btn:hover {
-            background-color: #0056b3;
-        }
-        .motivation {
-            margin-top: 30px;
             padding: 20px;
             background-color: #f0f0f0;
-            border-radius: 8px;
         }
-        .motivation h2 {
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #application-details {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        p {
+            margin-bottom: 10px;
+        }
+
+        a {
             color: #347576;
+            text-decoration: none;
         }
-        .motivation p {
-            line-height: 1.6;
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        button {
+            background-color: #347576;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 3px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #285e56;
         }
     </style>
 </head>
 <body>
-    <article class="container">
-        <h1>Applicant Details</h1>
-        <article>
-            <!-- TO BE REMOVED!!!PLACEHOLDER -->
-            <section id="applicant-details">
-                <section>
-                    <p><strong>Title:</strong> Dr.</p>
-                    <p><strong>Name:</strong> John</p>
-                    <p><strong>Surname:</strong> Doe</p>
-                    <p><strong>University:</strong> Example University</p>
-                    <p><strong>Degree:</strong> Bachelor of Science</p>
-                    <p><strong>Major:</strong> Computer Science</p>
-                    <p><strong>Transcript:</strong> <a href="#">Download Transcript</a></p>
-                </section>
-            </article>
-            <!-- <article class="motivation">
-                <h2>Motivation:</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet.</p>
-                <p>Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi.</p>
-            </article> -->
-        <article>
-            <section>
-                <!-- Applicant details will be populated here -->
-            </section>
-        </article>
-        <section class="btn-container">
-            <button class="btn" id="approve-btn" >Approve</button>
-            <button class="btn" id="reject-btn" >Reject</button>
-        </section>
-    </article>
-    
+    <h1>Application Details</h1>
+    <div id="application-details">
+        <!-- Application details will be displayed here -->
+    </div>
+
     <script type="module">
-        // Function to fetch applicant details from the API
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-        
-        const firebaseConfig = {
-          apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
-          authDomain: "fir-sd-22d1a.firebaseapp.com",
-          databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
-          projectId: "fir-sd-22d1a",
-          storageBucket: "fir-sd-22d1a.appspot.com",
-          messagingSenderId: "526172429927",
-          appId: "1:526172429927:web:51ae427f7acfa1d925bec2"
+        import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+
+        // Firebase configuration
+      // Firebase configuration
+      const firebaseConfig = {
+            apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
+            authDomain: "fir-sd-22d1a.firebaseapp.com",
+            databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
+            projectId: "fir-sd-22d1a",
+            storageBucket: "fir-sd-22d1a.appspot.com",
+            messagingSenderId: "526172429927",
+            appId: "1:526172429927:web:51ae427f7acfa1d925bec2"
         };
-      
-        
+
+
         const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
 
-        import {getDatabase,ref,child,get,set,update,remove,onValue} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js"
-        const db=getDatabase();
+        async function getApplicationDetails() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const applicantId = urlParams.get('id');
 
-        const applicantID=sessionStorage.getItem('info');
+            const applicantRef = ref(db, `StudentApplicant/${applicantId}`);
+            const snapshot = await get(applicantRef);
+            const applicantData = snapshot.val();
 
-        //function to get a students data
-        function RetrieveData(){
-            const  dbRef=ref(db);
-            
-            
-            get(child(dbRef,'Students/'+applicantID)).then((snapshot)=>{
-                if(snapshot.exists()){
-                    const title=snapshot.val().title;
-                   const fName=snapshot.val().name;
-                   const lName=snapshot.val().surname;
-                    const university=snapshot.val().university;
-                    const degree=snapshot.val().degree;
-                    const major=snapshot.val().major;
-                    const motivation=snapshot.val().motivation;
-                    const applicationStatus=snapshot.val().status;
-                    
-                    const applicantDetails = document.getElementById('applicant-details');
-                   
-                   
-
-               
-                    applicantDetails.innerHTML = `
-                    <p><strong>Title:</strong> ${title}</p>
-                        <p><strong>Name:</strong> ${fName}</p>
-                        <p><strong>Surname:</strong> ${lName}</p>
-                        <p><strong>University:</strong> ${university}</p>
-                        <p><strong>Degree:</strong> ${degree}</p>
-                        <p><strong>Major:</strong> ${major}</p>
-                        <p><strong>Application Status:</strong> ${applicationStatus}</p>
-                        <p><strong>Transcript:</strong> <a href="#">Download Transcript</a></p>
-                        <div class="motivation">
-                            <h2>Motivation:</h2>
-                            <p>${motivation}</p>
-                        </div>
-                        
-                    `;
-                }
-                else{
-                   alert("Employee does not exist") ;
-                }
-            }).catch((error)=>{
-                console.log(error);
-            })   
+            return { id: applicantId, ...applicantData };
         }
 
-        
-        // Function to approve a students application
+        async function displayApplicationDetails() {
+            const applicantData = await getApplicationDetails();
+            const applicationDetailsDiv = document.getElementById('application-details');
 
-        function updateData(updated){
-            let acceptance='';
-            if(updated=='accepted'){
-                acceptance='accepted';
+            if (applicantData) {
+                applicationDetailsDiv.innerHTML = `
+                    <p><strong>Name:</strong> ${applicantData.name} ${applicantData.surname}</p>
+                    <p><strong>University:</strong> ${applicantData.university}</p>
+                    <p><strong>Email:</strong> ${applicantData.email}</p>
+                    <p><strong>Phone:</strong> ${applicantData.phone}</p>
+                    <p><strong>About Me:</strong> ${applicantData.about}</p>
+                    <p><strong>Financial Documents:</strong> <a href="${applicantData.payslips}" target="_blank">View Payslips</a></p>
+                    <p><strong>Academic Record:</strong> <a href="${applicantData.transcript}" target="_blank">View Transcript</a></p>
+                    <button id="approveBtn">Approve</button>
+                    <button id="rejectBtn">Reject</button>
+                `;
+
+                const approveBtn = document.getElementById('approveBtn');
+                const rejectBtn = document.getElementById('rejectBtn');
+
+                approveBtn.addEventListener('click', () => updateStatus(applicantData.id, 'approved'));
+                rejectBtn.addEventListener('click', () => updateStatus(applicantData.id, 'rejected'));
+            } else {
+                applicationDetailsDiv.innerHTML = "<p>Application details not found.</p>";
             }
-            else{
-                acceptance='rejected';
-            }
-            update(ref(db,'Students/'+applicantID),{
-                'status':acceptance
-            }).then(()=>{
-                alert("Data updated succesfully");
-            }).catch((error)=>{
-                alert("unsuccesful");
-            })    
         }
-        function approve() {
-            const accept='accepted';
-            updateData(accept);  
 
-            setTimeout(function(){
-                window.location.href = 'fundingmenager.html'
-            },2000)
-        };
-       
+        async function updateStatus(applicantId, status) {
+            const applicantRef = ref(db, `StudentApplicant/${applicantId}/status`);
+            try {
+                await set(applicantRef, status);
+                alert(`Application ${status}`);
+                window.location.href = "fundingmenager.html"; // Redirect to dashboard
+            } catch (error) {
+                console.error(error);
+                alert('Error updating status');
+            }
+        }
 
-        // Function to reject a students application
-        function reject() {
-            const reject='rejected';
-            updateData(reject); 
-            
-            setTimeout(function(){
-                window.location.href = 'fundingmenager.html'
-            },2000)
-        };
-
-        // Fetch applicant details when the page loads
-        window.onload = RetrieveData;
-        
-        // Attach click event listeners to approve and reject buttons
-         document.getElementById('approve-btn').addEventListener('click', approve);
-         document.getElementById('reject-btn').addEventListener('click', reject);
+        displayApplicationDetails();
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
