@@ -10,6 +10,6 @@ This repo has a dev container. This means if you open it inside a [GitHub Codesp
 
 
 
-
+![CI](https://github.com/muano-thee-last/Robinhood/workflows/test.yml/badge.svg)
 
 THE URL FOR OUR PROJECT : https://orange-bay-0263a040f.5.azurestaticapps.net/

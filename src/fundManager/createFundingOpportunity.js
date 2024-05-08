@@ -1,5 +1,5 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js";
-import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js";
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, push, set } from "firebase/database";
 
 const firebaseConfig = {
     apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
@@ -18,7 +18,7 @@ const firebaseApp = initializeApp(firebaseConfig);
 const db = getDatabase(firebaseApp);
 const fundingOpportunitiesRef = ref(db, 'fund_manager-applications');
 
-async function createFundingOpportunity(title, description, deadline, motivation, uid) {
+export async function createFundingOpportunity(title, description, deadline, motivation, uid) {
     try {
         const newFundingOpportunity = {
             title,
@@ -36,13 +36,12 @@ async function createFundingOpportunity(title, description, deadline, motivation
     }
 }
 
-// Handle form submission
-async function handleSubmit(event) {
+export async function handleSubmit(event, form) {
     event.preventDefault();
-    const title = document.getElementById('title').value;
-    const description = document.getElementById('description').value;
-    const deadline = document.getElementById('deadline').value;
-    const motivation = document.getElementById('motivation').value;
+    const title = form.querySelector('#title').value;
+    const description = form.querySelector('#description').value;
+    const deadline = form.querySelector('#deadline').value;
+    const motivation = form.querySelector('#motivation').value;
     
     // Get UID from session storage
     let user = JSON.parse(sessionStorage.getItem("user"));
@@ -51,8 +50,10 @@ async function handleSubmit(event) {
     await createFundingOpportunity(title, description, deadline, motivation, uid);
 }
 
-// Add event listener to form submission
-document.getElementById('fundingOpportunityForm').addEventListener('submit', handleSubmit);
+// Export the function for testing
+export function redirect() {
+    window.location.href = 'fundingmenager.html';
+}
 
 // Redirect function
 function Create() {
