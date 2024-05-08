@@ -40,7 +40,13 @@ googleLogin.addEventListener("click", function () {
             if(snapshot.val().status=="Blocked"){
               alert("User is blocked")
               window.location.href="./blocked.html";
-            }else{
+            }
+            if(snapshot.val().status=="Violation"){
+              alert("You are in violation of the rules and your account will be blocked")
+              window.location.href = "./fundManager/fundingmenager.html";
+
+            }
+            else{
             // User is a fund manager, redirect to the fund manager dashboard
             window.location.href = "./fundManager/fundingmenager.html";}
           } else {
@@ -51,6 +57,10 @@ googleLogin.addEventListener("click", function () {
                   if(snapshot.val().status=="Blocked"){
                     alert("User is blocked")
                     window.location.href="./blocked.html";
+                  }
+                  if(snapshot.val().status=="Violation"){
+                    alert("You are in violation of the rules and your account will be blocked");
+                    window.location.href="./fundApplicant/dashboard.html";
                   }
                   else{
                   // User is a student, redirect to the student dashboard
