@@ -1,584 +1,263 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bursaries</title>
-    <link rel="stylesheet" href="Opportunities.css" />
-
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eeducational Opportunities</title>
     <style>
-      /* Reset CSS */
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        text-align: center;
-      }
+/* Reset default margin and padding */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-      /* Global styles */
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-      }
+/* Body styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+}
 
-      header {
-        background-color: #347576;
-        color: white;
-        padding: 20px;
-        text-align: center;
-        position: fixed;
-        width: 100%;
-        position: static;
-        z-index: 2;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        transition: left 0.5s;
-      }
+/* Header styles */
+header {
+  background-color: #347576;
+  color: #fff;
+  padding: 20px;
+}
 
-      .container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding-top: 100px;
-        margin-left: 250px;
-        transition: margin-left 0.5s;
-      }
+header h1 {
+  margin: 0;
+  font-size: 24px;
+}
 
-      .content {
-        width: 80%;
-        max-width: 1200px;
-        padding: 20px;
-        background-color: white;
-        border-radius: 10px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
-      }
+nav ul {
+  list-style-type: none;
+}
 
-      .content h2 {
-        margin-bottom: 20px;
-        color: #347576;
-      }
+nav ul li {
+  display: inline;
+  margin-right: 20px;
+}
 
-      /* Funding opportunity cards */
-      .opportunity {
-        background-color: white;
-        border-radius: 10px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
-        padding: 20px;
-      }
+nav ul li a {
+  color: #fff;
+  text-decoration: none;
+}
 
-      .opportunity h3 {
-        margin-bottom: 10px;
-        color: #666;
-        font-size: 20px;
-      }
+nav ul li a.active {
+  font-weight: bold;
+}
 
-      .opportunity p {
-        margin-bottom: 10px;
-        color: #666;
-        font-size: 16px;
-      }
+/* Main styles */
+main {
+  padding: 20px;
+}
 
-      /* Sidebar styles */
+.opportunities h2 {
+  margin-bottom: 20px;
+}
 
-      header nav a {
-        padding: 10px;
-        text-decoration: none;
-        font-size: 18px;
-        color: white;
-        display: block;
-        transition: 0.3s;
-        border-radius: 5px;
-        margin: 5px 0;
-        text-align: center;
-      }
+.opportunities ul {
+  list-style-type: none;
+}
 
-      header nav a:hover {
-        background-color: #3e8e41;
-        transform: scale(1.05);
-      }
+.opportunities li {
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
 
-      .arrow {
-        width: 20px;
-        height: 20px;
-        fill: white;
-      }
+.opportunities li h3 {
+  margin-bottom: 10px;
+}
 
-      footer {
-        background-color: #347576;
-        color: white;
-        text-align: center;
-        padding: 20px;
-        position: relative;
-        bottom: 0;
-        width: 100%;
-      }
+.opportunities li p {
+  margin-bottom: 5px;
+}
 
-      header nav ul {
-        display: flex; /* Use flexbox layout */
-        list-style-type: none; /* Remove default list styles */
-        padding: 0; /* Remove default padding */
-      }
+.opportunities li a {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #347576;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+}
 
-      header nav li {
-        margin-right: 10px; /* Adjust spacing between list items */
-      }
+.opportunities li a:hover {
+  background-color: #0056b3;
+}
 
-      header nav a {
-        text-decoration: none;
-        color: white;
-        font-size: 18px;
-        padding: 10px;
-        border-radius: 5px;
-        transition: background-color 0.3s;
-      }
+/* Footer styles */
+footer {
+  background-color: #347576;
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
 
-      header nav a:hover {
-        background-color: #3e8e41;
-        transform: scale(1.05);
-      }
+/* Table styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
 
-      header nav ul {
-        display: flex; /* Use flexbox layout */
-        justify-content: center; /* Center the contents horizontally */
-        list-style-type: none; /* Remove default list styles */
-        padding: 0; /* Remove default padding */
-      }
+th, td {
+  padding: 10px;
+  border: 1px solid #ccc;
+}
 
-      header nav li {
-        margin-right: 10px; /* Adjust spacing between list items */
-      }
+thead {
+  background-color: #347576;
+  color: #fff;
+}
 
-      header nav a {
-        text-decoration: none;
-        color: white;
-        font-size: 18px;
-        padding: 10px;
-        border-radius: 5px;
-        transition: background-color 0.3s;
-      }
+tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
 
-      header nav a:hover {
-        background-color: #3e8e41;
-        transform: scale(1.05);
-      }
+/* Link styles */
+a {
+  color: #007bff;
+  text-decoration: none;
+}
 
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-      }
+a:hover {
+  text-decoration: underline;
+}
 
-      header {
-        background-color: #347576;
-        color: #fff;
-        padding: 20px;
-        text-align: center;
-      }
-
-      header h1 {
-        margin: 0;
-      }
-
-      nav ul {
-        list-style-type: none;
-        padding: 0;
-      }
-
-      nav ul li {
-        display: inline;
-        margin-right: 20px;
-      }
-
-      nav ul li a {
-        color: #fff;
-        text-decoration: none;
-      }
-
-      nav ul li a.active {
-        font-weight: bold;
-      }
-
-      main {
-        padding: 20px;
-      }
-
-      section {
-        margin-bottom: 30px;
-      }
-
-      .summary {
-        background-color: #f0f0f0;
-        padding: 20px;
-      }
-
-      .notifications {
-        background-color: #eaeaea;
-        padding: 20px;
-      }
-
-      footer {
-        background-color: #347576;
-        color: #fff;
-        text-align: center;
-        padding: 10px;
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-      }
-
-      header {
-        background-color: #347576;
-        color: #fff;
-        padding: 20px;
-        text-align: center;
-      }
-
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-      }
-
-      main {
-        padding-top: 80px; /* Adjusted to accommodate the fixed header */
-        display: flex;
-        justify-content: space-evenly;
-        flex-direction: row;
-      }
-
-      article {
-        display: flex;
-        flex-direction: column;
-      }
-
-      td:last-child button:hover {
-        background-color: #ddd;
-      }
-
-      table {
-        display: flex;
-        flex-direction: column;
-        border-collapse: collapse;
-        width: 100%;
-        margin-left: 0px;
-        border-collapse: collapse;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-      }
-      thead {
-        background-color: #347576;
-        color: white;
-      }
-      #headings {
-        display: flex;
-        justify-content: space-evenly;
-      }
-
-      th,
-      td {
-        border: none;
-        padding: 12px;
-        text-align: left;
-      }
-
-      #row:hover {
-        background-color: #f5f5f5;
-        cursor: pointer;
-      }
-
-      h2 {
-        display: flex;
-        justify-content: center;
-      }
-
-      header h1 {
-        margin: 0;
-      }
-
-      a {
-        font: bold;
-        font-size: large;
-      }
-
-      nav ul {
-        list-style-type: none;
-        justify-content: center;
-        padding: 0;
-      }
-
-      nav ul li {
-        display: flex;
-
-        margin-right: 20px;
-      }
-
-      nav ul li a {
-        color: #fff;
-        text-decoration: none;
-      }
-
-      nav ul li a.active {
-        font-weight: bold;
-      }
-
-      ul {
-        display: flex;
-        flex-direction: row;
-      }
-
-      main {
-        padding: 20px;
-      }
-
-      section {
-        margin-bottom: 30px;
-      }
-
-      .summary {
-        background-color: #f0f0f0;
-        padding: 20px;
-      }
-
-      .notifications {
-        background-color: #eaeaea;
-        padding: 20px;
-      }
-
-      footer {
-        background-color: #347576;
-        color: #fff;
-        text-align: center;
-        padding: 10px;
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-      }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <header>
-      <h1>Applicant Dashboard</h1>
-      <nav>
-        <ul>
-          <li>
-            <a href="dashboard.html"  id="Dash">Dashboard</a>
-          </li>
-          <li><a href="bursaries.html" class="active" id="opportunities">Bursaries</a></li>
-          <li>
-            <a href="applications.html" id="applications">Applications</a>
-          </li>
-          <li><a href="profile.html" id="profile">Profile</a></li>
-          <li><a href="../index.html" id="logout">Logout</a></li>
-        </ul>
-      </nav>
+        <h1>Event Opportunities</h1>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html" id="Dash">Dashboard</a></li>
+                <li><a href="bursaries.html" class="active" id="opportunities">Event Opportunities</a></li>
+                <li><a  id="applications">Applications</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a>Logout</a></li>
+            </ul>
+        </nav>
     </header>
+
     <main>
-      <section>
-        <h2 id="pending">Available Bursaries</h2>
-        <table id="BursaryTable">
-          <thead id="BursaryHead">
-            <tr id="headings">
-              <th>Bursary</th>
-              <th>Contact</th>
-              <th>Deadline</th>
-            </tr>
-          </thead>
-          <tbody id="BursaryData">
-            <!-- Bursary Data Displayed Here -->
-          </tbody>
-        </table>
-      </section>
-      <article id="BursaryInfo"></article>
+        <section class="opportunities">
+            <h2>Available Event Funding Opportunities</h2>
+            <table id="Events">
+                <thead>
+                    <tr>
+                        <th>Event Funding Opportunity</th>
+                        <th>Description</th>
+                        <th>Eligibility Criteria</th>
+                        <th>Application Deadline</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="BursaryData">
+                   
+                    <!-- Add more rows as needed -->
+                </tbody>
+            </table>
+            
+        </section>
     </main>
 
+    <footer>
+        <p>&copy; 2024 eduvcational Funding Portal</p>
+    </footer>
+
     <script type="module" defer>
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getDatabase, ref, child, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 
-      const firebaseConfig = {
-        apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
-        authDomain: "fir-sd-22d1a.firebaseapp.com",
-        databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
-        projectId: "fir-sd-22d1a",
-        storageBucket: "fir-sd-22d1a.appspot.com",
-        messagingSenderId: "526172429927",
-        appId: "1:526172429927:web:51ae427f7acfa1d925bec2",
-      };
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
+            authDomain: "fir-sd-22d1a.firebaseapp.com",
+            databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
+            projectId: "fir-sd-22d1a",
+            storageBucket: "fir-sd-22d1a.appspot.com",
+            messagingSenderId: "526172429927",
+            appId: "1:526172429927:web:51ae427f7acfa1d925bec2"
+          };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
 
-      const app = initializeApp(firebaseConfig);
+        const opportunities = document.getElementById("opportunities");
 
-      import {
-        getDatabase,
-        ref,
-        child,
-        get,
-        set,
-        update,
-        remove,
-        onValue,
-      } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
-      const db = getDatabase();
+        function RetrieveAllEventFunders(){
+            const dbref=ref(db);
+            get(child(dbref,'funding-advertisements')).then((snapshot)=>{
+            
+                let bursaries = [];
+                snapshot.forEach(childSnapshot => {
+                    const burs = childSnapshot.val();
+                    burs['id'] = childSnapshot.key;
+                    bursaries.push(burs);
+                });
 
-      const Dashboard = document.getElementById("Dash");
-      const opportunities = document.getElementById("opportunities");
-      const applications = document.getElementById("applications");
-      const profile = document.getElementById("profile");
-      const logout = document.getElementById("logout");
-      const section1 = document.getElementById("BursaryInfo");
-
-      //get all bursary
-      function RetrieveAllBursaries() {
-        const dbref = ref(db);
-        get(child(dbref, "funding-advertisements"))
-          .then((snapshot) => {
-            let bursaries = [];
-            snapshot.forEach((childSnapshot) => {
-              var burs = childSnapshot.val();
-              burs["id"] = childSnapshot.key;
-              bursaries.push(burs);
+                AddRow(bursaries);
+            }).catch((error) => {
+                console.error("Error getting data: ", error);
             });
+        };
 
-            AddRow(bursaries);
-            console.log(bursaries);
-          })
-          .catch((error) => {
-            alert("A network issue is causing some errors with the operation");
-            console.log(error);
-          });
-      }
-
-      //basic page nav
-      function DashBoard() {
-        window.location.href = "studentDashboard.html";
-      }
-
-      function Application() {
-        window.location.href = "Applications.html";
-      }
-
-      function Profile() {
-        window.location.href = "Profile.html";
-      }
-
-      function LogOut() {
-        window.location.href = "BasicLogin.html";
-      }
-
-      function ApplicationForm() {
-        window.location.href = "Application.html";
-      }
-
-      function rowEventListner(bursary) {
-        var dynamicSection = document.getElementById("BursaryInfo");
-
-        var rows = document.querySelectorAll("#BursaryTable tbody tr");
-        rows.forEach(function (row, index) {
-          row.addEventListener("click", function () {
-            if (dynamicSection.childElementCount != 0) {
-              while (dynamicSection.firstChild) {
-                dynamicSection.removeChild(dynamicSection.firstChild);
-              }
-            }
-            let BursaryInfo = document.createElement("h3");
-            let Title = document.createElement("h1");
-            let Title1 = document.createElement("h2");
-            let Description = document.createElement("p");
-            let Description1 = document.createElement("p");
-            let Criterea = document.createElement("p");
-            let Criterea1 = document.createElement("p");
-            //Title.innerText="Bursary:"
-            Title1.innerText = bursary["title"];
-            Description.innerText = "About:";
-            Description1.innerText = bursary.description;
-            Criterea.innerText = "Criteria:";
-            Criterea1.innerText = bursary.criteria;
-
-            let viewButton = document.createElement("button");
-            viewButton.addEventListener("click", () => {
-              ApplicationForm();
+        function AddRow(eventS) {
+            const TBody = document.getElementById('BursaryData');
+            eventS.forEach(bursary => {
+                // Check if the opportunity belongs to the event category
+                if (bursary.category === 'educational') {
+                    const newTableRow = document.createElement('tr');
+                    
+                    const BursaryName = document.createElement('td');
+                    BursaryName.textContent = bursary['bursary-title'] || 'N/A';
+        
+                    const BursaryDescription = document.createElement('td');
+                    BursaryDescription.textContent = bursary['description'] || 'N/A';
+        
+                    const BursaryCriteria = document.createElement('td');
+                    BursaryCriteria.textContent = bursary['criteria'] || 'N/A';
+        
+                    const BursaryDeadline = document.createElement('td');
+                    BursaryDeadline.textContent = bursary['deadline'] || 'N/A';
+        
+                    const BursaryAction = document.createElement('td');
+                    const applyNowButton = document.createElement('a');
+                    applyNowButton.innerText = 'Apply Now';
+                    applyNowButton.href = 'eventApplication.html';
+                    BursaryAction.appendChild(applyNowButton);
+        
+                    newTableRow.appendChild(BursaryName);
+                    newTableRow.appendChild(BursaryDescription);
+                    newTableRow.appendChild(BursaryCriteria);
+                    newTableRow.appendChild(BursaryDeadline);
+                    newTableRow.appendChild(BursaryAction);
+        
+                    TBody.appendChild(newTableRow);
+                }
             });
-            section1.append(Title);
-            section1.append(Title1);
-            section1.append(Description);
-            section1.append(Description1);
-            section1.append(Criterea);
-            section1.append(Criterea1);
-            BursaryInfo.textContent = "Hello";
-            viewButton.textContent = "Apply";
-            section1.append(viewButton);
-          });
+        }
+        
+        opportunities.addEventListener('click', () => {
+            Opportuninties();
         });
-      }
 
-      function AddRow(bursaries) {
-        let THead = document.getElementById("BursaryData");
-        let Deadline = "";
-        let Bursary = "";
-        let Contact = "";
-        let Criteria = "";
-        let Desc = "";
-        let id = "";
-        let burs = {};
-        bursaries.forEach((bursary) => {
-          id = bursary.id;
-          Bursary = bursary["bursary-title"];
-          Contact = bursary.contact;
-          Deadline = bursary.deadline;
-          Criteria = bursary.criteria;
-          Desc = bursary.description;
-          burs["id"] = id;
-          burs["title"] = Bursary;
-          burs["contact"] = Contact;
-          burs["deadline"] = Deadline;
-          burs["criteria"] = Criteria;
-          burs["description"] = Desc;
-          let newTableRow = document.createElement("tr");
-          newTableRow.setAttribute("id", "row");
-          // newTableRow.setAttribute('id',`${id}`);
+        function Opportuninties() {
+            window.location.href = 'eventOpportunities.html';
+        }
 
-          let BursaryName = document.createElement("td");
-          let BursaryContact = document.createElement("td");
-          let BursaryDeadline = document.createElement("td");
-          //let BursaryInfo=document.createElement('h3');
-          let BursaryView = document.createElement("td");
-          //let viewButton=document.createElement('button');
-
-          BursaryName.textContent = Bursary;
-          BursaryContact.textContent = Contact;
-          BursaryDeadline.textContent = Deadline;
-
-          newTableRow.append(BursaryName);
-          newTableRow.append(BursaryContact);
-          newTableRow.append(BursaryDeadline);
-          THead.append(newTableRow);
+        document.addEventListener("DOMContentLoaded", function() {
+            RetrieveAllEventFunders();
         });
-        rowEventListner(burs);
-      }
-
-      // Get all the rows in the table
-
-      // Loop through each row and add a click event listener
-
-      Dashboard.addEventListener("click", () => {
-        DashBoard();
-      });
-
-      applications.addEventListener("click", () => {
-        Application();
-      });
-
-      profile.addEventListener("click", () => {
-        Profile();
-      });
-
-      logout.addEventListener("click", () => {
-        LogOut();
-      });
-
-      //display bursary info when page loaded
-      document.addEventListener("DOMContentLoaded", function () {
-        // Your code to be executed after the DOM content is fully loaded
-        RetrieveAllBursaries();
-      });
     </script>
-  </body>
+</body>
 </html>
