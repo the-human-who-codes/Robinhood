@@ -224,12 +224,29 @@
         bottom: 0;
         width: 100%;
       }
+      .notification {
+    position: absolute;
+    top: 70px;
+    right: 20px;
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: none;
+    animation: slideIn 0.5s ease-in-out;
+}
+
+@keyframes slideIn {
+    0% { transform: translateY(-50px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
     </style>
   </head>
 
   <body>
     <header>
       <h1>Applicant Dashboard</h1>
+      <div id="notification" class="notification"></div>
       <nav>
         <ul>
           <li>
@@ -264,16 +281,6 @@
           <dd>2</dd>
         </dl>
       </section>
-
-      <section class="notifications">
-        <h2>Notifications</h2>
-        <p>You have 2 new notifications. Check them out!</p>
-        <!-- Display notifications -->
-        <ul>
-          <li>New bursary opportunity available!</li>
-          <li>Application status updated for Bursary XYZ.</li>
-        </ul>
-      </section>
     </main>
 
     <footer>
@@ -300,6 +307,7 @@
         ref,
         child,
         get,
+        onValue
       } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
       const db = getDatabase();
 
@@ -347,6 +355,54 @@
       }
 
       fetchAndPopulateOpportunities();
+          // Function to get current user ID from session storage
+function getCurrentUserID() {
+    let user = JSON.parse(sessionStorage.getItem("user"));
+    const uid = user.uid;
+    return uid;
+}
+
+// Function to show notification
+function showNotification(message) {
+    const notification = document.getElementById("notification");
+    notification.innerText = message;
+    notification.style.display = "block";
+    setTimeout(() => {
+        notification.style.display = "none";
+    }, 5000); // Hide notification after 5 seconds
+}
+
+// Function to check fund manager application status
+// Function to check fund manager application status
+function checkApplicationStatus() {
+    const userId = getCurrentUserID();
+    if (userId) {
+        const applicationsRef = ref(db, "StudentApplicant");
+
+        onValue(applicationsRef, (snapshot) => {
+            if (snapshot.exists()) {
+                snapshot.forEach((childSnapshot) => {
+                    const application = childSnapshot.val();
+                    if (application.uid === userId) {
+                        const status = application.status;
+                        if (status === "approved") {
+                            showNotification("Your application has been approved!");
+                        } else if (status === "rejected") {
+                            showNotification("Your application has been rejected. Please contact the admin for more details.");
+                        }
+                    }
+                });
+            }
+        });
+    } else {
+        console.log("User ID not found in session storage.");
+    }
+}
+
+// Call the function to check application status when the page loads
+document.addEventListener('DOMContentLoaded', function () {
+    checkApplicationStatus();
+});
     </script>
   </body>
 </html>

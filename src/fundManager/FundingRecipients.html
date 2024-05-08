@@ -227,7 +227,7 @@
         //function to get relevant info from students in our database
         function getAllData(){
             const dbref= ref(db);
-            get(child(dbref,"Students/"))
+            get(child(dbref,"StudentApplicant/"))
             .then((snapshot)=>{
                 if(snapshot.exists()){
                     let Students=[];
@@ -235,7 +235,7 @@
                     let id1='';
                     snapshot.forEach(childSnapShot=>{
                         id1=childSnapShot.key;
-                        if(childSnapShot.val().status=='accepted'){
+                        if(childSnapShot.val().status=='approved'){
                             let data=childSnapShot.val();
                             data.id=id1;
                             Students.push(data);

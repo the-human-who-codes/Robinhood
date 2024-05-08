@@ -211,6 +211,9 @@
 
         //add user to DB with associated pdfs
         function addToDatabase(userInfo) {
+          const uid = getCurrentUserID();
+
+    // Add the UID to the userInfo object
           console.log(userInfo);
           set(ref(db, "StudentApplicant/" + uniqueId), {
             name: userInfo.name,
@@ -221,6 +224,7 @@
             about: userInfo.about,
             transcript: userInfo.transcript,
             payslips: userInfo.payslips,
+            uid: uid
           })
             .then(() => {
               alert("Submission Recieved");
@@ -231,6 +235,16 @@
             });
         }
       });
+      function getCurrentUserID() {
+    // Retrieve the user from session storage
+    let user = JSON.parse(sessionStorage.getItem("user"));
+    if (user && user.uid) {
+        return user.uid;
+    } else {
+        console.error("User ID not found in session storage.");
+        return null;
+    }
+}
     </script>
   </body>
 </html>
