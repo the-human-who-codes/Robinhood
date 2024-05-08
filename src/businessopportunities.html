@@ -4,15 +4,144 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Opportunities</title>
-    <link rel="stylesheet" href="eventOpportunities.css">
+    <style>
+        /* Reset default margin and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* Header styles */
+header {
+    background-color: #347576;
+    color: #fff;
+    padding: 20px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+nav ul {
+    list-style-type: none;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+nav ul li a.active {
+    font-weight: bold;
+}
+
+/* Main styles */
+main {
+    padding: 20px;
+}
+
+.opportunities h2 {
+    margin-bottom: 20px;
+}
+
+.opportunities ul {
+    list-style-type: none;
+}
+
+.opportunities li {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.opportunities li h3 {
+    margin-bottom: 10px;
+}
+
+.opportunities li p {
+    margin-bottom: 5px;
+}
+
+.opportunities li a {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #347576;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.opportunities li a:hover {
+    background-color: #0056b3;
+}
+
+/* Footer styles */
+footer {
+    background-color: #347576;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Table styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+thead {
+    background-color: #347576;
+    color: #fff;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Link styles */
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+    </style>
 </head>
 <body>
     <header>
         <h1>Event Opportunities</h1>
         <nav>
             <ul>
-                <li><a href="EventDashboard.html" id="Dash">Dashboard</a></li>
-                <li><a href="eventOpportunities.html" class="active" id="opportunities">Event Opportunities</a></li>
+                <li><a href="business.html" id="Dash">Dashboard</a></li>
+                <li><a href="businessopportunities.html" class="active" id="opportunities">Event Opportunities</a></li>
                 <li><a  id="applications">Applications</a></li>
                 <li><a >Profile</a></li>
                 <li><a>Logout</a></li>
@@ -86,7 +215,7 @@
             const TBody = document.getElementById('BursaryData');
             eventS.forEach(bursary => {
                 // Check if the opportunity belongs to the event category
-                if (bursary.category === 'event') {
+                if (bursary.category === 'business') {
                     const newTableRow = document.createElement('tr');
                     
                     const BursaryName = document.createElement('td');
