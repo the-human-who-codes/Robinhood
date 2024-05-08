@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advertise Your Bursary</title>
     <style>
-        /* CSS styles */
-        
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+
             background-color: #f9f9f9;
         }
 
@@ -117,6 +116,14 @@
             <label for="contact">Contact Information:</label><br>
             <input type="text" id="contact" name="contact" required><br><br>
 
+            <label for="category">Category:</label><br>
+            <select id="category" name="category" required>
+                <option value="">Select a category</option>
+                <option value="educational">Educational</option>
+                <option value="business">Business</option>
+                <option value="event">Event</option>
+            </select><br><br>
+
             <button type="submit">Advertise Bursary</button>
         </form>
     </main>
@@ -127,7 +134,7 @@
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js';
-        import { getDatabase, ref, push, get } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js';
+        import { getDatabase, ref, push } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js';
 
         // Firebase configuration
         const firebaseConfig = {
@@ -138,67 +145,25 @@
             storageBucket: "fir-sd-22d1a.appspot.com",
             messagingSenderId: "526172429927",
             appId: "1:526172429927:web:51ae427f7acfa1d925bec2"
-        };
-
+          };
+        
+        
         const firebaseApp = initializeApp(firebaseConfig);
         const db = getDatabase(firebaseApp);
-        const fundingOpportunitiesRef = ref(db, 'fund_manager-applications');
         const fundingAdvertisementsRef = ref(db, 'funding-advertisements');
 
         async function createAdvertisement(event) {
             event.preventDefault();
-            const status = await checkFundManagerStatus();
-            console.log(status);
-            console.log('Fund manager status:', status);
-            if (status === 'accepted') {
-                const formData = new FormData(document.getElementById('bursary-form'));
-                const bursaryData = {};
-                formData.forEach((value, key) => {
-                    bursaryData[key] = value;
-                });
-                console.log(bursaryData);
-                saveAdvertisementToDatabase(bursaryData);
-                alert('Bursary advertisement created successfully!');
-                document.getElementById('bursary-form').reset();
-            } else if (status === 'pending') {
-                alert('Your application is still pending. Please wait for approval.');
-            } else {
-                alert('Your application has been rejected. You cannot create advertisements.');
-            }
+            const formData = new FormData(document.getElementById('bursary-form'));
+            const bursaryData = {};
+            formData.forEach((value, key) => {
+                bursaryData[key] = value;
+            });
+            console.log(bursaryData);
+            saveAdvertisementToDatabase(bursaryData);
+            alert('Bursary advertisement created successfully!');
+            document.getElementById('bursary-form').reset();
         }
-
-        async function checkFundManagerStatus() {
-    try {
-        const user = JSON.parse(sessionStorage.getItem('user'));
-        if (!user || !user.uid) {
-            console.error('User ID not found in session storage.');
-            return 'pending';
-        }
-
-        const snapshot = await get(fundingOpportunitiesRef);
-        if (snapshot.exists()) {
-            const applications = snapshot.val();
-            for (const key in applications) {
-                if (applications.hasOwnProperty(key)) {
-                    const application = applications[key];
-                    if (application.uid === user.uid) {
-                        const status = application.status || 'pending';
-                        console.log('Status:', status);
-                        return status === 'accepted' ? 'accepted' : 'rejected';
-                    }
-                }
-            }
-            console.log('Application not found for user:', user.uid);
-            return 'pending';
-        } else {
-            console.log('No data available');
-            return 'pending';
-        }
-    } catch (error) {
-        console.error('Error getting fund manager status: ', error);
-        return 'pending';
-    }
-}
 
         function saveAdvertisementToDatabase(advertisementData) {
             push(fundingAdvertisementsRef, advertisementData);
