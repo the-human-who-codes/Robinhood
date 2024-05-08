@@ -29,5 +29,7 @@ module.exports = {
   globals: {
     TextEncoder: require('util').TextEncoder,
   },
-  "setupFilesAfterEnv": ["./src/setupTests.js"]
+  "setupFilesAfterEnv": ["./src/setupTests.js"],
+  collectCoverage: true,
+  coverageReporters: ['text', 'lcov'],
 };
