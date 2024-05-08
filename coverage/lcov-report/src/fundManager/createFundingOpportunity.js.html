@@ -39,7 +39,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>0/3</span>
             </div>
         
             
@@ -122,9 +122,7 @@
 <a name='L57'></a><a href='#L57'>57</a>
 <a name='L58'></a><a href='#L58'>58</a>
 <a name='L59'></a><a href='#L59'>59</a>
-<a name='L60'></a><a href='#L60'>60</a>
-<a name='L61'></a><a href='#L61'>61</a>
-<a name='L62'></a><a href='#L62'>62</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L60'></a><a href='#L60'>60</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -163,6 +161,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -172,21 +171,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { initializeApp } from "firebase/app";
-import { getDatabase, ref, push, set } from "firebase/database";
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js";
+import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js";
 &nbsp;
 const firebaseConfig = <span class="cstat-no" title="statement not covered" >{</span>
     apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
@@ -205,7 +201,7 @@ const firebaseApp = <span class="cstat-no" title="statement not covered" >initia
 const db = <span class="cstat-no" title="statement not covered" >getDatabase(firebaseApp);</span>
 const fundingOpportunitiesRef = <span class="cstat-no" title="statement not covered" >ref(db, 'fund_manager-applications');</span>
 &nbsp;
-export async function <span class="fstat-no" title="function not covered" >createFundingOpportunity(</span>title, description, deadline, motivation, uid) {
+async function <span class="fstat-no" title="function not covered" >createFundingOpportunity(</span>title, description, deadline, motivation, uid) {
 <span class="cstat-no" title="statement not covered" >    try {</span>
         const newFundingOpportunity = <span class="cstat-no" title="statement not covered" >{</span>
             title,
@@ -223,12 +219,13 @@ export async function <span class="fstat-no" title="function not covered" >creat
     }
 }
 &nbsp;
-export async function <span class="fstat-no" title="function not covered" >handleSubmit(</span>event, form) {
+// Handle form submission
+async function <span class="fstat-no" title="function not covered" >handleSubmit(</span>event) {
 <span class="cstat-no" title="statement not covered" >    event.preventDefault();</span>
-    const title = <span class="cstat-no" title="statement not covered" >form.querySelector('#title').value;</span>
-    const description = <span class="cstat-no" title="statement not covered" >form.querySelector('#description').value;</span>
-    const deadline = <span class="cstat-no" title="statement not covered" >form.querySelector('#deadline').value;</span>
-    const motivation = <span class="cstat-no" title="statement not covered" >form.querySelector('#motivation').value;</span>
+    const title = <span class="cstat-no" title="statement not covered" >document.getElementById('title').value;</span>
+    const description = <span class="cstat-no" title="statement not covered" >document.getElementById('description').value;</span>
+    const deadline = <span class="cstat-no" title="statement not covered" >document.getElementById('deadline').value;</span>
+    const motivation = <span class="cstat-no" title="statement not covered" >document.getElementById('motivation').value;</span>
     
     // Get UID from session storage
     let user = <span class="cstat-no" title="statement not covered" >JSON.parse(sessionStorage.getItem("user"));</span>
@@ -237,23 +234,20 @@ export async function <span class="fstat-no" title="function not covered" >handl
 <span class="cstat-no" title="statement not covered" >    await createFundingOpportunity(title, description, deadline, motivation, uid);</span>
 }
 &nbsp;
-// Export the function for testing
-export function <span class="fstat-no" title="function not covered" >redirect(</span>) {
-<span class="cstat-no" title="statement not covered" >    window.location.href = 'fundingmenager.html';</span>
-}
+// Add event listener to form submission
+<span class="cstat-no" title="statement not covered" >document.getElementById('fundingOpportunityForm').addEventListener('submit', handleSubmit);</span>
 &nbsp;
 // Redirect function
 function <span class="fstat-no" title="function not covered" >Create(</span>) {
 <span class="cstat-no" title="statement not covered" >    window.location.href = 'fundingmenager.html';</span>
-}
-&nbsp;</pre></td></tr></table></pre>
+}</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-05-08T02:37:35.724Z
+                at 2024-05-08T07:06:07.071Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

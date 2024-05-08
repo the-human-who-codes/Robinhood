@@ -1,5 +1,5 @@
-import { initializeApp } from "firebase/app";
-import { getDatabase, ref, push, set } from "firebase/database";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js";
+import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
@@ -18,7 +18,7 @@ const firebaseApp = initializeApp(firebaseConfig);
 const db = getDatabase(firebaseApp);
 const fundingOpportunitiesRef = ref(db, 'fund_manager-applications');
 
-export async function createFundingOpportunity(title, description, deadline, motivation, uid) {
+async function createFundingOpportunity(title, description, deadline, motivation, uid) {
     try {
         const newFundingOpportunity = {
             title,
@@ -36,12 +36,13 @@ export async function createFundingOpportunity(title, description, deadline, mot
     }
 }
 
-export async function handleSubmit(event, form) {
+// Handle form submission
+async function handleSubmit(event) {
     event.preventDefault();
-    const title = form.querySelector('#title').value;
-    const description = form.querySelector('#description').value;
-    const deadline = form.querySelector('#deadline').value;
-    const motivation = form.querySelector('#motivation').value;
+    const title = document.getElementById('title').value;
+    const description = document.getElementById('description').value;
+    const deadline = document.getElementById('deadline').value;
+    const motivation = document.getElementById('motivation').value;
     
     // Get UID from session storage
     let user = JSON.parse(sessionStorage.getItem("user"));
@@ -50,10 +51,8 @@ export async function handleSubmit(event, form) {
     await createFundingOpportunity(title, description, deadline, motivation, uid);
 }
 
-// Export the function for testing
-export function redirect() {
-    window.location.href = 'fundingmenager.html';
-}
+// Add event listener to form submission
+document.getElementById('fundingOpportunityForm').addEventListener('submit', handleSubmit);
 
 // Redirect function
 function Create() {
