@@ -45,168 +45,90 @@
     <footer>
         <p>&copy; 2024 Event Funding Portal</p>
     </footer>
-</body>
-</html>
 
-    
     <script type="module" defer>
-         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-        
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getDatabase, ref, child, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+
+        // Firebase configuration
         const firebaseConfig = {
-          apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
-          authDomain: "fir-sd-22d1a.firebaseapp.com",
-          databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
-          projectId: "fir-sd-22d1a",
-          storageBucket: "fir-sd-22d1a.appspot.com",
-          messagingSenderId: "526172429927",
-          appId: "1:526172429927:web:51ae427f7acfa1d925bec2"
-        };
-      
-        
+            apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
+            authDomain: "fir-sd-22d1a.firebaseapp.com",
+            databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
+            projectId: "fir-sd-22d1a",
+            storageBucket: "fir-sd-22d1a.appspot.com",
+            messagingSenderId: "526172429927",
+            appId: "1:526172429927:web:51ae427f7acfa1d925bec2"
+          };
         const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
 
-        import {getDatabase,ref,child,get,set,update,remove,onValue} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js"
-        const db=getDatabase();
+        const opportunities = document.getElementById("opportunities");
 
-        const Dashboard=document.getElementById("Dash");
-        const opportunities=document.getElementById("opportunities");
-        const applications=document.getElementById("applications");
-        //const profile=document.getElementById("profile");
-        //const logout=document.getElementById("logout");
-        //const section1=document.getElementById("BursaryInfo")
-        
-
-        
-       
-
-        //get all bursary
-    function RetrieveAllEventFunders(){
-        const dbref=ref(db);
-        get(child(dbref,'EvenFunders')).then((snapshot)=>{
-             let bursaries=[];
-            snapshot.forEach(childSnapshot=>{
-                var burs=childSnapshot.val();
-                burs['id']=childSnapshot.key;
-                bursaries.push(burs);
+        function RetrieveAllEventFunders(){
+            const dbref=ref(db);
+            get(child(dbref,'funding-advertisements')).then((snapshot)=>{
             
-            })
+                let bursaries = [];
+                snapshot.forEach(childSnapshot => {
+                    const burs = childSnapshot.val();
+                    burs['id'] = childSnapshot.key;
+                    bursaries.push(burs);
+                });
 
-            AddRow(bursaries);
-            console.log(bursaries);
-        }).catch((error)=>{
-            alert("A network issue is causing some errors with the operation")  ;
-            console.log(error);  
-         })
-    };
+                AddRow(bursaries);
+            }).catch((error) => {
+                console.error("Error getting data: ", error);
+            });
+        };
 
-        //basic page nav
-        function DashBoard(){
-            window.location.href = 'eventDashBoard.html';
+        function AddRow(eventS) {
+            const TBody = document.getElementById('BursaryData');
+            eventS.forEach(bursary => {
+                // Check if the opportunity belongs to the event category
+                if (bursary.category === 'event') {
+                    const newTableRow = document.createElement('tr');
+                    
+                    const BursaryName = document.createElement('td');
+                    BursaryName.textContent = bursary['bursary-title'] || 'N/A';
+        
+                    const BursaryDescription = document.createElement('td');
+                    BursaryDescription.textContent = bursary['description'] || 'N/A';
+        
+                    const BursaryCriteria = document.createElement('td');
+                    BursaryCriteria.textContent = bursary['criteria'] || 'N/A';
+        
+                    const BursaryDeadline = document.createElement('td');
+                    BursaryDeadline.textContent = bursary['deadline'] || 'N/A';
+        
+                    const BursaryAction = document.createElement('td');
+                    const applyNowButton = document.createElement('a');
+                    applyNowButton.innerText = 'Apply Now';
+                    applyNowButton.href = 'eventApplication.html';
+                    BursaryAction.appendChild(applyNowButton);
+        
+                    newTableRow.appendChild(BursaryName);
+                    newTableRow.appendChild(BursaryDescription);
+                    newTableRow.appendChild(BursaryCriteria);
+                    newTableRow.appendChild(BursaryDeadline);
+                    newTableRow.appendChild(BursaryAction);
+        
+                    TBody.appendChild(newTableRow);
+                }
+            });
         }
+        
+        opportunities.addEventListener('click', () => {
+            Opportuninties();
+        });
 
-        function Opportuninties(){
+        function Opportuninties() {
             window.location.href = 'eventOpportunities.html';
         }
 
-        // function Profile(){
-        //     window.location.href = 'Profile.html';
-        // }
-
-        // function LogOut(){
-        //     window.location.href = 'BasicLogin.html';
-        // }
-
-        function ApplicationForm(){
-            window.location.href = 'Application.html';
-        }
-
-        function AddRow(eventS){
-            let THead=document.getElementById('BursaryData');
-                let Deadline='';
-                let Opportunity='';
-                let Description='';
-                let Criteria='';
-                let id=''; 
-             let Evs={};   
-            eventS.forEach(bursary => {
-                    id=bursary.id;
-                   const fundingOpp=bursary["funder"];
-                   //Contact=bursary.contact; 
-                   Deadline=bursary.deadline;
-                   Criteria=bursary.citeria;
-                   Description=bursary.description;
-                   Evs['id']=id;
-                   Evs['funder']=fundingOpp;
-                   Evs['description']=Description;
-                   Evs['deadline']=Deadline;
-                   Evs['citeria']=Criteria;
-                   //Evs['description']=Desc;
-                   let newTableRow=document.createElement('tr');
-                   newTableRow.setAttribute('id','row');
-                  // newTableRow.setAttribute('id',`${id}`);
-
-                   let BursaryName=document.createElement('td');
-                   let BursaryContact=document.createElement('td');
-                   let BursaryDeadline=document.createElement('td');
-                   let BursaryDeadline1=document.createElement('td');
-                   let BursaryDeadline2=document.createElement('td');
-                   //let BursaryInfo=document.createElement('h3');
-                   let BursaryView=document.createElement('td');
-                   let viewButton=document.createElement('a');
-                   viewButton.innerText='Apply Now';
-                   viewButton.href='eventApplication.html';
-
-                   BursaryName.textContent=fundingOpp;
-                   BursaryContact.textContent=Description;
-                   BursaryDeadline.textContent=Criteria;
-                   BursaryDeadline1.textContent=Deadline;
-                   BursaryDeadline2.append(viewButton);
-                  
-                    
-
-                   newTableRow.append(BursaryName);
-                   newTableRow.append(BursaryContact);
-                   newTableRow.append(BursaryDeadline);
-                   newTableRow.append(BursaryDeadline1);
-                   newTableRow.append(BursaryDeadline2);
-                   THead.append(newTableRow);
-                   
-
-            })
-           //rowEventListner(burs);
-        }
-
-           // Get all the rows in the table
-        
-
-        // Loop through each row and add a click event listener
-        
-
-        Dashboard.addEventListener('click',()=>{
-            DashBoard();
-        });
-
-        applications.addEventListener('click',()=>{
-            Application();
-        })
-
-        // profile.addEventListener('click',()=>{
-        //     Profile();
-        // })
-
-        // logout.addEventListener('click',()=>{
-        //     LogOut();
-        // })
-
-        //display bursary info when page loaded
         document.addEventListener("DOMContentLoaded", function() {
-            // Your code to be executed after the DOM content is fully loaded
             RetrieveAllEventFunders();
         });
-
-
-        
     </script>
-    
 </body>
 </html>
