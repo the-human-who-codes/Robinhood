@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Opportunities</title>
+    <style>
+        /* Reset default margin and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* Header styles */
+header {
+    background-color: #347576;
+    color: #fff;
+    padding: 20px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+nav ul {
+    list-style-type: none;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+nav ul li a.active {
+    font-weight: bold;
+}
+
+/* Main styles */
+main {
+    padding: 20px;
+}
+
+.opportunities h2 {
+    margin-bottom: 20px;
+}
+
+.opportunities ul {
+    list-style-type: none;
+}
+
+.opportunities li {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.opportunities li h3 {
+    margin-bottom: 10px;
+}
+
+.opportunities li p {
+    margin-bottom: 5px;
+}
+
+.opportunities li a {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #347576;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.opportunities li a:hover {
+    background-color: #0056b3;
+}
+
+/* Footer styles */
+footer {
+    background-color: #347576;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Table styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+thead {
+    background-color: #347576;
+    color: #fff;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Link styles */
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Event Opportunities</h1>
+        <nav>
+            <ul>
+                <li><a href="business.html" id="Dash">Dashboard</a></li>
+                <li><a href="businessopportunities.html" class="active" id="opportunities">Event Opportunities</a></li>
+                <li><a  id="applications">Applications</a></li>
+                <li><a >Profile</a></li>
+                <li><a>Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="opportunities">
+            <h2>Available Event Funding Opportunities</h2>
+            <table id="Events">
+                <thead>
+                    <tr>
+                        <th>Event Funding Opportunity</th>
+                        <th>Description</th>
+                        <th>Eligibility Criteria</th>
+                        <th>Application Deadline</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="BursaryData">
+                   
+                    <!-- Add more rows as needed -->
+                </tbody>
+            </table>
+            
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Event Funding Portal</p>
+    </footer>
+
+    <script type="module" defer>
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getDatabase, ref, child, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
+            authDomain: "fir-sd-22d1a.firebaseapp.com",
+            databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
+            projectId: "fir-sd-22d1a",
+            storageBucket: "fir-sd-22d1a.appspot.com",
+            messagingSenderId: "526172429927",
+            appId: "1:526172429927:web:51ae427f7acfa1d925bec2"
+          };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+
+        const opportunities = document.getElementById("opportunities");
+
+        function RetrieveAllEventFunders(){
+            const dbref=ref(db);
+            get(child(dbref,'funding-advertisements')).then((snapshot)=>{
+            
+                let bursaries = [];
+                snapshot.forEach(childSnapshot => {
+                    const burs = childSnapshot.val();
+                    burs['id'] = childSnapshot.key;
+                    bursaries.push(burs);
+                });
+
+                AddRow(bursaries);
+            }).catch((error) => {
+                console.error("Error getting data: ", error);
+            });
+        };
+
+        function AddRow(eventS) {
+            const TBody = document.getElementById('BursaryData');
+            eventS.forEach(bursary => {
+                // Check if the opportunity belongs to the event category
+                if (bursary.category === 'business') {
+                    const newTableRow = document.createElement('tr');
+                    
+                    const BursaryName = document.createElement('td');
+                    BursaryName.textContent = bursary['bursary-title'] || 'N/A';
+        
+                    const BursaryDescription = document.createElement('td');
+                    BursaryDescription.textContent = bursary['description'] || 'N/A';
+        
+                    const BursaryCriteria = document.createElement('td');
+                    BursaryCriteria.textContent = bursary['criteria'] || 'N/A';
+        
+                    const BursaryDeadline = document.createElement('td');
+                    BursaryDeadline.textContent = bursary['deadline'] || 'N/A';
+        
+                    const BursaryAction = document.createElement('td');
+                    const applyNowButton = document.createElement('a');
+                    applyNowButton.innerText = 'Apply Now';
+                    applyNowButton.href = 'eventApplication.html';
+                    BursaryAction.appendChild(applyNowButton);
+        
+                    newTableRow.appendChild(BursaryName);
+                    newTableRow.appendChild(BursaryDescription);
+                    newTableRow.appendChild(BursaryCriteria);
+                    newTableRow.appendChild(BursaryDeadline);
+                    newTableRow.appendChild(BursaryAction);
+        
+                    TBody.appendChild(newTableRow);
+                }
+            });
+        }
+        
+        opportunities.addEventListener('click', () => {
+            Opportuninties();
+        });
+
+        function Opportuninties() {
+            window.location.href = 'eventOpportunities.html';
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            RetrieveAllEventFunders();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Funding Dashboard</title>
+    <style>
+        /* Reset default margin and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* Header styles */
+header {
+    background-color: #347576;
+    color: #fff;
+    padding: 20px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+nav ul {
+    list-style-type: none;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+nav ul li a.active {
+    font-weight: bold;
+}
+
+/* Main styles */
+main {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+section {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 20px;
+    flex-basis: 48%;
+}
+
+.summary h2, .notifications h2 {
+    margin-bottom: 10px;
+}
+
+.summary dl, .notifications ul {
+    list-style-type: none;
+}
+
+.summary dl dt, .notifications ul li {
+    margin-bottom: 5px;
+}
+
+/* Footer styles */
+footer {
+    background-color: #347576;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+    </style>
+    
+</head>
+<body>
+    <header>
+        <h1>Event Funding Dashboard</h1>
+        <nav>
+            <ul>
+                <li><a href="business.html" class="active" id="Dash">Dashboard</a></li>
+                <li><a href="businessopportunities.html" id="opportunities">business Opportunities</a></li>
+                <li><a  id="applications">Applications</a></li>
+                <li><a  id="profile">Profile</a></li>
+                <li><a  id="logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="Profile" id="Profile">
+            <h2>Profile</h2>
+            <ul id="userInfoContainer"></ul>
+            
+        </section>
+        <section class="notifications" id="notifications">
+            <h2>Notifications</h2>
+            Welcome to FRM
+            <!-- Existing notifications will be displayed here -->
+            <ul id="notificationList">
+                <!-- Notifications will be added dynamically here -->
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 business Funding Portal</p>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getDatabase, ref, onChildAdded } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+
+        
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
+            authDomain: "fir-sd-22d1a.firebaseapp.com",
+            databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
+            projectId: "fir-sd-22d1a",
+            storageBucket: "fir-sd-22d1a.appspot.com",
+            messagingSenderId: "526172429927",
+            appId: "1:526172429927:web:51ae427f7acfa1d925bec2"
+          };
+        
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+        const fundingRef = ref(db, 'funding-advertisements');
+
+        // Listen for any changes in the 'funding-advertisements' node
+        onChildAdded(fundingRef, (snapshot) => {
+            const newChild = snapshot.val();
+            // Check if the category is 'event'
+            if (newChild.category === 'business') {
+                // Create a new notification element
+                const notificationList = document.getElementById('notificationList');
+                const li = document.createElement('li');
+                // Setting the text content based on the 'bursary-title' field
+                li.textContent = `New opportunity added: ${newChild['bursary-title'].trim()}`;
+                notificationList.appendChild(li);
+            }
+        });
+
+    </script>
+</body>
+</html>
