@@ -113,7 +113,7 @@
                     let id1='';
                     snapshot.forEach(childSnapShot=>{
                         id1=childSnapShot.key;
-                        if(childSnapShot.val().status=='pending'){
+                        if(childSnapShot.val().status=='active'||'pending'){
                             let data=childSnapShot.val();
                             data.id=id1;
                             Students.push(data);
@@ -171,7 +171,7 @@
         }
 
         function viewUserDetails1(id) {
-            sessionStorage.setItem('info',id);
+            sessionStorage.setItem('creator id',id);
             window.location.href = 'fundDetails.html';
         }
     </script>

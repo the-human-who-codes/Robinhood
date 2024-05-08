@@ -1,5 +1,5 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js';
-import { getDatabase, ref, onValue, remove ,get,update} from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js';
+import { getDatabase, ref, onValue, remove, get, update } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js';
 
 // Firebase configuration
 const firebaseConfig = {
@@ -10,7 +10,7 @@ const firebaseConfig = {
     storageBucket: "fir-sd-22d1a.appspot.com",
     messagingSenderId: "526172429927",
     appId: "1:526172429927:web:51ae427f7acfa1d925bec2"
-  };
+};
 
 
 // Initialize Firebase
@@ -123,10 +123,15 @@ async function approveFundingOpportunity(id) {
 onValue(fundingOpportunitiesRef, (snapshot) => {
     const fundingOpportunities = [];
     snapshot.forEach((childSnapshot) => {
-        fundingOpportunities.push({
-            id: childSnapshot.key,
-            ...childSnapshot.val()
-        });
+        let fund_opp_creator_uid = sessionStorage.getItem('creator id');
+
+        if (childSnapshot.val().uid == fund_opp_creator_uid) {
+            fundingOpportunities.push({
+                id: childSnapshot.key,
+                ...childSnapshot.val()
+            });
+        }
+
     });
     displayFundingOpportunities(fundingOpportunities);
 }, {
