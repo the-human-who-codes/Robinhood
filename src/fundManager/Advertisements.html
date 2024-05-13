@@ -184,7 +184,7 @@
                     if (application.uid === user.uid) {
                         const status = application.status || 'pending';
                         console.log('Status:', status);
-                        return status === 'accepted' ? 'accepted' : 'rejected';
+                        return status;
                     }
                 }
             }
