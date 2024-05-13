@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FRM Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css" />
+
+    <script src="dashboard.js" type="module"></script>
+  </head>
+  <body>
+    <!-- Header -->
+    <header>
+      <article>
+        <img src="FRM.png" alt="Company Logo" class="logo" />
+        <h1>FRM Dashboard</h1>
+      </article>
+
+      <!-- Profile -->
+      <article>
+        <h3 class="notifications">
+          Notifications
+          <article class="notification-list">
+            <p>notification 1</p>
+            <p>notification 2</p>
+            <p>notification 3</p>
+          </article>
+          <p class="notifications-counter">3</p>
+        </h3>
+        <div class="profile">
+          <img src="user_icon.png" alt="User Icon" />
+          <span id="username"></span>
+          <div class="profile-dropdown">
+            <a href="#">View Profile</a>
+            <a href="#">Delete Account</a>
+            <a href="#">Log Out</a>
+          </div>
+        </div>
+      </article>
+      <!-- End Profile -->
+    </header>
+
+    <!-- Main Content Area -->
+    <main>
+      <!-- Welcome Modal -->
+      <div class="overlay" id="overlay" style="display: none">
+        <div class="modal">
+          <h2 id="welcome"></h2>
+          <p class="animated-text">let's setup you account!.</p>
+          <section id="ApplicationForm">
+            <article>
+              <h2>Profile Setup</h2>
+              <form id="uploadForm">
+                
+                <input type="text" id="number" name="Cellphone Number" placeholder="Cellphone Number" required /><br />
+                
+                <input type="text" id="university" name="University" placeholder="University" required /><br />
+
+                <textarea  id="address" name="address" rows="4" cols="50" placeholder="Address"  required></textarea><br/>
+                <br />
+
+                <label for="applicantType">Type of Applicant:</label>
+                <select id="applicantType" name="applicantType" required>
+                  <option value="Student">Student</option>
+                  <option value="Business">Business</option>
+                  <option value="Event">Event</option></select><br />
+
+                
+                <button type="submit" id="finishSetupBtn">Finish Setup</button>
+              </form>
+            </article>
+          </section>
+        </div>
+      </div>
+
+      <section>
+        <div id="dashview">
+          <article class="active">
+            <h1>AVAILABLE FUNDING OPPORTUNITIES</h1>
+          </article>
+          <article><h1>VIEW MY APPLICATIONS</h1></article>
+        </div>
+      </section>
+      <!-- Profile Setup Page -->
+      <section id="profileSetupPage" class="widget" style="display: none">
+        <h2>Profile Setup</h2>
+        <!-- Profile setup form goes here -->
+        <!-- For simplicity, let's assume a form with input fields -->
+      </section>
+
+      <!-- Dashboard Widgets -->
+      <section class="widget" id="container">
+        <!-- More funding opportunities can be added -->
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <p>&copy; 2024 Professional Dashboard. All rights reserved.</p>
+    </footer>
+  </body>
+</html>

@@ -12,14 +12,23 @@ const firebaseConfig = {
   projectId: "fir-sd-22d1a",
   storageBucket: "fir-sd-22d1a.appspot.com",
   messagingSenderId: "526172429927",
-  appId: "1:526172429927:web:51ae427f7acfa1d925bec2"
+  appId: "1:526172429927:web:51ae427f7acfa1d925bec2",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 auth.languageCode = "it";
-import { getDatabase, ref, child, get, set, update, remove, onValue } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js"
+import {
+  getDatabase,
+  ref,
+  child,
+  get,
+  set,
+  update,
+  remove,
+  onValue,
+} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 const db = getDatabase();
 const dbref = ref(db);
 const provider = new GoogleAuthProvider();
@@ -30,52 +39,48 @@ googleLogin.addEventListener("click", function () {
     .then((result) => {
       // The signed-in user info.
       const user = result.user;
-      sessionStorage.setItem('user', JSON.stringify(user));
+      sessionStorage.setItem("user", JSON.stringify(user));
       let uid = user.uid;
-      
+      sessionStorage.setItem('firstLogin',false);
       // Check if the user exists in the FundManagers table
       get(child(dbref, "FundManagers/" + uid))
         .then((snapshot) => {
           if (snapshot.exists()) {
-            if(snapshot.val().status=="Blocked"){
-              alert("User is blocked")
-              window.location.href="./blocked.html";
+            if (snapshot.val().status == "Blocked") {
+              alert("User is blocked");
+              window.location.href = "./blocked.html";
             }
-            if(snapshot.val().status=="Violation"){
-              alert("You are in violation of the rules and your account will be blocked")
+            if (snapshot.val().status == "Violation") {
+              alert(
+                "You are in violation of the rules and your account will be blocked"
+              );
               window.location.href = "./fundManager/fundingmenager.html";
-
+            } else {
+              // User is a fund manager, redirect to the fund manager dashboard
+              window.location.href = "./fundManager/fundingmenager.html";
             }
-            else{
-            // User is a fund manager, redirect to the fund manager dashboard
-            window.location.href = "./fundManager/fundingmenager.html";}
           } else {
             // Check if the user exists in the Students table
             get(child(dbref, "Applicants/" + uid))
               .then((snapshot) => {
                 if (snapshot.exists()) {
-                  if(snapshot.val().status=="Blocked"){
-                    alert("User is blocked")
-                    window.location.href="./blocked.html";
-                  }
-                  if(snapshot.val().status=="Violation"){
-                    alert("You are in violation of the rules and your account will be blocked");
-                    window.location.href="./fundApplicant/dashboard.html";
-                  }
-                  else{
-                  // User is a student, redirect to the student dashboard
-                  if(snapshot.val().type=="educational"){
-                    window.location.href="./Sprint/dash_board.html";
-                  }
-                  else if(snapshot.val().type=="events"){
-                    window.location.href="./Sprint/dash_board.html";
-                  }
+                  if (snapshot.val().status == "Blocked") {
+                    alert("User is blocked");
+                    window.location.href = "./blocked.html";
+                  } else {
+                    if (snapshot.val().status == "Violation") {
+                      alert(
+                        "You are in violation of the rules and your account will be blocked"
+                      );
+                    }
 
-                }
-                  //window.location.href = "./fundApplicant/dashboard.html";}
+                    window.location.href =
+                      "./Sprint/fundApplicant/dash_board.html";
+                  }
                 } else {
                   // User not found, redirect to registration page
-                  console.log('please register');
+                  console.log("please register");
+                  sessionStorage.setItem('firstLogin',true);
                   window.location.href = "createacc.html";
                 }
               })
@@ -91,9 +96,7 @@ googleLogin.addEventListener("click", function () {
         });
     })
     .catch((error) => {
-      
       const errorCode = error.code;
       console.log("Error:", error.message);
-      
     });
 });
