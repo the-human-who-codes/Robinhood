@@ -55,10 +55,10 @@ googleLogin.addEventListener("click", function () {
                   else{
                   // User is a student, redirect to the student dashboard
                   if(snapshot.val().type=="educational"){
-                    window.location.href="./fundApplicant/dashboard.html";
+                    window.location.href="./Sprint/dash_board.html";
                   }
                   else if(snapshot.val().type=="events"){
-                    window.location.href="./Event/EventDashboard.html";
+                    window.location.href="./Sprint/dash_board.html";
                   }
 
                 }

@@ -24,7 +24,7 @@ function goBack() {
 
 function showForm(formType) {
     if (formType === 'applicant') {
-        window.location.href = './fundApplicant/applicant.html';
+        window.location.href = './sprint/dash_board.html';
     } else if (formType === 'fundManager') {
         window.location.href = './fundManager/applicant.html';
     }

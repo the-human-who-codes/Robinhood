@@ -1,0 +1,305 @@
+p{
+    margin: 0;
+}
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(90deg, #f9f9f9, #dfe2c5);
+}
+
+/* Header styles */
+header {
+    background: linear-gradient(90deg, #038fc2 ,#0048b5); /* Initial gradient background */
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+header article {
+    display: flex;
+    align-items: center;
+}
+#dashview {
+    display: flex;
+    justify-content: space-around;
+    color: #0077b5;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+}
+#dashview article{
+    flex: 1;
+}
+#dashview h1 {
+    cursor: pointer;
+    padding: 10px 20px;
+    margin: 0;
+}
+#dashview .active {
+    background-color: #0077b5;
+    color: #fff;
+}
+/* Logo styles */
+.logo {
+    width: 100px;
+    margin-right: 20px;
+}
+.notifications{
+    position: relative;
+}
+.notification-list {
+position: absolute;
+bottom: -100px;
+right: 3px;
+background-color: #ffffff;
+display: none;
+flex-direction: column;
+z-index: 3000;
+color: #0048b5;
+width: 200px;
+box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+border-radius: 5px;
+padding: 10px;
+}
+.notifications-counter{
+position: absolute;
+top: -10px;
+right: -25px;
+font-size: small;
+background-color: red;
+border-radius: 100px;
+border: none;
+padding-left: 9px;
+padding-right: 9px;
+padding-top: 5px;
+padding-bottom: 5px;
+
+}
+
+.notifications:active .notification-list {
+display: flex;
+}
+/* Profile styles */
+.profile {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-right: 20px;
+}
+
+.profile img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+    margin-left: 35px;
+}
+
+/* Profile dropdown */
+.profile-dropdown {
+    position: absolute;
+    top: 70px;
+    right: 20px;
+    background-color: #fff;
+    min-width: 120px;
+    z-index: 1;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: none;
+}
+
+.profile-dropdown a {
+    color: #333;
+    padding: 10px 20px;
+    display: block;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.profile-dropdown a:hover {
+    background-color: #f1f1f1;
+}
+
+.profile:hover .profile-dropdown {
+    display: block;
+}
+
+/* Navigation menu styles */
+nav {
+    background-color: #fff; /* White background */
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid #e1e9ef; /* Light gray border */
+}
+
+nav a {
+    color: #0077b5; /* LinkedIn-like blue for links */
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    border: 1px solid #0077b5;
+    text-align: center;
+}
+
+nav a:hover {
+    background-color: #0077b5; /* LinkedIn-like blue on hover */
+    color: #fff;
+}
+
+/* Main content styles */
+main {
+    padding: 20px;
+}
+section{
+    background: linear-gradient(90deg, #f9f9f9, #dfe2c5);
+}
+
+/* Widget styles */
+.widget h2 {
+    margin-top: 0;
+    color: #0077b5; /* LinkedIn-like blue for widget headings */
+}
+
+article.opportunity {
+    background-color: #fff; /* White background */
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Shadow effect */
+    transition: transform 0.3s ease;
+    margin-bottom: 15px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+article.opportunity:hover {
+    transform: translateY(-5px); /* Lifts the card on hover */
+}
+
+article.opportunity img {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px 0 0 10px; /* Rounded corners on the left */
+    margin-left: 25px;
+}
+
+article.opportunity .opportunity-details {
+    flex: 1;
+    padding: 20px;
+}
+
+article.opportunity h3 {
+    margin-top: 0;
+    color: #0077b5; /* LinkedIn-like blue for opportunity titles */
+    margin-bottom: 10px;
+}
+
+article.opportunity p {
+    margin: 0 0 5px;
+    color: #333; /* Dark gray text color */
+}
+
+.view-more-btn {
+    background-color: #0077b5; /* LinkedIn-like blue */
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 10px;
+    margin-left: 20px;
+}
+
+article.opportunity:hover .view-more-btn {
+    transform: scale(1.05); /* Scale up slightly on hover */
+}
+
+.view-more-btn:hover {
+    background-color: #005c91; /* Darker blue on hover */
+}
+
+/* Modal styles */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    z-index: 1000; /* Make sure it's on top of everything */
+    display: none; /* Initially hidden */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: zapIn 0.5s ease forwards; /* Apply zap animation */
+}
+
+.modal h2 {
+    margin-top: 0;
+    color: #0077b5; /* LinkedIn-like blue for modal heading */
+}
+
+.modal p {
+    color: #333; /* Dark gray text color */
+}
+
+.modal button {
+    background-color: #0077b5; /* LinkedIn-like blue */
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.modal button:hover {
+    background-color: #005c91; /* Darker blue on hover */
+}
+
+/* Footer styles */
+footer {
+    background-color: #0077b5; /* LinkedIn-like blue */
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+}
+
+/* Animation keyframes */
+@keyframes zapIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Animation for fancy text */
+.animated-text {
+    animation: fadeInDown 1s ease forwards;
+    opacity: 0;
+}
+
+@keyframes fadeInDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
