@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function() {
             applyBtn.textContent = "Apply";
             applyBtn.classList.add("apply-btn");
             applyBtn.addEventListener("click", function() {
-                window.location.href = 'application.html';
+                window.location.href = 'Application.html';
             });
             this.parentNode.appendChild(applyBtn);
             this.style.display = "none";
