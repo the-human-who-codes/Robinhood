@@ -75,13 +75,28 @@ function addOpportunity(bursary) {
     const amountP = document.createElement("p");
     amountP.textContent = "Amount: " + bursary.amount;
     detailsDiv.appendChild(amountP);
+    //view more button
+    const viewMoreBtn = document.createElement("button");
+    viewMoreBtn.classList.add("view-more-btn");
+    viewMoreBtn.textContent = "View More";
+    detailsDiv.appendChild(viewMoreBtn);
+    viewMoreBtn.addEventListener("click", function () {
+        
+        //add extra info about the bursary
 
-    const button = document.createElement("button");
-    button.classList.add("view-more-btn");
-    button.textContent = "View More";
-    detailsDiv.appendChild(button);
-    button.addEventListener("click", function () {
-        console.log("in");
+        const criteria = document.createElement("p");
+        criteria.textContent ='criteria: '+bursary.criteria;
+        detailsDiv.appendChild(criteria);
+
+        const contact = document.createElement("p");
+        contact.textContent = 'contact: '+bursary.contact;
+        detailsDiv.appendChild(contact);
+
+        const deadline = document.createElement("p");
+        deadline.textContent = 'Deadline: '+bursary.deadline;
+        detailsDiv.appendChild(deadline);
+
+
         const opportunity = this.closest(".opportunity");
         const details = opportunity.querySelector(".opportunity-details");
         details.style.display = "block";
