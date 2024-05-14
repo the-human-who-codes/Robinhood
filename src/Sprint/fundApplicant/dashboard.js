@@ -80,6 +80,20 @@ function addOpportunity(bursary) {
     button.classList.add("view-more-btn");
     button.textContent = "View More";
     detailsDiv.appendChild(button);
+    button.addEventListener("click", function () {
+        console.log("in");
+        const opportunity = this.closest(".opportunity");
+        const details = opportunity.querySelector(".opportunity-details");
+        details.style.display = "block";
+        const applyBtn = document.createElement("button");
+        applyBtn.textContent = "Apply";
+        applyBtn.classList.add("apply-btn");
+        applyBtn.addEventListener("click", function () {
+            window.location.href = 'Application.html';
+        });
+        this.parentNode.appendChild(applyBtn);
+        this.style.display = "none";
+    });
 
     article.appendChild(detailsDiv);
 
@@ -161,6 +175,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const viewMoreBtns = document.querySelectorAll(".view-more-btn");
     viewMoreBtns.forEach(btn => {
         btn.addEventListener("click", function () {
+            console.log("in")
             const opportunity = this.closest(".opportunity");
             const details = opportunity.querySelector(".opportunity-details");
             details.style.display = "block";

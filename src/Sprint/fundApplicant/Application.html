@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Form</title>
+    <link rel="stylesheet" href="Application.css">
+</head>
+<body>
+    <section id="ApplicationForm" >
+        <artice>
+            <h2>Application Form</h2>
+            <form  id="uploadForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required><br>
+
+            <label for="surname">Surname:</label>
+            <input type="text" id="surname" name="surname" required><br>
+
+            <label for="university">University:</label>
+            <input type="text" id="university" name="university" required><br>
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br>
+            
+            <label for="phone">Phone:</label>
+            <input type="tel" id="phone" name="phone" required><br>
+
+            <label for="payslip">Financial Documnets:</label>
+            <input type="file" id="fileInput1" name="fileInput" required accept=".pdf"></input><br>
+            
+            <label for="transcript">Academic Record:</label>
+            <input type="file" id="fileInput2" name="fileInput" required accept=".pdf"></input><br>
+            
+            <label for="Tell Us About Yourself:">Motivation:</label><br>
+            <textarea id="comments" name="comments" rows="4" cols="50"></textarea><br>
+            
+            <button type="submit">Submit Application</button>
+        </artice>
+        
+    </form>
+
+    </section>
+  
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+        //import storage
+        import {
+          getStorage,
+          ref as ref1,
+          uploadBytes,
+          getDownloadURL,
+        } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-storage.js";
+  
+        const firebaseConfig = {
+          apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
+  
+          authDomain: "fir-sd-22d1a.firebaseapp.com",
+  
+          databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
+  
+          projectId: "fir-sd-22d1a",
+  
+          storageBucket: "fir-sd-22d1a.appspot.com",
+  
+          messagingSenderId: "526172429927",
+  
+          appId: "1:526172429927:web:51ae427f7acfa1d925bec2",
+        };
+  
+        import {
+          getDatabase,
+          ref,
+          child,
+          get,
+          set,
+          update,
+          remove,
+          onValue,
+        } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+  
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+        const storage1 = getStorage();
+  
+        const uniqueId = Date.now(); //user ID for testing only
+  
+        const uploadForm = document.getElementById("uploadForm");
+        uploadForm.addEventListener("submit", function (event) {
+          event.preventDefault();
+          const name = document.getElementById("name").value;
+          const surname = document.getElementById("surname").value;
+          const university = document.getElementById("university").value;
+          const email = document.getElementById("email").value;
+          const phone = document.getElementById("phone").value;
+          const file1 = document.getElementById("fileInput1").files[0];
+          const file2 = document.getElementById("fileInput2").files[0];
+          const aboutMe = document.getElementById("comments").value;
+  
+          // User information
+          let userInfo = {
+            name: name,
+            surname: surname,
+            university: university,
+            email: email,
+            phone: phone,
+            about: aboutMe,
+          };
+  
+          const StoragePath = `Students/${uniqueId}/`;
+          Promise.all([
+            //uploading files to Students storage
+            uploadFile(file1, file1.name),
+            uploadFile(file2, file2.name),
+          ])
+            .then(() => {
+              Promise.all([
+                getDownloadURL(ref1(storage1, StoragePath + file1.name)),
+                getDownloadURL(ref1(storage1, StoragePath + file2.name)),
+              ])
+                .then((urls) => {
+                  // store urls in userInfo object
+                  userInfo["transcript"] = urls[0];
+                  userInfo["payslips"] = urls[1];
+                  // Output the URLs
+                  // console.log('Uploaded both PDF files with unique ID:', uniqueId);
+                  addToDatabase(userInfo);
+                })
+                .catch((error) => {
+                  console.error("Error getting PDF URLs:", error);
+                });
+            })
+            .catch((error) => {
+              console.error("Error uploading PDF files:", error);
+            });
+  
+          //uploads pdf files and ensures they are stored in the same folder i.e Students/UniqueID/
+          function uploadFile(file, fileName) {
+            const fileStorageRef = ref1(storage1, StoragePath + fileName);
+            // Upload the file to Firebase Storage
+            return uploadBytes(fileStorageRef, file);
+          }
+  
+          //add user to DB with associated pdfs
+          function addToDatabase(userInfo) {
+            const uid = getCurrentUserID();
+  
+      // Add the UID to the userInfo object
+            console.log(userInfo);
+            set(ref(db, "StudentApplicant/" + uniqueId), {
+              name: userInfo.name,
+              surname: userInfo.surname,
+              university: userInfo.university,
+              email: userInfo.email,
+              phone: userInfo.phone,
+              about: userInfo.about,
+              transcript: userInfo.transcript,
+              payslips: userInfo.payslips,
+              uid: uid
+            })
+              .then(() => {
+                alert("Submission Recieved");
+              })
+              .catch((error) => {
+                alert("Issue with Submission try again");
+                console.log(error);
+              });
+          }
+        });
+        function getCurrentUserID() {
+      // Retrieve the user from session storage
+      let user = JSON.parse(sessionStorage.getItem("user"));
+      if (user && user.uid) {
+          return user.uid;
+      } else {
+          console.error("User ID not found in session storage.");
+          return null;
+      }
+  }
+      </script>
+</body>
+</html>

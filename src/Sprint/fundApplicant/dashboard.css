@@ -253,6 +253,15 @@ article.opportunity p {
     margin-left: 20px;
 }
 
+.apply-btn{
+    background-color: #0077b5;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
 article.opportunity:hover .view-more-btn {
     transform: scale(1.05);
     /* Scale up slightly on hover */
