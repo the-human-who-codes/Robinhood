@@ -72,6 +72,31 @@
         </div>
       </div>
 
+      <div class="overlay" id="bursaryApplicationForm" style="display: none">
+        <div class="modal">
+            <h2 id="bursaryName"></h2>
+            <p class="animated-text">let's Apply for Funding!.</p>
+            <section id="ApplicationForm">
+              <article>
+                <h2>Application Form</h2>
+                <form id="applicationForm">
+                  
+                    <label for="payslip">Financial Documnets:</label>
+                    <input type="file" id="fileInput1" name="fileInput" required accept=".pdf"></input><br>
+                    
+                    <label for="transcript">Academic Record:</label>
+                    <input type="file" id="fileInput2" name="fileInput" required accept=".pdf"></input><br>
+                    
+                    <label for="Tell Us About Yourself:">Motivation:</label><br>
+                    <textarea id="comments" name="comments" rows="4" cols="50"></textarea><br>
+                    
+                    <button type="submit">Submit Application</button> <button id="closeApplication">Abort</button>
+                </form>
+              </article>
+            </section>
+          </div>
+      </div>
+
       <section>
         <div id="dashview">
           <article class="active">

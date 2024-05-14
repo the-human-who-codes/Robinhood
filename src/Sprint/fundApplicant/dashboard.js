@@ -104,7 +104,8 @@ function addOpportunity(bursary) {
         applyBtn.textContent = "Apply";
         applyBtn.classList.add("apply-btn");
         applyBtn.addEventListener("click", function () {
-            window.location.href = 'Application.html';
+            generateApplicationForm(bursary);
+
         });
         this.parentNode.appendChild(applyBtn);
         this.style.display = "none";
@@ -115,12 +116,28 @@ function addOpportunity(bursary) {
     document.getElementById("container").appendChild(article);
 }
 
+function generateApplicationForm(bursary) {
+    const formContainer = document.getElementById("bursaryApplicationForm");
+    formContainer.style.display = "flex";
+    const close = document.getElementById('closeApplication');
+    close.addEventListener('click',function(){
+        window.location.href = './dash_board.html';
+    });
+    const bursaryName = document.getElementById('bursaryName');
+    bursaryName.innerText = bursary['bursary-title'];
+
+    //set the submit button to send the application appropriately
+
+}
+
 
 document.addEventListener("DOMContentLoaded", function () {
     const overlay = document.getElementById("overlay");
     const completeProfileBtn = document.getElementById("completeProfileBtn");
     const dashViewArticles = document.querySelectorAll("#dashview article");
     const name = user.displayName;
+    
+
 
     try {
         document.getElementById('username').textContent = name.split(' ')[0];
