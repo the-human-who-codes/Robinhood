@@ -145,7 +145,7 @@
           function addToDatabase(userInfo) {
             const uid = getCurrentUserID();
   
-      // Add the UID to the userInfo object
+            // Add the UID to the userInfo object
             console.log(userInfo);
             set(ref(db, "StudentApplicant/" + uniqueId), {
               name: userInfo.name,
@@ -167,6 +167,8 @@
               });
           }
         });
+        
+        
         function getCurrentUserID() {
       // Retrieve the user from session storage
       let user = JSON.parse(sessionStorage.getItem("user"));

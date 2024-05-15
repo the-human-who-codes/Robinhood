@@ -74,28 +74,33 @@
 
       <div class="overlay" id="bursaryApplicationForm" style="display: none">
         <div class="modal">
-            <h2 id="bursaryName"></h2>
-            <p class="animated-text">let's Apply for Funding!.</p>
-            <section id="ApplicationForm">
-              <article>
-                <h2>Application Form</h2>
-                <form id="applicationForm">
-                  
-                    <label for="payslip">Financial Documnets:</label>
-                    <input type="file" id="fileInput1" name="fileInput" required accept=".pdf"></input><br>
-                    
-                    <label for="transcript">Academic Record:</label>
-                    <input type="file" id="fileInput2" name="fileInput" required accept=".pdf"></input><br>
-                    
-                    <label for="Tell Us About Yourself:">Motivation:</label><br>
-                    <textarea id="comments" name="comments" rows="4" cols="50"></textarea><br>
-                    
-                    <button type="submit">Submit Application</button> <button id="closeApplication">Abort</button>
-                </form>
-              </article>
-            </section>
-          </div>
+          <h2 id="bursaryName"></h2>
+          <p class="animated-text">Let's Apply for Funding!</p>
+          <section id="ApplicationForm">
+            <article>
+              <h2>Application Form</h2>
+              <form id="applicationForm">
+
+                <label for="payslip">Financial Documents:</label>
+                <input type="file" id="fileInput1" name="payslip" required accept=".pdf"><br>
+      
+                <label for="transcript">Academic Record:</label>
+                <input type="file" id="fileInput2" name="transcript" required accept=".pdf"><br>
+      
+                <label for="motivation">Motivation:</label><br>
+                <textarea id="motivation" name="motivation" rows="4" cols="50" placeholder="Motivation" required></textarea><br>
+      
+                <button type="submit">Submit Application</button>
+                
+              </form>
+              <button class="close-btn" id="closeButton">X</button>
+            </article>
+          </section>
+        </div>
       </div>
+      
+    </div>
+    
 
       <section>
         <div id="dashview">

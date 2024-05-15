@@ -1,5 +1,6 @@
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+import { getDatabase, ref, child, get, set, push, update, remove, onValue } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-storage.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
@@ -8,32 +9,21 @@ const firebaseConfig = {
     projectId: "fir-sd-22d1a",
     storageBucket: "fir-sd-22d1a.appspot.com",
     messagingSenderId: "526172429927",
-    appId: "1:526172429927:web:51ae427f7acfa1d925bec2",
+    appId: "1:526172429927:web:51ae427f7acfa1d925bec2"
 };
 
 const app = initializeApp(firebaseConfig);
-
-import {
-    getDatabase,
-    ref,
-    child,
-    get,
-    set,
-    update,
-    remove,
-    onValue,
-} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
-const db = getDatabase();
+const db = getDatabase(app);
+const storage = getStorage(app);
 const dbref = ref(db);
 
-let user = JSON.parse(sessionStorage.getItem("user"));
 
 
 //get all bursary
 function RetrieveAllBursaries() {
     get(child(dbref, "funding-advertisements"))
         .then((snapshot) => {
-            console.log("opportunities fetched");
+
             snapshot.forEach((childSnapshot) => {
                 var bursary = childSnapshot.val();
                 bursary["id"] = childSnapshot.key;
@@ -41,6 +31,7 @@ function RetrieveAllBursaries() {
                 //display the bursaries to the user
                 addOpportunity(bursary);
             });
+
         })
         .catch((error) => {
             alert("A network issue is causing some errors with the operation");
@@ -81,19 +72,19 @@ function addOpportunity(bursary) {
     viewMoreBtn.textContent = "View More";
     detailsDiv.appendChild(viewMoreBtn);
     viewMoreBtn.addEventListener("click", function () {
-        
+
         //add extra info about the bursary
 
         const criteria = document.createElement("p");
-        criteria.textContent ='criteria: '+bursary.criteria;
+        criteria.textContent = 'criteria: ' + bursary.criteria;
         detailsDiv.appendChild(criteria);
 
         const contact = document.createElement("p");
-        contact.textContent = 'contact: '+bursary.contact;
+        contact.textContent = 'contact: ' + bursary.contact;
         detailsDiv.appendChild(contact);
 
         const deadline = document.createElement("p");
-        deadline.textContent = 'Deadline: '+bursary.deadline;
+        deadline.textContent = 'Deadline: ' + bursary.deadline;
         detailsDiv.appendChild(deadline);
 
 
@@ -116,136 +107,229 @@ function addOpportunity(bursary) {
     document.getElementById("container").appendChild(article);
 }
 
+function submitApplication(event, bursary) {
+    event.preventDefault();
+
+    const applicationForm = document.getElementById("applicationForm");
+    const file1 = document.getElementById("fileInput1").files[0];
+    const file2 = document.getElementById("fileInput2").files[0];
+    const motivation = document.getElementById("motivation").value;
+
+    // User information
+    let userInfo = {
+
+        motivation: motivation
+    };
+
+    const fundingId = bursary['id'];
+    const uid = user.uid;
+
+    const StoragePath = `fundingApplications/${fundingId}/${uid}`;
+    Promise.all([
+        //uploading files to Students storage
+        uploadFile(file1, file1.name),
+        uploadFile(file2, file2.name),
+    ]).then(() => {
+        Promise.all([
+            getDownloadURL(storageRef(storage, StoragePath + file1.name)),
+            getDownloadURL(storageRef(storage, StoragePath + file2.name)),
+        ]).then((urls) => {
+            // store urls in userInfo object
+            userInfo["transcript"] = urls[0];
+            userInfo["payslips"] = urls[1];
+            userInfo["name"] = user.displayName;
+            userInfo["email"] = user.email;
+            // Output the URLs
+            // console.log('Uploaded both PDF files with unique ID:', uniqueId);
+            addToDatabase(userInfo, fundingId);
+            alert('submited!');
+            document.getElementById('bursaryApplicationForm').display = 'none';
+            
+        }).catch((error) => {
+            console.error("Error getting PDF URLs:", error);
+        });
+    }).catch((error) => {
+        console.error("Error uploading PDF files:", error);
+    });
+
+    //uploads pdf files and ensures they are stored in the same folder i.e fingApplications/UniqueID/
+    function uploadFile(file, fileName) {
+        const fileStorageRef = storageRef(storage, StoragePath + fileName);
+        // Upload the file to Firebase Storage
+        return uploadBytes(fileStorageRef, file);
+    }
+
+    function addToDatabase(userInfo, fundingId) {
+        const uid = user.uid;
+
+        // Add the UID to the userInfo object
+        console.log(userInfo);
+
+        // Get a reference to the fundingOpportunity node
+        const fundingRef = ref(db, "fundingApplications/" + fundingId);
+
+        // Push the applicant data into the array of applicants
+        push(child(fundingRef, "applicants"), {
+            name: userInfo.name,
+            motivation: userInfo.motivation,
+            transcript: userInfo.transcript,
+            payslips: userInfo.payslips,
+            uid: uid
+        }).then(() => {
+            console.log("Submission Received");
+        }).catch((error) => {
+            alert("Issue with Submission, please try again");
+            console.log(error);
+        });
+    }
+
+}
+
 function generateApplicationForm(bursary) {
     const formContainer = document.getElementById("bursaryApplicationForm");
     formContainer.style.display = "flex";
-    const close = document.getElementById('closeApplication');
-    close.addEventListener('click',function(){
-        window.location.href = './dash_board.html';
+    const closeButton = document.getElementById("closeButton");
+
+    closeButton.addEventListener("click", function () {
+        const form = document.getElementById('applicationForm');
+        const overlay = document.getElementById("bursaryApplicationForm");
+        form.reset();
+        overlay.style.display = "none";
+
+
     });
+
+
+
     const bursaryName = document.getElementById('bursaryName');
     bursaryName.innerText = bursary['bursary-title'];
 
     //set the submit button to send the application appropriately
+    const form = document.getElementById('applicationForm');
+    form.addEventListener('submit', function (event) {
+        submitApplication(event, bursary);
+    });
+
 
 }
 
+let user = JSON.parse(sessionStorage.getItem("user"));
 
-document.addEventListener("DOMContentLoaded", function () {
-    const overlay = document.getElementById("overlay");
-    const completeProfileBtn = document.getElementById("completeProfileBtn");
-    const dashViewArticles = document.querySelectorAll("#dashview article");
-    const name = user.displayName;
+if (!user) {
+    window.location.href = '../../index.html';
     
+}
+else {
+    document.addEventListener("DOMContentLoaded", function () {
+        const overlay = document.getElementById("overlay");
+        const completeProfileBtn = document.getElementById("completeProfileBtn");
+        const dashViewArticles = document.querySelectorAll("#dashview article");
+        const name = user.displayName;
 
+        try {
+            document.getElementById('username').textContent = name.split(' ')[0];
+            document.getElementById('welcome').textContent = 'Welcome ' + name.split(' ')[0] + '!';
 
-    try {
-        document.getElementById('username').textContent = name.split(' ')[0];
-        document.getElementById('welcome').textContent = 'Welcome '+ name.split(' ')[0]+'!';
-
-    }
-    catch (error) {
-        alert('please login!');
-    }
-    RetrieveAllBursaries();
-
-    const isFirstLogin = sessionStorage.getItem('firstLogin');
-    
-    console.log('isFirstLogin',isFirstLogin);
-    if (isFirstLogin=='true') {
-        overlay.style.display = "flex";
-    }
-    else {
-        overlay.style.display = "none";
-    }
-
-    function handleSubmit(event) {
-
-        // Prevent the default form submission behavior
-        event.preventDefault();
-        const fundingForm = document.getElementById('uploadForm')
-        const formData = new FormData(fundingForm);
-
-        let uid = user.uid;
-
-        const applicantData = {};
-
-        applicantData.name = user.displayName;
-        applicantData.email = user.email;
-
-        // Add the "Type of Applicant" field to the data
-        applicantData.type = document.getElementById('applicantType').value;;
-
-        formData.forEach((value, key) => {
-            applicantData[key] = value;
-        });
-
-        // Post the new applicant to the database
-        set(ref(db, 'Applicants/' + uid), applicantData)
-            .then(() => {
-                // Hide the overlay/modal
-                overlay.style.display = "none";
-                sessionStorage.setItem('firstLogin',false);
-            })
-            .catch((error) => {
-                console.error('Error submitting application:', error);
-            });
-
-
-    }
-
-
-    // Get a reference to the form
-    const uploadForm = document.getElementById('uploadForm');
-
-    // Add a submit event listener to the form
-    uploadForm.addEventListener('submit', handleSubmit);
-
-
-
-    // Event listener for view more button
-    const viewMoreBtns = document.querySelectorAll(".view-more-btn");
-    viewMoreBtns.forEach(btn => {
-        btn.addEventListener("click", function () {
-            console.log("in")
-            const opportunity = this.closest(".opportunity");
-            const details = opportunity.querySelector(".opportunity-details");
-            details.style.display = "block";
-            const applyBtn = document.createElement("button");
-            applyBtn.textContent = "Apply";
-            applyBtn.classList.add("apply-btn");
-            applyBtn.addEventListener("click", function () {
-                window.location.href = 'Application.html';
-            });
-            this.parentNode.appendChild(applyBtn);
-            this.style.display = "none";
-        });
-    });
-
-    // Toggle active class for tabs
-    dashViewArticles.forEach(article => {
-        article.addEventListener("click", function () {
-            dashViewArticles.forEach(a => a.classList.remove("active"));
-            this.classList.add("active");
-        });
-    });
-
-    const notifications = document.querySelector('.notifications');
-
-    notifications.addEventListener('click', function () {
-        this.classList.toggle('active');
-        const notificationList = this.querySelector('.notification-list');
-        notificationList.style.display = notificationList.style.display === 'block' ? 'none' : 'block';
-    });
-
-    // Close notification list when clicking outside
-    document.addEventListener('click', function (event) {
-        if (!notifications.contains(event.target)) {
-            notifications.classList.remove('active');
-            const notificationList = notifications.querySelector('.notification-list');
-            notificationList.style.display = 'none';
+        } catch (error) {
+            alert('please login!');
         }
+
+        RetrieveAllBursaries();
+
+        const isFirstLogin = sessionStorage.getItem('firstLogin');
+
+        console.log('isFirstLogin', isFirstLogin);
+        if (isFirstLogin == 'true') {
+            overlay.style.display = "flex";
+        } else {
+            overlay.style.display = "none";
+        }
+
+        function handleSubmit(event) {
+
+            // Prevent the default form submission behavior
+            event.preventDefault();
+            const fundingForm = document.getElementById('uploadForm')
+            const formData = new FormData(fundingForm);
+
+            let uid = user.uid;
+
+            const applicantData = {};
+
+            applicantData.name = user.displayName;
+            applicantData.email = user.email;
+
+            // Add the "Type of Applicant" field to the data
+            applicantData.type = document.getElementById('applicantType').value;;
+
+            formData.forEach((value, key) => {
+                applicantData[key] = value;
+            });
+
+            // Post the new applicant to the database
+            set(ref(db, 'Applicants/' + uid), applicantData)
+                .then(() => {
+                    // Hide the overlay/modal
+                    overlay.style.display = "none";
+                    sessionStorage.setItem('firstLogin', false);
+                })
+                .catch((error) => {
+                    console.error('Error submitting application:', error);
+                });
+
+
+        }
+
+
+        // Get a reference to the form
+        const uploadForm = document.getElementById('uploadForm');
+
+        // Add a submit event listener to the form
+        uploadForm.addEventListener('submit', handleSubmit);
+
+
+        // Event listener for view more button
+        const viewMoreBtns = document.querySelectorAll(".view-more-btn");
+        viewMoreBtns.forEach(btn => {
+            btn.addEventListener("click", function () {
+                console.log("in")
+                const opportunity = this.closest(".opportunity");
+                const details = opportunity.querySelector(".opportunity-details");
+                details.style.display = "block";
+                const applyBtn = document.createElement("button");
+                applyBtn.textContent = "Apply";
+                applyBtn.classList.add("apply-btn");
+                applyBtn.addEventListener("click", function () {
+                    window.location.href = 'Application.html';
+                });
+                this.parentNode.appendChild(applyBtn);
+                this.style.display = "none";
+            });
+        });
+
+        // Toggle active class for tabs
+        dashViewArticles.forEach(article => {
+            article.addEventListener("click", function () {
+                dashViewArticles.forEach(a => a.classList.remove("active"));
+                this.classList.add("active");
+            });
+        });
+
+        const notifications = document.querySelector('.notifications');
+
+        notifications.addEventListener('click', function () {
+            this.classList.toggle('active');
+            const notificationList = this.querySelector('.notification-list');
+            notificationList.style.display = notificationList.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Close notification list when clicking outside
+        document.addEventListener('click', function (event) {
+            if (!notifications.contains(event.target)) {
+                notifications.classList.remove('active');
+                const notificationList = notifications.querySelector('.notification-list');
+                notificationList.style.display = 'none';
+            }
+        });
     });
-});
-
-
+}

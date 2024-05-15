@@ -462,3 +462,19 @@ button[type="submit"] {
 button[type="submit"]:hover {
     background-color: #005c91;
 }
+
+.close-btn {
+    background-color: transparent; /* Make it transparent initially */
+    border: none; /* Remove default border */
+    cursor: pointer; /* Indicate clickable behavior */
+    font-size: 1.5rem; /* Adjust font size as needed */
+    position: absolute; /* Position it absolutely */
+    top: 10px; /* Adjust top position as needed */
+    right: 10px; /* Adjust right position as needed */
+    color: #ccc; /* Adjust color as needed */
+  }
+  
+  .close-btn:hover {
+    color: #000; /* Change color on hover */
+  }
+  

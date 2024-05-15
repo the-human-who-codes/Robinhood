@@ -41,7 +41,7 @@ googleLogin.addEventListener("click", function () {
       const user = result.user;
       sessionStorage.setItem("user", JSON.stringify(user));
       let uid = user.uid;
-      sessionStorage.setItem('firstLogin',false);
+      sessionStorage.setItem('firstLogin', false);
       // Check if the user exists in the FundManagers table
       get(child(dbref, "FundManagers/" + uid))
         .then((snapshot) => {
@@ -50,10 +50,8 @@ googleLogin.addEventListener("click", function () {
               alert("User is blocked");
               window.location.href = "./blocked.html";
             }
-            if (snapshot.val().status == "Violation") {
-              alert(
-                "You are in violation of the rules and your account will be blocked"
-              );
+            else if (snapshot.val().status == "Violation") {
+              alert("You are in violation of the rules and your account will be blocked");
               window.location.href = "./fundManager/fundingmenager.html";
             } else {
               // User is a fund manager, redirect to the fund manager dashboard
@@ -80,7 +78,7 @@ googleLogin.addEventListener("click", function () {
                 } else {
                   // User not found, redirect to registration page
                   console.log("please register");
-                  sessionStorage.setItem('firstLogin',true);
+                  sessionStorage.setItem('firstLogin', true);
                   window.location.href = "createacc.html";
                 }
               })
