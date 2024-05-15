@@ -142,8 +142,9 @@ function submitApplication(event, bursary) {
             // Output the URLs
             // console.log('Uploaded both PDF files with unique ID:', uniqueId);
             addToDatabase(userInfo, fundingId);
+            form.reset();
+            document.getElementById("bursaryApplicationForm").style.display = "none";
             alert('submited!');
-            document.getElementById('bursaryApplicationForm').display = 'none';
             
         }).catch((error) => {
             console.error("Error getting PDF URLs:", error);
@@ -161,15 +162,12 @@ function submitApplication(event, bursary) {
 
     function addToDatabase(userInfo, fundingId) {
         const uid = user.uid;
-
-        // Add the UID to the userInfo object
-        console.log(userInfo);
-
+    
         // Get a reference to the fundingOpportunity node
-        const fundingRef = ref(db, "fundingApplications/" + fundingId);
-
-        // Push the applicant data into the array of applicants
-        push(child(fundingRef, "applicants"), {
+        const fundingRef = ref(db, "fundingApplications/" + fundingId + "/applications/" + uid);
+    
+        // Set the application data
+        set(fundingRef, {
             name: userInfo.name,
             motivation: userInfo.motivation,
             transcript: userInfo.transcript,
@@ -182,7 +180,7 @@ function submitApplication(event, bursary) {
             console.log(error);
         });
     }
-
+    
 }
 
 function generateApplicationForm(bursary) {
@@ -198,8 +196,6 @@ function generateApplicationForm(bursary) {
 
 
     });
-
-
 
     const bursaryName = document.getElementById('bursaryName');
     bursaryName.innerText = bursary['bursary-title'];
