@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="profile.css">
+    <script type="module" src="profile.js"></script>
+</head>
+<body>
+    <section class="container">
+        <section class="profile">
+            <h2>Your Profile</h2>
+            <img src="user_icon.png" alt="Profile Icon" id="profile-icon">
+            <section id="profile-view">
+                <p>Name: <span id="profile-name"></span></p>
+                <p>Email: <span id="profile-email"></span></p>
+                <p>Address: <span id="profile-address"></span></p>
+                <p>Contacts: <span id="profile-contacts"></span></p>
+                <p>Type: <span id="profile-type"></span></p>
+                <p>University: <span id="uni"></span></p>
+            </section>
+            <button id="edit-profile-btn" class="btn">Edit Profile</button>
+        </section>
+
+        <section class="profile-edit" id="profile-edit" style="display:none;">
+            <h2>Edit Profile</h2>
+            <form id="edit-profile-form">
+                <label for="edit-name">Name:</label>
+                <input type="text" id="edit-name" required><br>
+                <label for="edit-email">Email:</label>
+                <input type="email" id="edit-email" required><br>
+                <label for="edit-address">Address:</label>
+                <input type="text" id="edit-address" required><br>
+                <label for="edit-contacts">Contacts:</label>
+                <input type="text" id="edit-contacts" required><br>
+                <label for="edit-type">Type:</label>
+                <input type="text" id="edit-type" required><br>
+                <label for="edit-uni">University:</label>
+                <input type="text" id="edit-uni" required><br>
+                <button type="submit" class="btn">Save</button>
+                <button type="button" id="cancel-edit" class="btn cancel">Cancel</button>
+            </form>
+        </section>
+    </section>
+</body>
+</html>
