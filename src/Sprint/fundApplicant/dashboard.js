@@ -142,10 +142,11 @@ function submitApplication(event, bursary) {
             // Output the URLs
             // console.log('Uploaded both PDF files with unique ID:', uniqueId);
             addToDatabase(userInfo, fundingId);
+            const form = document.getElementById('applicationForm');
             form.reset();
             document.getElementById("bursaryApplicationForm").style.display = "none";
             alert('submited!');
-            
+
         }).catch((error) => {
             console.error("Error getting PDF URLs:", error);
         });
