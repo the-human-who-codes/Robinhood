@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     } else {
       console.log("User is signed out.");
-      window.location.href = "index.html"; // Redirect if not logged in
+      window.location.href = "../../index.html"; // Redirect if not logged in
     }
   });
 
@@ -58,7 +58,7 @@ function deleteUserProfile(user) {
         .then(() => {
           console.log("User account deleted successfully.");
           alert("Your account has been deleted.");
-          window.location.href = "index.html"; // Redirect to the homepage or appropriate page
+          window.location.href = "../../index.html"; // Redirect to the homepage or appropriate page
         })
         .catch((error) => {
           console.error("Error deleting user authentication profile:", error.message);
