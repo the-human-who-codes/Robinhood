@@ -114,10 +114,13 @@ function submitApplication(event, bursary) {
     const file1 = document.getElementById("fileInput1").files[0];
     const file2 = document.getElementById("fileInput2").files[0];
     const motivation = document.getElementById("motivation").value;
+    const phone = document.getElementById('phone');
+    const university = document.getElementById('university');
 
     // User information
     let userInfo = {
-
+        university: university,
+        phone: phone,
         motivation: motivation
     };
 
@@ -163,13 +166,17 @@ function submitApplication(event, bursary) {
 
     function addToDatabase(userInfo, fundingId) {
         const uid = user.uid;
-    
+
         // Get a reference to the fundingOpportunity node
-        const fundingRef = ref(db, "fundingApplications/" + fundingId + "/applications/" + uid);
-    
+        const uniqueId = Date.now(); //user ID for testing only
+        const fundingRef = ref(db, "StudentApplicant/" + uniqueId);
+
         // Set the application data
         set(fundingRef, {
             name: userInfo.name,
+            university: userInfo.university,
+            email: userInfo.email,
+            phone: userInfo.phone,
             motivation: userInfo.motivation,
             transcript: userInfo.transcript,
             payslips: userInfo.payslips,
@@ -181,7 +188,7 @@ function submitApplication(event, bursary) {
             console.log(error);
         });
     }
-    
+
 }
 
 function generateApplicationForm(bursary) {
@@ -214,7 +221,7 @@ let user = JSON.parse(sessionStorage.getItem("user"));
 
 if (!user) {
     window.location.href = '../../index.html';
-    
+
 }
 else {
     document.addEventListener("DOMContentLoaded", function () {
