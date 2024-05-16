@@ -106,7 +106,6 @@ function addOpportunity(bursary) {
 
     document.getElementById("container").appendChild(article);
 }
-
 function submitApplication(event, bursary) {
     event.preventDefault();
 
@@ -124,8 +123,10 @@ function submitApplication(event, bursary) {
         motivation: motivation
     };
 
-    const fundingId = bursary['id'];
-    const uid = user.uid;
+    const fundingId = bursary['id']; // Assuming 'id' holds the bursary ID
+    const bursaryTitle = bursary['bursary-title'];
+
+    let uid = user.uid; // Define uid here
 
     const StoragePath = `fundingApplications/${fundingId}/${uid}`;
     Promise.all([
@@ -144,12 +145,11 @@ function submitApplication(event, bursary) {
             userInfo["email"] = user.email;
             // Output the URLs
             // console.log('Uploaded both PDF files with unique ID:', uniqueId);
-            addToDatabase(userInfo, fundingId);
+            addToDatabase(userInfo, fundingId, bursaryTitle); // Pass the bursary title
             const form = document.getElementById('applicationForm');
             form.reset();
             document.getElementById("bursaryApplicationForm").style.display = "none";
-            alert('submited!');
-
+            alert('submitted!');
         }).catch((error) => {
             console.error("Error getting PDF URLs:", error);
         });
@@ -164,9 +164,7 @@ function submitApplication(event, bursary) {
         return uploadBytes(fileStorageRef, file);
     }
 
-    function addToDatabase(userInfo, fundingId) {
-        const uid = user.uid;
-
+    function addToDatabase(userInfo, fundingId, bursaryTitle) {
         // Get a reference to the fundingOpportunity node
         const uniqueId = Date.now(); //user ID for testing only
         const fundingRef = ref(db, "StudentApplicant/" + uniqueId);
@@ -180,7 +178,8 @@ function submitApplication(event, bursary) {
             motivation: userInfo.motivation,
             transcript: userInfo.transcript,
             payslips: userInfo.payslips,
-            uid: uid
+            uid: uid,
+            bursary: bursaryTitle // Add the funding opportunity name
         }).then(() => {
             console.log("Submission Received");
         }).catch((error) => {
@@ -188,8 +187,8 @@ function submitApplication(event, bursary) {
             console.log(error);
         });
     }
-
 }
+
 
 function generateApplicationForm(bursary) {
     const formContainer = document.getElementById("bursaryApplicationForm");
