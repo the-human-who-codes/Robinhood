@@ -64,3 +64,8 @@ function displayApplications(applications) {
     });
 }
 
+// Add event listener to the back button
+document.getElementById('backButton').addEventListener('click', function() {
+    // Navigate back to the previous page
+    window.history.back();
+});
