@@ -43,6 +43,9 @@ function fetchUserProfile(userId) {
             document.getElementById('edit-contacts').value = data["Cellphone Number"] || '';
             document.getElementById('edit-type').value = data.type || '';
             document.getElementById('edit-uni').value = data.University || '';
+
+            // Show profile view
+            document.getElementById('profile-view').style.display = 'block';
         } else {
             console.log("No user data found.");
         }
@@ -88,4 +91,13 @@ document.getElementById('edit-profile-form').addEventListener('submit', (event) 
             console.error("Error updating profile:", error);
         });
     }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const backBtn = document.getElementById('back-btn');
+    
+    // Add event listener for back button
+    backBtn.addEventListener('click', () => {
+        window.history.back();
+    });
 });
