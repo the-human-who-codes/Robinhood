@@ -20,6 +20,7 @@ const provider = new GoogleAuthProvider();
 document.addEventListener('DOMContentLoaded', () => {
   const confirmDeleteBtn = document.getElementById('confirmDelete');
   const cancelDeleteBtn = document.getElementById('cancelDelete');
+  const backButton = document.getElementById('backButton');
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -33,7 +34,11 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   cancelDeleteBtn.addEventListener('click', () => {
-    window.location.href = "dashboard.html"; // Redirect to the dashboard or appropriate page
+    window.location.href = "dash_board.html"; // Redirect to the dashboard or appropriate page
+  });
+
+  backButton.addEventListener('click', () => {
+    window.history.back(); // Redirect to the previous page
   });
 });
 
