@@ -58,7 +58,7 @@ function displayApplications(applications) {
         motivation.textContent = `Motivation: ${application.motivation}`;
         listItem.appendChild(motivation);
         const status = document.createElement('p');
-        status.textContent = `Status: ${application.status}`;
+        status.textContent = `Status: ${application.status || 'Pending'}`; // Set status to 'Pending' if undefined
         listItem.appendChild(status);
         applicationsList.appendChild(listItem);
     });
