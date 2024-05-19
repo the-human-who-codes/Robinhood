@@ -63,9 +63,11 @@ function addOpportunity(bursary) {
     descriptionP.textContent = bursary.description;
     detailsDiv.appendChild(descriptionP);
 
+    // Check if amount is defined
     const amountP = document.createElement("p");
-    amountP.textContent = "Amount: " + bursary.amount;
+    amountP.textContent = "Amount: " + (bursary.amount ? bursary.amount : "Not Disclosed");
     detailsDiv.appendChild(amountP);
+    
     //view more button
     const viewMoreBtn = document.createElement("button");
     viewMoreBtn.classList.add("view-more-btn");
@@ -106,6 +108,7 @@ function addOpportunity(bursary) {
 
     document.getElementById("container").appendChild(article);
 }
+
 function submitApplication(event, bursary) {
     event.preventDefault();
 
@@ -200,21 +203,48 @@ function generateApplicationForm(bursary) {
         const overlay = document.getElementById("bursaryApplicationForm");
         form.reset();
         overlay.style.display = "none";
-
-
     });
 
     const bursaryName = document.getElementById('bursaryName');
     bursaryName.innerText = bursary['bursary-title'];
 
-    //set the submit button to send the application appropriately
-    const form = document.getElementById('applicationForm');
-    form.addEventListener('submit', function (event) {
-        submitApplication(event, bursary);
-    });
+    // Determine the type of funding opportunity
+    const fundingType = bursary.type; // Assuming 'type' holds the type of funding opportunity
 
+    // Construct the file path based on the funding type
+    let filePath = '';
+    switch (fundingType) {
+        case 'Student':
+            filePath = 'student_funding_form.html';
+            break;
+        case 'Business':
+            filePath = 'business_funding_form.html';
+            break;
+        case 'Event':
+            filePath = 'event_funding_form.html';
+            break;
+        default:
+            console.error('Invalid funding type.');
+            return;
+    }
 
+    // Fetch the HTML content of the appropriate form file
+    fetch(filePath)
+        .then(response => response.text())
+        .then(html => {
+            // Display the form in the overlay/modal
+            formContainer.innerHTML = html;
+            // Set the submit event listener for the form
+            const form = document.getElementById('applicationForm');
+            form.addEventListener('submit', function (event) {
+                submitApplication(event, bursary);
+            });
+        })
+        .catch(error => {
+            console.error('Error loading form:', error);
+        });
 }
+
 
 let user = JSON.parse(sessionStorage.getItem("user"));
 
