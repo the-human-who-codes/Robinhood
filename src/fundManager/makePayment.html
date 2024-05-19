@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Make Payment</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    form {
+      margin-top: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    input[type="text"], input[type="number"], input[type="email"], input[type="submit"], select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    input[type="submit"] {
+      background-color: #347576;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #285c4d;
+    }
+  </style>
+</head>
+<body>
+    <main>
+        <div class="container">
+            <h1>Make Payment</h1>
+            <form id="paymentForm">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="amount">Amount:</label>
+                <input type="number" id="amount" name="amount" required>
+
+                <label for="description">Description</label>
+                <input type="text" id="description" name="description" required>
+
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" required>
+
+                <label for="type">Type:</label>
+                <select id="type" name="type">
+                    <option value="credit">Student</option>
+                    <option value="debit">Business</option>
+                    <option value="paypal">event</option>
+                </select>
+
+                <input type="submit" value="Make Payment">
+            </form>
+        </div>
+    </main>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+        import { getDatabase, ref, update, get, push,set } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+        
+        const firebaseConfig = {
+          apiKey: "AIzaSyA41QF5gZ_12IdeQivH9mxH3tLXEyxZkRY",
+          authDomain: "finance-51da8.firebaseapp.com",
+          databaseURL: "https://finance-51da8-default-rtdb.firebaseio.com",
+          projectId: "finance-51da8",
+          storageBucket: "finance-51da8.appspot.com",
+          messagingSenderId: "416372129674",
+          appId: "1:416372129674:web:85d6cbca019f6d512dd273",
+          measurementId: "G-F9RS1E4LBV"
+        };
+    
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+        document.getElementById('paymentForm').addEventListener('submit', async function(event) {
+  event.preventDefault(); // Prevent form submission
+
+  // Fetch values from form inputs
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const amount = parseFloat(document.getElementById('amount').value);
+  const date = document.getElementById('date').value;
+  const description = document.getElementById('description').value;
+  const type = document.getElementById('type').value;
+
+  try {
+    const totalFundsRef = ref(db, 'summary/totalFunds');
+    const snapshot = await get(totalFundsRef);
+    const totalFunds = snapshot.val();
+
+    if (totalFunds !== null) {
+      const totalFundsFloat = parseFloat(totalFunds);
+      const updatedFunds = totalFundsFloat - amount;
+
+      // Update the value of totalFunds directly
+      await set(totalFundsRef, updatedFunds);
+      
+      const transactionsRef = ref(db, 'transactions');
+      const newTransactionKey = push(transactionsRef).key; // Generate a new key for the transaction
+      const transactionData = {
+        [newTransactionKey]: {
+          name: name,
+          email: email,
+          amount: amount,
+          date: date,
+          description: description,
+          type: type
+        }
+      };
+
+      // Update the transactions node with the new transaction
+      await update(transactionsRef, transactionData);
+
+      alert('Payment made successfully!');
+      window.location.href = `Financial-report.html?updatedFunds=${updatedFunds}`;
+    } else {
+      console.error('totalFunds is null');
+      alert('An error occurred while fetching totalFunds. Please try again later.');
+    }
+  } catch (error) {
+    console.error('Error making payment:', error);
+    alert('An error occurred while making payment. Please try again later.');
+  }
+});
+
+    </script>
+    </body>
+</html>
