@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -89,7 +90,8 @@
             margin-top: 20px;
         }
 
-        th, td {
+        th,
+        td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
@@ -129,45 +131,62 @@
             height: 20px;
             fill: white;
         }
-        button{
+
+        button {
             padding: 0px 30px;
         }
+
         .notification {
-    position: absolute;
-    top: 70px;
-    right: 20px;
-    background-color: #28a745;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    display: none;
-    animation: slideIn 0.5s ease-in-out;
-}
+            position: absolute;
+            top: 70px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: none;
+            animation: slideIn 0.5s ease-in-out;
+        }
 
-@keyframes slideIn {
-    0% { transform: translateY(-50px); opacity: 0; }
-    100% { transform: translateY(0); opacity: 1; }
-}
+        @keyframes slideIn {
+            0% {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
 
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
+
 <body>
     <header>
         <h1>Fund Manager Dashboard</h1>
-    <div id="notification" class="notification"></div>
+        <div id="notification" class="notification"></div>
     </header>
 
     <div id="mySidebar" class="sidebar">
-        <a  href="#" onclick="closeNav()"><svg class="arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M17.3 5.71a.996.996 0 0 0-1.41 0L12 10.59 7.11 5.7A.996.996 0 1 0 5.7 7.11L10.59 12 5.7 16.89a.996.996 0 1 0 1.41 1.41L12 13.41l4.89 4.89a.996.996 0 1 0 1.41-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"/></svg></a>
-        <a href="#" id="apply" >Apply</a>
-        <a href="#" id="applications" >View My Applications</a>
+        <a href="#" onclick="closeNav()"><svg class="arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M0 0h24v24H0V0z" fill="none" />
+                <path
+                    d="M17.3 5.71a.996.996 0 0 0-1.41 0L12 10.59 7.11 5.7A.996.996 0 1 0 5.7 7.11L10.59 12 5.7 16.89a.996.996 0 1 0 1.41 1.41L12 13.41l4.89 4.89a.996.996 0 1 0 1.41-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z" />
+            </svg></a>
+        <a href="#" id="apply">Apply</a>
+        <a href="#" id="applications">View My Applications</a>
         <a href="#" id="finacialReport">Financial Report</a>
         <a href="#" id="Adverts">Advertise</a>
         <a href="#" id="Recipients">Funding Recipients</a>
     </div>
 
     <div class="container">
-        <button class="openbtn" onclick="openNav()"><svg class="arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 2L0 9h24L12 2zm0 3l8 5H4l8-5zm0 9l8 5H4l8-5z"/></svg></button>
+        <button class="openbtn" onclick="openNav()"><svg class="arrow" xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24">
+                <path d="M0 0h24v24H0V0z" fill="none" />
+                <path d="M12 2L0 9h24L12 2zm0 3l8 5H4l8-5zm0 9l8 5H4l8-5z" />
+            </svg></button>
         <div class="content">
             <h2 id="pending">Pending Fund Applicant Applications</h2>
             <table id="applicants">
@@ -184,37 +203,37 @@
                         <td>2024-04-16</td>
                         <td><button onClick="view()" >view</button></td>
                     </tr> -->
-                </tbody>
+                    </tbody>
             </table>
         </div>
     </div>
 
     <script type="module">
-        const tblApplicant=document.getElementById("applicantTable");
-        const finacialReport=document.getElementById('finacialReport');
-        const applications1=document.getElementById('applications');
-        const adverts1=document.getElementById('Adverts');
-        const apply=document.getElementById('apply');
-        const recipients=document.getElementById('Recipients');
+        const tblApplicant = document.getElementById("applicantTable");
+        const finacialReport = document.getElementById('finacialReport');
+        const applications1 = document.getElementById('applications');
+        const adverts1 = document.getElementById('Adverts');
+        const apply = document.getElementById('apply');
+        const recipients = document.getElementById('Recipients');
 
-        
-         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-        
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+
         const firebaseConfig = {
-          apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
-          authDomain: "fir-sd-22d1a.firebaseapp.com",
-          databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
-          projectId: "fir-sd-22d1a",
-          storageBucket: "fir-sd-22d1a.appspot.com",
-          messagingSenderId: "526172429927",
-          appId: "1:526172429927:web:51ae427f7acfa1d925bec2"
+            apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
+            authDomain: "fir-sd-22d1a.firebaseapp.com",
+            databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
+            projectId: "fir-sd-22d1a",
+            storageBucket: "fir-sd-22d1a.appspot.com",
+            messagingSenderId: "526172429927",
+            appId: "1:526172429927:web:51ae427f7acfa1d925bec2"
         };
-      
-        
+
+
         const app = initializeApp(firebaseConfig);
 
-        import {getDatabase,ref,child,get,set,update,remove,onValue,query} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js"
-        const db=getDatabase();
+        import { getDatabase, ref, child, get, set, update, remove, onValue, query } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js"
+        const db = getDatabase();
 
         function openNav() {
             document.getElementById("mySidebar").style.left = "0";
@@ -227,13 +246,13 @@
             document.getElementById("openBtn").style.left = "10px";
             document.getElementsByTagName("header")[0].style.left = "0";
         }
-        function view(){
+        function view() {
             window.location.href = 'Applicant1.html';
         }
 
         function view1(applicantID) {
-    window.location.href = `Applicant1.html?id=${applicantID}`;
-}
+            window.location.href = `Applicant1.html?id=${applicantID}`;
+        }
 
 
         function navigateToApplyPage() {
@@ -255,172 +274,162 @@
         function showStudentDetails(name, email, date) {
             window.location.href = 'Applicant.html';
         }
-        
-        function showRecipients(){
-            window.location.href = 'FundingRecipients.html'; 
+
+        function showRecipients() {
+            window.location.href = 'FundingRecipients.html';
         }
 
-        
+
         //creating rows for student table(shows students in our database as it grows)
-        function createNewRow(data){
-            let Table=document.getElementById('applicantTable');
-                let id='';
-                let name='';
-                let email=''; 
-                let date='';
-                let status='';
+        function createNewRow(data) {
+            let Table = document.getElementById('applicantTable');
+            let id = '';
+            let name = '';
+            let email = '';
+            let date = '';
+            let status = '';
             data.forEach(applicant => {
-                    id=applicant.id;
-                   name=applicant.name+' '+applicant.surname;
-                   email=applicant.email; 
-                   date=applicant.date;
-                   status=applicant.status;
-                   let newTableRow=document.createElement('tr');
-                  // newTableRow.setAttribute('id',`${id}`);
+                id = applicant.id;
+                name = applicant.name + ' ' + applicant.surname;
+                email = applicant.email;
+                date = applicant.date;
+                status = applicant.status;
+                let newTableRow = document.createElement('tr');
+                // newTableRow.setAttribute('id',`${id}`);
 
-                   let ApplicantDetailsName=document.createElement('td');
-                   let ApplicantDetailsEmail=document.createElement('td');
-                   let ApplicantDetailsDate=document.createElement('td');
-                   let ApplicantView=document.createElement('td');
-                   let viewButton=document.createElement('button');
+                let ApplicantDetailsName = document.createElement('td');
+                let ApplicantDetailsEmail = document.createElement('td');
+                let ApplicantDetailsDate = document.createElement('td');
+                let ApplicantView = document.createElement('td');
+                let viewButton = document.createElement('button');
 
-                   ApplicantDetailsName.textContent=name;
-                   ApplicantDetailsEmail.textContent=email;
-                   ApplicantDetailsDate.textContent=date;
-                   viewButton.setAttribute('id',`${id}`);
-                   viewButton.textContent='view';
-                    ApplicantView.append(viewButton);
-                   viewButton.onclick=function(){
-                        let id=viewButton.id;
-                        view1(id);
-                    };
-                    
+                ApplicantDetailsName.textContent = name;
+                ApplicantDetailsEmail.textContent = email;
+                ApplicantDetailsDate.textContent = date;
+                viewButton.setAttribute('id', `${id}`);
+                viewButton.textContent = 'view';
+                ApplicantView.append(viewButton);
+                viewButton.onclick = function () {
+                    let id = viewButton.id;
+                    view1(id);
+                };
 
-                   newTableRow.append(ApplicantDetailsName);
-                   newTableRow.append(ApplicantDetailsEmail);
-                   newTableRow.append(ApplicantDetailsDate);
-                    newTableRow.append( ApplicantView);
 
-                   Table.append(newTableRow);
-        })
-    }
+                newTableRow.append(ApplicantDetailsName);
+                newTableRow.append(ApplicantDetailsEmail);
+                newTableRow.append(ApplicantDetailsDate);
+                newTableRow.append(ApplicantView);
+
+                Table.append(newTableRow);
+            })
+        }
         //function to get relevant info from students in our database
         // Function to get relevant info from students in our database
-function getAllData() {
-    const dbref = ref(db);
-    get(child(dbref, "StudentApplicant/"))
-        .then((snapshot) => {
-            if (snapshot.exists()) {
-                let Students = [];
-                let id1 = '';
-                snapshot.forEach(childSnapShot => {
-                    id1 = childSnapShot.key;
-                    let data = childSnapShot.val();
-                    if (!data.hasOwnProperty('status') || data.status === 'pending') {
-                        data.id = id1;
-                        Students.push(data);
+        function getAllData() {
+            const dbref = ref(db);
+            get(child(dbref, "StudentApplicant/"))
+                .then((snapshot) => {
+                    if (snapshot.exists()) {
+                        let Students = [];
+                        snapshot.forEach(childSnapShot => {
+                            let id1 = childSnapShot.key;
+                            let data = childSnapShot.val();
+                            console.log(data.fundingId);
+                            console.log('my uid',JSON.parse(sessionStorage.getItem("user")).uid)
+                            if (data.status == 'pending' && data.owner_uid == JSON.parse(sessionStorage.getItem("user")).uid) {  //it is pending and it is mine!
+                                data.id = id1;
+                                
+                                Students.push(data);
+                            }
+                        });
+                        const h2 = document.getElementById('pending');
+                        if (Students.length === 0) {
+                            h2.innerText = "No Pending Applications";
+                        } else {
+                            h2.innerText = "";  // Clear any previous message
+                            createNewRow(Students);
+                        }
+                    } else {
+                        const h2 = document.getElementById('pending');
+                        h2.innerText = "No Active Applications";
                     }
+                }).catch((error) => {
+                    console.log(error);
                 });
-                if (Students.length === 0) {
-                    const h2 = document.getElementById('pending');
-                    h2.innerText = "No Pending Applications"
-                } else {
-                    createNewRow(Students);
-                }
-            } else {
-                const h2 = document.getElementById('pending');
-                h2.innerText = "No Active Applications"
-            }
-        }).catch((error) => {
-            console.log(error);
-        })
-}
+        }
 
- 
         //eventlistner fetches relevant student data to display on fundManager Dashboard
-        document.addEventListener('DOMContentLoaded',function(){
+        document.addEventListener('DOMContentLoaded', function () {
             getAllData();
         });
-        
-        
-        finacialReport.addEventListener('click',function(){
+
+
+        finacialReport.addEventListener('click', function () {
             finance();
         });
-        applications1.addEventListener('click',function(){
+        applications1.addEventListener('click', function () {
             applications();
         });
-        adverts1.addEventListener('click',function(){
+        adverts1.addEventListener('click', function () {
             advert();
         });
 
-        apply.addEventListener('click',function(){
-            navigateToApplyPage() ; 
+        apply.addEventListener('click', function () {
+            navigateToApplyPage();
         });
 
-        recipients.addEventListener('click',function(){
-                showRecipients();
+        recipients.addEventListener('click', function () {
+            showRecipients();
         });
-    // Function to get current user ID from session storage
-function getCurrentUserID() {
-    let user = JSON.parse(sessionStorage.getItem("user"));
-    const uid = user.uid;
-    return uid;
-}
+        // Function to get current user ID from session storage
+        function getCurrentUserID() {
+            let user = JSON.parse(sessionStorage.getItem("user"));
+            const uid = user.uid;
+            return uid;
+        }
 
-// Function to show notification
-function showNotification(message) {
-    const notification = document.getElementById("notification");
-    notification.innerText = message;
-    notification.style.display = "block";
-    setTimeout(() => {
-        notification.style.display = "none";
-    }, 5000); // Hide notification after 5 seconds
-}
+        // Function to show notification
+        function showNotification(message) {
+            const notification = document.getElementById("notification");
+            notification.innerText = message;
+            notification.style.display = "block";
+            setTimeout(() => {
+                notification.style.display = "none";
+            }, 5000); // Hide notification after 5 seconds
+        }
 
-// Function to check fund manager application status
-// Function to check fund manager application status
-function checkApplicationStatus() {
-    const userId = getCurrentUserID();
-    if (userId) {
-        const applicationsRef = ref(db, "fund_manager-applications");
+        // Function to check fund manager application status
+        // Function to check fund manager application status
+        function checkApplicationStatus() {
+            const userId = getCurrentUserID();
+            if (userId) {
+                const applicationsRef = ref(db, "fund_manager-applications");
 
-        onValue(applicationsRef, (snapshot) => {
-            if (snapshot.exists()) {
-                snapshot.forEach((childSnapshot) => {
-                    const application = childSnapshot.val();
-                    if (application.uid === userId) {
-                        const status = application.status;
-                        if (status === "accepted") {
-                            showNotification("Your application has been approved!");
-                        } else if (status === "rejected") {
-                            showNotification("Your application has been rejected. Please contact the admin for more details.");
-                        }
+                onValue(applicationsRef, (snapshot) => {
+                    if (snapshot.exists()) {
+                        snapshot.forEach((childSnapshot) => {
+                            const application = childSnapshot.val();
+                            if (application.uid === userId) {
+                                const status = application.status;
+                                if (status === "accepted") {
+                                    showNotification("Your application has been approved!");
+                                } else if (status === "rejected") {
+                                    showNotification("Your application has been rejected. Please contact the admin for more details.");
+                                }
+                            }
+                        });
                     }
                 });
+            } else {
+                console.log("User ID not found in session storage.");
             }
-        });
-    } else {
-        console.log("User ID not found in session storage.");
-    }
-}
+        }
 
-// Call the function to check application status when the page loads
-document.addEventListener('DOMContentLoaded', function () {
-    checkApplicationStatus();
-});
+        // Call the function to check application status when the page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            checkApplicationStatus();
+        });
     </script>
 </body>
+
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
