@@ -163,9 +163,9 @@ function submitApplication(event, bursary) {
 
     function addToDatabase(userInfo, fundingId) {
         const uid = user.uid;
-    
+        const uniqueId = Date.now(); //user ID for testing only
         // Get a reference to the fundingOpportunity node
-        const fundingRef = ref(db, "fundingApplications/" + fundingId + "/applications/" + uid);
+        const fundingRef = ref(db,"StudentApplicant/" + uniqueId);
     
         // Set the application data
         set(fundingRef, {
