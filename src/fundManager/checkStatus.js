@@ -18,22 +18,6 @@ const firebaseApp = initializeApp(firebaseConfig);
 const db = getDatabase(firebaseApp);
 const fundingOpportunitiesRef = ref(db, 'fund_manager-applications');
 
-async function createFundingOpportunity(title, description, deadline, motivation) {
-    try {
-        const newFundingOpportunity = {
-            title,
-            description,
-            deadline,
-            motivation,
-        };
-
-        const snapshot = await push(fundingOpportunitiesRef, newFundingOpportunity);
-        console.log('New funding opportunity created:', snapshot.key);
-    } catch (error) {
-        console.error('Error creating funding opportunity:', error);
-    }
-}
-
 async function displayAllFundingOpportunities() {
     try {
         const snapshot = await get(fundingOpportunitiesRef);
