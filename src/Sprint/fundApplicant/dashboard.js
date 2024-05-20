@@ -17,7 +17,7 @@ const db = getDatabase(app);
 const storage = getStorage(app);
 const dbref = ref(db);
 
-
+var notificationList = document.querySelector('.notification-list');
 
 //get all bursary
 function RetrieveAllBursaries() {
@@ -27,7 +27,7 @@ function RetrieveAllBursaries() {
             snapshot.forEach((childSnapshot) => {
                 var bursary = childSnapshot.val();
                 bursary["id"] = childSnapshot.key;
-                console.log(bursary);
+                //console.log(bursary);
                 //display the bursaries to the user
                 addOpportunity(bursary);
             });
@@ -258,7 +258,7 @@ else {
         const completeProfileBtn = document.getElementById("completeProfileBtn");
         const dashViewArticles = document.querySelectorAll("#dashview article");
         const name = user.displayName;
-
+        getMessages();
         try {
             document.getElementById('username').textContent = name.split(' ')[0];
             document.getElementById('welcome').textContent = 'Welcome ' + name.split(' ')[0] + '!';
@@ -325,7 +325,7 @@ else {
         const viewMoreBtns = document.querySelectorAll(".view-more-btn");
         viewMoreBtns.forEach(btn => {
             btn.addEventListener("click", function () {
-                console.log("in")
+                //console.log("in")
                 const opportunity = this.closest(".opportunity");
                 const details = opportunity.querySelector(".opportunity-details");
                 details.style.display = "block";
@@ -364,5 +364,111 @@ else {
                 notificationList.style.display = 'none';
             }
         });
+
+       
+
     });
+
+    function getMessages() {
+        const dbref = ref(db);
+        get(child(dbref, "NewNotifications/"))
+            .then((snapshot) => {
+                if (snapshot.exists()) {
+                    let Messages= [];
+                    let id1 = '';
+                    snapshot.forEach(childSnapShot => {
+                        let data = childSnapShot.val();
+                        console.log(data.key);
+                        data["messageID"]=childSnapShot.key;
+                        console.log(data);
+                        if (data.id=user.uid && data.read==false) {
+                            Messages.push(data);
+                        }
+                    });
+                    //console.log(Messages.length);
+                    
+                    if (Messages.length === 0) {
+                        var notificationsCounter = document.querySelector('.notifications-counter');
+                        notificationsCounter.textContent =0;
+                    } else  {
+                        createNewNotifications(Messages);
+                    }
+                } else {
+                    const h2 = document.getElementById('pending');
+                    h2.innerText = "No Active Applications"
+                }
+            }).catch((error) => {
+                console.log(error);
+            })
+    }
+
+    function createNewNotifications(data){
+
+        //dynamic notifications
+
+        // Get the notification list element
+        var notificationList = document.querySelector('.notification-list');
+
+        let Table=document.getElementById('applicantTable');
+            let id='';
+            let notification='';
+            let msgID='';
+        let count=0;  
+        data.forEach((messages) => {
+                id=messages.id;
+               notification=messages.message;
+               msgID=messages.messageID;
+               count++;
+
+               var newNotification = document.createElement('p');
+               if(id==user.uid){
+                newNotification.onclick=function(){
+                    let date=getCurrentDate();
+                    console.log(date);
+                    let userObj={Date:date,id:user.uid,msgID:msgID,notif:notification};
+                    let userStrng=JSON.stringify(userObj);
+                    update(ref(db, "NewNotifications/" + msgID), {
+                        read: true,
+                        readOn:date,
+                      })
+                        .then(() => {
+                            sessionStorage.setItem("Data",userStrng);
+                            window.location.href = "Notifications.html";
+                        })
+                        .catch((error) => {
+                          alert("unable to open notification");
+                        });
+                    
+                   }
+                   newNotification.textContent=`notification ${count}`;
+                    notificationList.appendChild(newNotification);
+                    
+               }
+
+               var notificationsCounter = document.querySelector('.notifications-counter');
+                    notificationsCounter.textContent = data.length;
+
+               
+                
+               
+        })
+
+        
+            
+}
+
+function getCurrentDate(){
+    var currentDate = new Date();
+
+// Extract day, month, and year
+    var day = currentDate.getDate().toString().padStart(2, '0');
+    var month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Add 1 because months are zero-based
+    var year = currentDate.getFullYear();
+
+// Format the date as dd/mm/yyyy
+    var formattedDate = day + '/' + month + '/' + year;
+    return formattedDate;
+}
+
+    
 }
