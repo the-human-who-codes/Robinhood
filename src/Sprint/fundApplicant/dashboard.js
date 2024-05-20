@@ -88,6 +88,9 @@ function displayApplication(application) {
     transcriptLink.target = "_blank";
     detailsDiv.appendChild(transcriptLink);
 
+    // Add a breakline
+    detailsDiv.appendChild(document.createElement("br"));
+
     const payslipsLink = document.createElement("a");
     payslipsLink.href = application.payslips;
     payslipsLink.textContent = "View Payslips ";
