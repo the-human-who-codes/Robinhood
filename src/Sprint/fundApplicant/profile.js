@@ -33,7 +33,7 @@ function fetchUserProfile(userId) {
             document.getElementById('profile-email').innerText = data.email || '';
             document.getElementById('profile-address').innerText = data.address || '';
             document.getElementById('profile-contacts').innerText = data["Cellphone Number"] || '';
-            document.getElementById('profile-type').innerText = data.type || '';
+            document.getElementById('profile-type').innerText = data['funding-type'] || '';
             document.getElementById('uni').innerText = data.University || '';
 
             // Pre-fill the edit form
