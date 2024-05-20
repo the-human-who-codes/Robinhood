@@ -378,16 +378,17 @@ else {
                     let id1 = '';
                     snapshot.forEach(childSnapShot => {
                         let data = childSnapShot.val();
-                        console.log(data.key);
+                        //console.log(data.key);
                         data["messageID"]=childSnapShot.key;
                         console.log(data);
-                        if (data.id=user.uid && data.read==false) {
+                       // console.log(data.read+" "+user.uid);
+                        if (data.id==user.uid && data.read==false) {
                             Messages.push(data);
                         }
                     });
-                    //console.log(Messages.length);
+                   // console.log(Messages);
                     
-                    if (Messages.length === 0) {
+                    if (Messages.length==0) {
                         var notificationsCounter = document.querySelector('.notifications-counter');
                         notificationsCounter.textContent =0;
                     } else  {
@@ -407,6 +408,7 @@ else {
         //dynamic notifications
 
         // Get the notification list element
+        
         var notificationList = document.querySelector('.notification-list');
 
         let Table=document.getElementById('applicantTable');
@@ -445,13 +447,14 @@ else {
                     
                }
 
-               var notificationsCounter = document.querySelector('.notifications-counter');
-                    notificationsCounter.textContent = data.length;
-
+              
                
                 
                
         })
+        var notificationsCounter = document.querySelector('.notifications-counter');
+        notificationsCounter.textContent = data.length;
+
 
         
             

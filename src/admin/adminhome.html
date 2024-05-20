@@ -27,8 +27,8 @@
                     <canvas id="totalUsersChart"></canvas>
                 </div>
                 <div class="overview-item">
-                    <h3>Total Applicants</h3>
-                    <canvas id="totalApplicantsChart"></canvas>
+                    <h3>Fund Managers</h3>
+                    <canvas id="totalFundManagersChart"></canvas>
                 </div>
                 <div class="overview-item">
                     <h3>Applicant Status</h3>
@@ -39,6 +39,94 @@
     </div>
 
     <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+import { getDatabase, ref, child, get, set, push, update, remove, onValue } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-storage.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
+    authDomain: "fir-sd-22d1a.firebaseapp.com",
+    databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
+    projectId: "fir-sd-22d1a",
+    storageBucket: "fir-sd-22d1a.appspot.com",
+    messagingSenderId: "526172429927",
+    appId: "1:526172429927:web:51ae427f7acfa1d925bec2"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const storage = getStorage(app);
+
+
+    function countUsersByType(){
+        const dbref = ref(db,"Applicants/");
+      onValue(dbref, (snapshot) => {
+        const users = snapshot.val();
+        const userCounts = {
+          Student: 0,
+          Event: 0,
+          Business: 0
+        };
+
+        if (users) {
+          Object.values(users).forEach(user => {
+            if (user.type in userCounts) {
+              userCounts[user.type]++;
+            }
+          
+        })}
+        //console.log(userCounts);
+        const totalUsersData = {
+            labels: ['Business', 'Student','Event'],
+            datasets: [{
+                data: [userCounts.Business,userCounts.Student,userCounts.Event],
+                backgroundColor: ['#36A2EB', '#FF6384','#FFCE56'],
+                hoverBackgroundColor: ['#36A2EB', '#FF6384','#FFCE56']
+            }]
+        };
+
+        new Chart(document.getElementById('totalUsersChart').getContext('2d'), {
+            type: 'pie',
+            data: totalUsersData,
+        });
+
+    })}
+
+    function countFundManagersByType(){
+        const dbref = ref(db,"FundManagers/");
+      onValue(dbref, (snapshot) => {
+        const users = snapshot.val();
+        const userCounts = {
+          Approved: 0,
+          Pending: 0,
+          Rejected: 0
+        };
+
+        if (users) {
+          Object.values(users).forEach(user => {
+            if (user.applicationStatus in userCounts) {
+              userCounts[user.applicationStatus]++;
+            }
+          
+        })}
+        console.log(userCounts);
+        const totalFundManagersData = {
+            labels: ['Pending', 'Approved','Rejected'],
+            datasets: [{
+                data: [userCounts.Approved,userCounts.Pending,userCounts.Rejected],
+                backgroundColor: ['#FF6666', '#FFA500','#800080'],
+                hoverBackgroundColor: ['#FF6666', '#FFA500','#800080']
+            }]
+        };
+
+        new Chart(document.getElementById('totalFundManagersChart').getContext('2d'), {
+            type: 'pie',
+            data: totalFundManagersData,
+        });
+
+    })}
+        countUsersByType();
+        countFundManagersByType();
         const fundApplications=document.getElementById('fundManagerApplications');
 
         const dashboard=document.getElementById('overview');
@@ -56,25 +144,7 @@
             window.location.href = 'usermanagement.html';
         }
 
-        // Dummy data for pie charts
-        const totalUsersData = {
-            labels: ['Active Users', 'Inactive Users'],
-            datasets: [{
-                data: [350, 150],
-                backgroundColor: ['#36A2EB', '#FF6384'],
-                hoverBackgroundColor: ['#36A2EB', '#FF6384']
-            }]
-        };
-
-        const totalApplicantsData = {
-            labels: ['Total Applicants', 'Non-Applicants'],
-            datasets: [{
-                data: [200, 100],
-                backgroundColor: ['#FFCE56', '#FF6384'],
-                hoverBackgroundColor: ['#FFCE56', '#FF6384']
-            }]
-        };
-
+       
         const applicantStatusData = {
             labels: ['Pending', 'Approved', 'Rejected'],
             datasets: [{
@@ -84,17 +154,7 @@
             }]
         };
 
-        // Create pie charts
-        new Chart(document.getElementById('totalUsersChart').getContext('2d'), {
-            type: 'pie',
-            data: totalUsersData,
-        });
-
-        new Chart(document.getElementById('totalApplicantsChart').getContext('2d'), {
-            type: 'pie',
-            data: totalApplicantsData,
-        });
-
+       
         new Chart(document.getElementById('applicantStatusChart').getContext('2d'), {
             type: 'pie',
             data: applicantStatusData,
