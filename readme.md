@@ -7,6 +7,6 @@ This repo is used as a starter for a _very basic_ HTML web application using no 
 This repo has a dev container. This means if you open it inside a [GitHub Codespace](https://github.com/features/codespaces), or using [VS Code with the remote containers extension](https://code.visualstudio.com/docs/remote/containers), it will be opened inside a container with all the dependencies already installed.
 
 
-[![Coverage Status](https://img.shields.io/badge/coverage-5%25-green)](https://github.com/muano-thee-last/Robinhood/blob/main/coverage/lcov-report/index.html)
+[![Coverage Status](https://img.shields.io/badge/coverage-5%25-green)](https://muano-thee-last.github.io/Robinhood/coverage/lcov-report/)
 
 THE URL FOR OUR PROJECT : https://orange-bay-0263a040f.5.azurestaticapps.net/
