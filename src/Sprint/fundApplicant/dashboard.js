@@ -17,10 +17,19 @@ const db = getDatabase(app);
 const storage = getStorage(app);
 const dbref = ref(db);
 
-
+let user = JSON.parse(sessionStorage.getItem("user"));
 
 //get all bursary
 function RetrieveAllBursaries() {
+    let type = '';
+    // Get the type of user and know what to fetch
+    get(child(dbref, "Applicants/" + user.uid)).then((snapshot) => type = snapshot.val()['funding-type'])
+      .catch((error) => {
+        console.log("Error retrieving user details:", error);
+      });
+    
+
+
     const container = document.getElementById("container");
     container.innerHTML = ''; // Clear the container
     get(child(dbref, "funding-advertisements"))
@@ -31,7 +40,10 @@ function RetrieveAllBursaries() {
                 bursary["id"] = childSnapshot.key;
                 console.log(bursary);
                 //display the bursaries to the user
-                addOpportunity(bursary);
+                if(type == bursary['funding-type']){
+                    addOpportunity(bursary);
+                }
+                
             });
 
         })
@@ -305,7 +317,7 @@ function generateApplicationForm(bursary) {
 }
 
 
-let user = JSON.parse(sessionStorage.getItem("user"));
+
 
 
 // Function to set the active tab
@@ -387,7 +399,7 @@ else {
 
             // Prevent the default form submission behavior
             event.preventDefault();
-            const fundingForm = document.getElementById('applicationForm')
+            const fundingForm = document.getElementById('uploadForm')
             const formData = new FormData(fundingForm);
 
             let uid = user.uid;
@@ -396,9 +408,6 @@ else {
 
             applicantData.name = user.displayName;
             applicantData.email = user.email;
-
-            // Add the "Type of Applicant" field to the data
-            applicantData.type = document.getElementById('applicantType').value;;
 
             formData.forEach((value, key) => {
                 applicantData[key] = value;
