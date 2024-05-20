@@ -21,6 +21,8 @@ const dbref = ref(db);
 
 //get all bursary
 function RetrieveAllBursaries() {
+    const container = document.getElementById("container");
+    container.innerHTML = ''; // Clear the container
     get(child(dbref, "funding-advertisements"))
         .then((snapshot) => {
 
@@ -37,6 +39,97 @@ function RetrieveAllBursaries() {
             alert("A network issue is causing some errors with the operation");
             console.log(error);
         });
+}
+
+// Function to show user's applications
+function ShowMyApplications() {
+    const container = document.getElementById('container');
+    container.innerHTML = ''; // Clear previous content
+    // Retrieve and display user applications
+    const userId = user.uid;
+    get(child(dbref, `StudentApplicant`))
+        .then((snapshot) => {
+            if (snapshot.exists()) {
+                snapshot.forEach((childSnapshot) => {
+                    const application = childSnapshot.val();
+                    if(application.uid == user.uid){
+                    displayApplication(application);
+
+                    }
+                });
+            } else {
+                container.innerHTML = '<p>No applications found.</p>';
+            }
+        })
+        .catch((error) => {
+            console.error("Error retrieving applications:", error);
+        });
+}
+
+
+function displayApplication(application) {
+    const article = document.createElement("article");
+    article.classList.add("opportunity");
+
+    const detailsDiv = document.createElement("div");
+    detailsDiv.classList.add("opportunity-details");
+
+    const h3 = document.createElement("h3");
+    h3.textContent = application['bursary-title'];
+    detailsDiv.appendChild(h3);
+
+    const motivationP = document.createElement("p");
+    motivationP.textContent = `Motivation: ${application.motivation}`;
+    detailsDiv.appendChild(motivationP);
+
+    const transcriptLink = document.createElement("a");
+    transcriptLink.href = application.transcript;
+    transcriptLink.textContent = "View Transcript ";
+    transcriptLink.target = "_blank";
+    detailsDiv.appendChild(transcriptLink);
+
+    const payslipsLink = document.createElement("a");
+    payslipsLink.href = application.payslips;
+    payslipsLink.textContent = "View Payslips ";
+    payslipsLink.target = "_blank";
+    detailsDiv.appendChild(payslipsLink);
+
+    const statusP = document.createElement("p");
+    statusP.textContent = `Status: ${application.status}`;
+
+    if (application.status === "approved") {
+        statusP.style.color = "green";
+    } else if (application.status === "rejected") {
+        statusP.style.color = "red";
+    } else {
+        statusP.style.color = "orange";
+    }
+    detailsDiv.appendChild(statusP);
+
+    const viewMoreBtn = document.createElement("button");
+    viewMoreBtn.classList.add("view-more-btn");
+    viewMoreBtn.textContent = "View More";
+    detailsDiv.appendChild(viewMoreBtn);
+
+    viewMoreBtn.addEventListener("click", function () {
+        const additionalDetails = document.createElement("div");
+        additionalDetails.classList.add("additional-details");
+
+        const contact = document.createElement("p");
+        contact.textContent = `Contact: ${application.contact}`;
+        additionalDetails.appendChild(contact);
+
+        const deadline = document.createElement("p");
+        deadline.textContent = `Deadline: ${application.deadline}`;
+        additionalDetails.appendChild(deadline);
+
+        detailsDiv.appendChild(additionalDetails);
+
+        viewMoreBtn.style.display = "none";
+    });
+
+    article.appendChild(detailsDiv);
+    document.getElementById("container").appendChild(article);
 }
 
 // Function to create and append funding opportunity
@@ -122,6 +215,7 @@ function submitApplication(event, bursary) {
     };
 
     const fundingId = bursary['id'];
+    console.log(bursary);
     const uid = user.uid;
 
     const StoragePath = `fundingApplications/${fundingId}/${uid}`;
@@ -139,9 +233,11 @@ function submitApplication(event, bursary) {
             userInfo["payslips"] = urls[1];
             userInfo["name"] = user.displayName;
             userInfo["email"] = user.email;
+            userInfo["status"] = "pending";
+            userInfo = {...userInfo,...bursary};
             // Output the URLs
             // console.log('Uploaded both PDF files with unique ID:', uniqueId);
-            addToDatabase(userInfo, fundingId);
+            addToDatabase(userInfo);
             const form = document.getElementById('applicationForm');
             form.reset();
             document.getElementById("bursaryApplicationForm").style.display = "none";
@@ -161,27 +257,21 @@ function submitApplication(event, bursary) {
         return uploadBytes(fileStorageRef, file);
     }
 
-    function addToDatabase(userInfo, fundingId) {
+    function addToDatabase(userInfo) {
         const uid = user.uid;
         const uniqueId = Date.now(); //user ID for testing only
         // Get a reference to the fundingOpportunity node
-        const fundingRef = ref(db,"StudentApplicant/" + uniqueId);
-    
-        // Set the application data
-        set(fundingRef, {
-            name: userInfo.name,
-            motivation: userInfo.motivation,
-            transcript: userInfo.transcript,
-            payslips: userInfo.payslips,
-            uid: uid
-        }).then(() => {
+        const fundingRef = ref(db, "StudentApplicant/" + uniqueId);
+        userInfo['uid'] = uid; 
+
+        set(fundingRef, userInfo).then(() => {
             console.log("Submission Received");
         }).catch((error) => {
             alert("Issue with Submission, please try again");
             console.log(error);
         });
     }
-    
+
 }
 
 function generateApplicationForm(bursary) {
@@ -212,9 +302,48 @@ function generateApplicationForm(bursary) {
 
 let user = JSON.parse(sessionStorage.getItem("user"));
 
+
+// Function to set the active tab
+function setActiveTab(activeElement) {
+    const dashViewArticles = document.querySelectorAll("#dashview article");
+    dashViewArticles.forEach(article => article.classList.remove("active"));
+    activeElement.classList.add("active");
+}
+
+/*
+// Function to display an application
+function displayApplication(application) {
+    const article = document.createElement("article");
+    article.classList.add("application");
+
+    const h3 = document.createElement("h3");
+    h3.textContent = application.name;
+    article.appendChild(h3);
+
+    const motivationP = document.createElement("p");
+    motivationP.textContent = `Motivation: ${application.motivation}`;
+    article.appendChild(motivationP);
+
+    const transcriptLink = document.createElement("a");
+    transcriptLink.href = application.transcript;
+    transcriptLink.textContent = "View Transcript";
+    transcriptLink.target = "_blank";
+    article.appendChild(transcriptLink);
+
+    const payslipsLink = document.createElement("a");
+    payslipsLink.href = application.payslips;
+    payslipsLink.textContent = "View Payslips";
+    payslipsLink.target = "_blank";
+    article.appendChild(payslipsLink);
+
+    document.getElementById("container").appendChild(article);
+}
+
+*/
+
 if (!user) {
     window.location.href = '../../index.html';
-    
+
 }
 else {
     document.addEventListener("DOMContentLoaded", function () {
@@ -222,16 +351,23 @@ else {
         const completeProfileBtn = document.getElementById("completeProfileBtn");
         const dashViewArticles = document.querySelectorAll("#dashview article");
         const name = user.displayName;
+        //making the navigation tabs work
 
-        try {
-            document.getElementById('username').textContent = name.split(' ')[0];
-            document.getElementById('welcome').textContent = 'Welcome ' + name.split(' ')[0] + '!';
-
-        } catch (error) {
-            alert('please login!');
-        }
 
         RetrieveAllBursaries();
+
+        document.getElementById('availableFunding').addEventListener('click', function () {
+            setActiveTab(this);
+            RetrieveAllBursaries();
+        });
+
+        document.getElementById('viewApplications').addEventListener('click', function () {
+            setActiveTab(this);
+            ShowMyApplications();
+        });
+
+        document.getElementById('username').textContent = name.split(' ')[0];
+        document.getElementById('welcome').textContent = 'Welcome ' + name.split(' ')[0] + '!';
 
         const isFirstLogin = sessionStorage.getItem('firstLogin');
 
