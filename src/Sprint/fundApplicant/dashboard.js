@@ -241,10 +241,8 @@ function submitApplication(event, bursary) {
             // Output the URLs
             // console.log('Uploaded both PDF files with unique ID:', uniqueId);
             addToDatabase(userInfo);
-            const form = document.getElementById('applicationForm');
-            form.reset();
-            document.getElementById("bursaryApplicationForm").style.display = "none";
             alert('submited!');
+            window.location.reload();
 
         }).catch((error) => {
             console.error("Error getting PDF URLs:", error);
@@ -277,31 +275,35 @@ function submitApplication(event, bursary) {
 
 }
 
+// Function to handle form submission
+function handleSubmit(event, bursary) {
+    event.preventDefault();
+    submitApplication(event, bursary);
+}
+
 function generateApplicationForm(bursary) {
     const formContainer = document.getElementById("bursaryApplicationForm");
     formContainer.style.display = "flex";
     const closeButton = document.getElementById("closeButton");
 
     closeButton.addEventListener("click", function () {
-        const form = document.getElementById('applicationForm');
-        const overlay = document.getElementById("bursaryApplicationForm");
-        form.reset();
-        overlay.style.display = "none";
-
-
+        window.location.reload();
     });
 
     const bursaryName = document.getElementById('bursaryName');
     bursaryName.innerText = bursary['bursary-title'];
 
-    //set the submit button to send the application appropriately
     const form = document.getElementById('applicationForm');
-    form.addEventListener('submit', function (event) {
-        submitApplication(event, bursary);
+
+    // Remove existing event listeners to prevent multiple submissions
+    form.removeEventListener('submit', handleSubmit);
+
+    // Add new event listener
+    form.addEventListener('submit', function(event) {
+        handleSubmit(event, bursary);
     });
-
-
 }
+
 
 let user = JSON.parse(sessionStorage.getItem("user"));
 
@@ -385,7 +387,7 @@ else {
 
             // Prevent the default form submission behavior
             event.preventDefault();
-            const fundingForm = document.getElementById('uploadForm')
+            const fundingForm = document.getElementById('applicationForm')
             const formData = new FormData(fundingForm);
 
             let uid = user.uid;
