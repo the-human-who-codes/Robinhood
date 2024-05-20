@@ -63,11 +63,9 @@ function addOpportunity(bursary) {
     descriptionP.textContent = bursary.description;
     detailsDiv.appendChild(descriptionP);
 
-    // Check if amount is defined
     const amountP = document.createElement("p");
-    amountP.textContent = "Amount: " + (bursary.amount ? bursary.amount : "Not Disclosed");
+    amountP.textContent = "Amount: " + bursary.amount;
     detailsDiv.appendChild(amountP);
-    
     //view more button
     const viewMoreBtn = document.createElement("button");
     viewMoreBtn.classList.add("view-more-btn");
@@ -116,20 +114,15 @@ function submitApplication(event, bursary) {
     const file1 = document.getElementById("fileInput1").files[0];
     const file2 = document.getElementById("fileInput2").files[0];
     const motivation = document.getElementById("motivation").value;
-    const phone = document.getElementById('phone');
-    const university = document.getElementById('university');
 
     // User information
     let userInfo = {
-        university: university,
-        phone: phone,
+
         motivation: motivation
     };
 
-    const fundingId = bursary['id']; // Assuming 'id' holds the bursary ID
-    const bursaryTitle = bursary['bursary-title'];
-
-    let uid = user.uid; // Define uid here
+    const fundingId = bursary['id'];
+    const uid = user.uid;
 
     const StoragePath = `fundingApplications/${fundingId}/${uid}`;
     Promise.all([
@@ -148,11 +141,12 @@ function submitApplication(event, bursary) {
             userInfo["email"] = user.email;
             // Output the URLs
             // console.log('Uploaded both PDF files with unique ID:', uniqueId);
-            addToDatabase(userInfo, fundingId, bursaryTitle); // Pass the bursary title
+            addToDatabase(userInfo, fundingId);
             const form = document.getElementById('applicationForm');
             form.reset();
             document.getElementById("bursaryApplicationForm").style.display = "none";
-            alert('submitted!');
+            alert('submited!');
+
         }).catch((error) => {
             console.error("Error getting PDF URLs:", error);
         });
@@ -167,22 +161,19 @@ function submitApplication(event, bursary) {
         return uploadBytes(fileStorageRef, file);
     }
 
-    function addToDatabase(userInfo, fundingId, bursaryTitle) {
+    function addToDatabase(userInfo, fundingId) {
+        const uid = user.uid;
+    
         // Get a reference to the fundingOpportunity node
-        const uniqueId = Date.now(); //user ID for testing only
-        const fundingRef = ref(db, "StudentApplicant/" + uniqueId);
-
+        const fundingRef = ref(db, "fundingApplications/" + fundingId + "/applications/" + uid);
+    
         // Set the application data
         set(fundingRef, {
             name: userInfo.name,
-            university: userInfo.university,
-            email: userInfo.email,
-            phone: userInfo.phone,
             motivation: userInfo.motivation,
             transcript: userInfo.transcript,
             payslips: userInfo.payslips,
-            uid: uid,
-            bursary: bursaryTitle // Add the funding opportunity name
+            uid: uid
         }).then(() => {
             console.log("Submission Received");
         }).catch((error) => {
@@ -190,8 +181,8 @@ function submitApplication(event, bursary) {
             console.log(error);
         });
     }
+    
 }
-
 
 function generateApplicationForm(bursary) {
     const formContainer = document.getElementById("bursaryApplicationForm");
@@ -203,54 +194,27 @@ function generateApplicationForm(bursary) {
         const overlay = document.getElementById("bursaryApplicationForm");
         form.reset();
         overlay.style.display = "none";
+
+
     });
 
     const bursaryName = document.getElementById('bursaryName');
     bursaryName.innerText = bursary['bursary-title'];
 
-    // Determine the type of funding opportunity
-    const fundingType = bursary.type; // Assuming 'type' holds the type of funding opportunity
+    //set the submit button to send the application appropriately
+    const form = document.getElementById('applicationForm');
+    form.addEventListener('submit', function (event) {
+        submitApplication(event, bursary);
+    });
 
-    // Construct the file path based on the funding type
-    let filePath = '';
-    switch (fundingType) {
-        case 'Student':
-            filePath = 'student_funding_form.html';
-            break;
-        case 'Business':
-            filePath = 'business_funding_form.html';
-            break;
-        case 'Event':
-            filePath = 'event_funding_form.html';
-            break;
-        default:
-            console.error('Invalid funding type.');
-            return;
-    }
 
-    // Fetch the HTML content of the appropriate form file
-    fetch(filePath)
-        .then(response => response.text())
-        .then(html => {
-            // Display the form in the overlay/modal
-            formContainer.innerHTML = html;
-            // Set the submit event listener for the form
-            const form = document.getElementById('applicationForm');
-            form.addEventListener('submit', function (event) {
-                submitApplication(event, bursary);
-            });
-        })
-        .catch(error => {
-            console.error('Error loading form:', error);
-        });
 }
-
 
 let user = JSON.parse(sessionStorage.getItem("user"));
 
 if (!user) {
     window.location.href = '../../index.html';
-
+    
 }
 else {
     document.addEventListener("DOMContentLoaded", function () {
