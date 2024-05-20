@@ -9,6 +9,7 @@ This repo has a dev container. This means if you open it inside a [GitHub Codesp
 
 
 ![CI](https://github.com/muano-thee-last/Robinhood/actions/workflows/test.yml/badge.svg)
+[![Coverage Status](https://img.shields.io/badge/coverage-40%25-green)](https://github.com/muano-thee-last/Robinhood/blob/main/coverage/lcov-report/index.html)
 
 
 THE URL FOR OUR PROJECT : https://orange-bay-0263a040f.5.azurestaticapps.net/
