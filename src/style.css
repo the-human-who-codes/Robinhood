@@ -1,28 +1,24 @@
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    /*font-size: ;*/
 }
 
 body {
-     display: flex;
-     justify-content: center;
-     align-items: center;
-     min-height: 100vh;
-     background: url() no-repeat;
-     background-size: cover;
-     background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(90deg, #004aad 55%, #275e5f); /* Gradient background */
+    font-family: Arial, sans-serif;
 }
 
-/*Header*/
 header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    padding: 20px 100px;
+    padding: 20px 50px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -31,168 +27,109 @@ header {
 
 .logo {
     font-size: 2em;
-    color: #347576;
+    color: #fff; /* White text */
     user-select: none;
 }
 
 .navigation a {
-    position: relative;
     font-size: 1.1em;
-    color: #347576;
+    color: #fff;
     text-decoration: none;
     font-weight: 500;
-    margin-left: 40px;
+    margin-left: 20px;
+    transition: color 0.3s ease;
 }
-/*~~~~~~~~~~~~~~~~~~~~~*/
+
+.navigation a:hover {
+    color: #eee; /* Lighter color on hover */
+}
 
 .Wrapper {
-    position: relative;
-    width: 400px;
-    height: 440px;
-    background-color: transparent;
-    border: 2px solid #347576;
-    border-radius: 20px;
-    backdrop-filter: blur(20px);
-    box-shadow: 0 0 30px rgba(0, 0, 0, .5);
+    display: flex;
+    width: 100%;
+    height: 100vh;
+}
+
+.login-container {
+    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
-    border-bottom-left-radius: 20px;
-    cursor: pointer;
-    z-index: 1;
+}
+
+.logo-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #004aad; /* Use the background color for the logo container */
+    padding: 20px;
+    border-radius: 50%;
+}
+
+.logo-container img {
+    max-width: 60%; /* Adjust logo size */
+    height: auto;
+}
+
+.form-box {
+    background-color: #d1fff3; /* White background */
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Soft shadow */
     text-align: center;
 }
 
-.Wrapper .form-box {
-    width: 100%;
-    padding: 40px;
-}
-
 button.login, button.admin {
-    background-color: transparent;
-    color: #347576;
-    border: 2px solid #347576; 
-    padding: 20px 15px;
+    background-color: #347576; /* Dark green background */
+    color: #fff;
+    border: none;
+    padding: 18px 25px; /* Adjust padding */
     border-radius: 5px;
     cursor: pointer;
     margin-bottom: 20px;
     display: block;
     width: 100%;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+button.login:hover, button.admin:hover {
+    background-color: #235d5c; /* Darker green on hover */
 }
 
 .form-box h2 {
     color: #347576;
-    margin-bottom: 45px;
+    margin-bottom: 35px;
+    font-size: 1.5em;
 }
 
-.admin-input {
-    display: none;
-    background-color: #fff;
-    border: 1px solid grey;
-    padding: 5px;
-    border-radius: 3px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin-left: 5px;
-    width: 50px;
-
-}
-
-
-button.submit-pin {
-    background-color: #347576;
-    color: #fff;
-    border: none;
-    padding: 5px ;
-    border-radius: 5px;
-    cursor: pointer;
-    display: none; 
-    width: 40px;
-    position: absolute;
-    margin-left: 240px;
-}
-
-.admin-pin {
-    display: flex;
-    align-items: center;
-}
-
-/*applicant*/
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-label {
-    display: block;
-    margin-bottom: 8px;
-}
-
-.Wrapper .form-box.applicant {
-    width: 100%;
-    padding: 40px;
-}
-
-.applicant-form h2 {
-    color: #347576;
-    margin-bottom: 30px;
-}
-
-
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="tel"],
-input[type="text"]
- {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #347576;
-    border-radius: 4px;
-    transition: border-color 0.3s ease;
-    margin-right: 100px;
-}
-
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus,
-input[type="tel"]:focus,
-input[type="text"]:focus
-{
-    border-color: #b3e3e4;
-    outline: none;
-}
-.applicant-form button[type="submit"] {
+.admin-input, .admin-email, .submit-pin {
     width: 100%;
     padding: 12px;
-    border: none;
-    border-radius: 4px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.submit-pin {
     background-color: #347576;
     color: #fff;
-    font-size: 16px;
+    border: none;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.applicant-form button[type="submit"]:hover {
-    background-color: #b3e3e4;
+.submit-pin:hover {
+    background-color: #235d5c;
 }
-
-.Wrapper2 {
-    position: relative;
-    width: 500px;
-    height: 550px;
-    background-color: transparent;
-    border: 2px solid #347576;
-    border-radius: 20px;
-    backdrop-filter: blur(20px);
-    box-shadow: 0 0 30px rgba(0, 0, 0, .5);
+.admin-pin{
+    display: flex;
+    flex-direction: column;
+}
+main{
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
-    border-bottom-left-radius: 20px;
-    cursor: pointer;
-    z-index: 1;
-    text-align: center;
 }
