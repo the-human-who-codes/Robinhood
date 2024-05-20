@@ -182,7 +182,7 @@
 
         import {getDatabase,ref,child,get,set,update,remove,onValue} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js"
         const db=getDatabase();
-         function createNewRow(data){
+        function createNewRow(data){
             let Table=document.getElementById('recipientTable');
                 let id='';
                 let name='';
@@ -235,11 +235,13 @@
                     let id1='';
                     snapshot.forEach(childSnapShot=>{
                         id1=childSnapShot.key;
-                        if(childSnapShot.val().status=='approved'){
+                        
+                        if(childSnapShot.val().status=='approved' && childSnapShot.val().owner_uid == JSON.parse(sessionStorage.getItem("user")).uid ){
                             let data=childSnapShot.val();
                             data.id=id1;
                             Students.push(data);
                         }
+                        
                      });
                      if(Students.length===0){
                         const h2=document.getElementById('Beneficiaries');
