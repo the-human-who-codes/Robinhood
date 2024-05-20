@@ -1,48 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Login</title>
-    <script defer type="module" src="./GoogleAuth.js"></script>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <header>
-      <h2 class="logo">FRM</h2>
-      <nav class="navigation">
+    <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<header >
+  <p></p>
+    <nav class="navigation">
         <a href="#">Home</a>
         <a href="#">About</a>
         <a href="#">Services</a>
         <a href="#">Contact</a>
-      </nav>
-    </header>
+    </nav>
+</header>
 
-    <section class="Wrapper">
-      <section class="form-box login">
-        <h2>Login</h2>
-        <button type="button" class="login" id="continueWithGoogle">
-          Continue with Google
-        </button>
-        <button type="submit" class="admin">Admin</button>
-        <section class="admin-pin">
-          <input type="password" class="admin-input" placeholder="Enter code" />
-          <button type="button" class="submit-pin" style="display: none">
-            <a href="./admin/adminhome.html">Enter</a>
-          </button>
+<section class="Wrapper">
+  <div class="logo-container">
+        <img src="FRM.png" alt="Company Logo">
+    </div>
+    <div class="login-container">
+        <section class="form-box login">
+            <h2>Login</h2>
+            <button type="button" class="login" id="continueWithGoogle">
+                Continue with Google
+            </button>
+            <button type="button" class="admin">Admin</button>
+            <form id="adminForm" style="display: none;">
+                <section class="admin-pin">
+                    <input type="email" class="admin-email" placeholder="Enter Admin Email" required/>
+                    <input type="password" class="admin-input" placeholder="Enter Admin PIN" required/>
+                    <button type="submit" class="submit-pin">
+                        Enter
+                    </button>
+                </section>
+            </form>
         </section>
-      </section>
-    </section>
+    </div>
+    
+</section>
+<script type="module" src="./GoogleAuth.js"></script>
+<script>
+    const adminButton = document.querySelector(".admin");
+    const adminPinSection = document.querySelector(".admin-pin");
+    const adminForm = document.getElementById("adminForm");
+    const emailInput = document.querySelector(".admin-email");
+    const passwordInput = document.querySelector(".admin-input");
 
-    <script>
-      const adminButton = document.querySelector(".admin");
-      const adminInput = document.querySelector(".admin-input");
-      const submitPinButton = document.querySelector(".submit-pin");
+    adminButton.addEventListener("click", function () {
+        adminPinSection.style.display = "flex"; // Show the admin section
+        adminForm.style.display = "block"; // Show the admin form
+    });
 
-      adminButton.addEventListener("click", function () {
-        adminInput.style.display = "block";
-        submitPinButton.style.display = "block";
-      });
-    </script>
-  </body>
+    adminForm.addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        // Check if the email and password match
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
+        if (email === "adminFRM@gmail.com" && password === "FRM@SDadmin") {
+            // Redirect to admin home page after 3 seconds
+            window.location.href = "./admin/adminhome.html";
+        } else {
+            alert("Invalid email or password."); // Show an error message
+        }
+    });
+</script>
+</body>
 </html>
+
