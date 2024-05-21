@@ -48,10 +48,46 @@ googleLogin.addEventListener("click", function () {
           if (snapshot.exists()) {
             if (snapshot.val().status == "Blocked") {
               alert("User is blocked");
+              Notification.requestPermission().then((perm) => {
+                if (perm === "granted") {
+                  const notification = new Notification(
+                    "Application Submission",
+                    {
+                      body: "Your profile has been blocked",
+                      data: {
+                        url: "https://www.youtube.com/results?search_query=firebase+push+notification+with+php+and+javascript+for+web+development",
+                      },
+                      icon: "FRM.png",
+                      tag: "this is new",
+                    }
+                  );
+                  notification.addEventListener("error", (err) => {
+                    alert("error");
+                  });
+                }
+              });
               window.location.href = "./blocked.html";
             }
             else if (snapshot.val().status == "Violation") {
               alert("You are in violation of the rules and your account will be blocked");
+              Notification.requestPermission().then((perm) => {
+                if (perm === "granted") {
+                  const notification = new Notification(
+                    "Application Submission",
+                    {
+                      body: "You are in violation of the rules and your account will be blocked",
+                      data: {
+                        url: "https://www.youtube.com/results?search_query=firebase+push+notification+with+php+and+javascript+for+web+development",
+                      },
+                      icon: "FRM.png",
+                      tag: "this is new",
+                    }
+                  );
+                  notification.addEventListener("error", (err) => {
+                    alert("error");
+                  });
+                }
+              });
               window.location.href = "./fundManager/fundingmenager.html";
             } else {
               // User is a fund manager, redirect to the fund manager dashboard
@@ -64,12 +100,48 @@ googleLogin.addEventListener("click", function () {
                 if (snapshot.exists()) {
                   if (snapshot.val().status == "Blocked") {
                     alert("User is blocked");
+                    Notification.requestPermission().then((perm) => {
+                      if (perm === "granted") {
+                        const notification = new Notification(
+                          "Application Submission",
+                          {
+                            body: "Your profile has been blocked",
+                            data: {
+                              url: "https://www.youtube.com/results?search_query=firebase+push+notification+with+php+and+javascript+for+web+development",
+                            },
+                            icon: "FRM.png",
+                            tag: "this is new",
+                          }
+                        );
+                        notification.addEventListener("error", (err) => {
+                          alert("error");
+                        });
+                      }
+                    });
                     window.location.href = "./blocked.html";
                   } else {
                     if (snapshot.val().status == "Violation") {
                       alert(
                         "You are in violation of the rules and your account will be blocked"
                       );
+                      Notification.requestPermission().then((perm) => {
+                        if (perm === "granted") {
+                          const notification = new Notification(
+                            "Application Submission",
+                            {
+                              body: "You are in violation of the rules and your account will be blocked",
+                              data: {
+                                url: "https://www.youtube.com/results?search_query=firebase+push+notification+with+php+and+javascript+for+web+development",
+                              },
+                              icon: "FRM.png",
+                              tag: "this is new",
+                            }
+                          );
+                          notification.addEventListener("error", (err) => {
+                            alert("error");
+                          });
+                        }
+                      });
                     }
 
                     window.location.href =
