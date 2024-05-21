@@ -11,7 +11,7 @@ body {
 
 /* Header styles */
 header {
-    background: linear-gradient(90deg, #038fc2, #0048b5);
+    background: linear-gradient(90deg, #347576 , #659e92);
     /* Initial gradient background */
     color: #fff;
     padding: 20px;
@@ -45,7 +45,7 @@ header article {
 #dashview {
     display: flex;
     justify-content: space-around;
-    color: #0077b5;
+    color:  #347576;
     margin-bottom: 10px;
     padding-bottom: 10px;
 }
@@ -61,7 +61,7 @@ header article {
 }
 
 #dashview .active {
-    background-color: #0077b5;
+    background-color:  #347576;
     color: #fff;
 }
 
@@ -83,7 +83,7 @@ header article {
     display: none;
     flex-direction: column;
     z-index: 3000;
-    color: #0048b5;
+    color:  #347576;
     width: 200px;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
     border-radius: 5px;
@@ -186,7 +186,7 @@ nav {
 }
 
 nav a {
-    color: #0077b5;
+    color:  #347576;
     /* LinkedIn-like blue for links */
     text-decoration: none;
     padding: 10px 20px;
@@ -197,7 +197,7 @@ nav a {
 }
 
 nav a:hover {
-    background-color: #0077b5;
+    background-color:  #347576;
     /* LinkedIn-like blue on hover */
     color: #fff;
 }
@@ -215,7 +215,7 @@ section {
 /* Widget styles */
 .widget h2 {
     margin-top: 0;
-    color: #0077b5;
+    color:  #347576;
     /* LinkedIn-like blue for widget headings */
 }
 
@@ -252,7 +252,7 @@ article.opportunity .opportunity-details {
 
 article.opportunity h3 {
     margin-top: 0;
-    color: #0077b5;
+    color:  #347576;
     /* LinkedIn-like blue for opportunity titles */
     margin-bottom: 10px;
 }
@@ -264,7 +264,7 @@ article.opportunity p {
 }
 
 .view-more-btn {
-    background-color: #0077b5;
+    background-color:  #347576;
     /* LinkedIn-like blue */
     color: #fff;
     border: none;
@@ -277,7 +277,7 @@ article.opportunity p {
 }
 
 .apply-btn{
-    background-color: #0077b5;
+    background-color:  #347576;
     color: #fff;
     padding: 10px 20px;
     border: none;
@@ -291,7 +291,7 @@ article.opportunity:hover .view-more-btn {
 }
 
 .view-more-btn:hover {
-    background-color: #005c91;
+    background-color:  #347576;
     /* Darker blue on hover */
 }
 
@@ -325,7 +325,7 @@ article.opportunity:hover .view-more-btn {
 
 .modal h2 {
     margin-top: 0;
-    color: #0077b5;
+    color:  #347576;
     /* LinkedIn-like blue for modal heading */
 }
 
@@ -335,7 +335,7 @@ article.opportunity:hover .view-more-btn {
 }
 
 .modal button {
-    background-color: #0077b5;
+    background-color:  #347576;
     /* LinkedIn-like blue */
     color: #fff;
     border: none;
@@ -346,13 +346,13 @@ article.opportunity:hover .view-more-btn {
 }
 
 .modal button:hover {
-    background-color: #005c91;
+    background-color:  #347576;
     /* Darker blue on hover */
 }
 
 /* Footer styles */
 footer {
-    background-color: #0077b5;
+    background-color:  #347576;
     /* LinkedIn-like blue */
     color: #fff;
     text-align: center;
@@ -420,7 +420,7 @@ body {
 
 #ApplicationForm h2 {
     text-align: center;
-    color: #0077b5;
+    color:  #347576;
 }
 
 form {
@@ -450,7 +450,7 @@ input[type="file"] {
 }
 
 button[type="submit"] {
-    background-color: #0077b5;
+    background-color:  #347576;
     color: #fff;
     padding: 10px 20px;
     border: none;
@@ -460,7 +460,7 @@ button[type="submit"] {
 }
 
 button[type="submit"]:hover {
-    background-color: #005c91;
+    background-color:  #347576;
 }
 
 .close-btn {
