@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advertisement View</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        
+        #advertisements {
+            margin-top: 20px;
+        }
+        
+        .advertisement {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .advertisement h3 {
+            color: #347576;
+            margin-bottom: 10px;
+        }
+        
+        .advertisement p {
+            color: #666;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="color: white; background-color:#347576; padding-left: 5%; padding-right: 5%; padding-top: 3%; padding-bottom:3%; width: 100%;">Your Advertisements</h1>
+        <div id="advertisements"></div>
+    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getDatabase, ref, orderByChild, equalTo, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
+            authDomain: "fir-sd-22d1a.firebaseapp.com",
+            databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
+            projectId: "fir-sd-22d1a",
+            storageBucket: "fir-sd-22d1a.appspot.com",
+            messagingSenderId: "526172429927",
+            appId: "1:526172429927:web:51ae427f7acfa1d925bec2"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+
+        function displayAdvertisements() {
+    const advertisementsContainer = document.getElementById('advertisements');
+    advertisementsContainer.innerHTML = ''; // Clear previous content
+
+    const userId = JSON.parse(sessionStorage.getItem("user")).uid;
+    const advertisementsRef = ref(db, 'funding-advertisements');
+    
+    get(advertisementsRef)
+        .then((snapshot) => {
+            if (snapshot.exists()) {
+                snapshot.forEach((childSnapshot) => {
+                    const advertisement = childSnapshot.val();
+                    if (advertisement.owner_uid === userId) {
+                        displayAdvertisement(advertisement);
+                    }
+                });
+            } else {
+                advertisementsContainer.innerHTML = '<p>No advertisements found.</p>';
+            }
+        })
+        .catch((error) => {
+            console.error("Error retrieving advertisements:", error);
+        });
+}
+
+function displayAdvertisement(advertisement) {
+    const advertisementsContainer = document.getElementById('advertisements');
+    const advertisementDiv = document.createElement('div');
+    advertisementDiv.className = 'advertisement';
+    advertisementDiv.innerHTML = `
+        <h3>${advertisement['bursary-title']}</h3>
+        <p>${advertisement.description}</p>
+        <p>Deadline: ${advertisement.deadline}</p>
+        <p>Contact: ${advertisement.contact}</p>
+        <p>Criteria: ${advertisement.criteria}</p>
+        <p>description: ${advertisement.description}</p>
+        <p>${advertisement['funding-type']}</p>
+        <p>totalAllowance: ${advertisement.totalAllowance}</p>
+
+
+        
+    `;
+    advertisementsContainer.appendChild(advertisementDiv);
+}
+
+
+        window.onload = displayAdvertisements;
+    </script>
+</body>
+</html>
