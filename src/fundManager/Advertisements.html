@@ -51,6 +51,7 @@
 
       input[type="text"],
       textarea,
+      input[type="number"],
       input[type="date"],
       .select {
         width: 100%;
@@ -109,6 +110,26 @@
           id="bursary-title"
           name="bursary-title"
           required
+        /><br /><br />
+
+        <label for="budget">Budget (in Rands):</label>
+        <input
+          type="number"
+          id="budget"
+          name="budget"
+          required
+          min="0"
+          step="100000"
+        /><br /><br />
+
+        <label for="totalAllowance">Total Allowance:</label>
+        <input
+          type="number"
+          id="totalAllowance"
+          name="totalAllowance"
+          required
+          min="90000"
+          step="10000"
         /><br /><br />
 
         <label for="description">Description:</label><br />
