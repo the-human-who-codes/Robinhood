@@ -11,6 +11,7 @@
     <!-- Header -->
     <header>
       <article>
+        <img src="FRM.png" alt="Company Logo" class="logo" />
         <h1>FRM Dashboard</h1>
       </article>
 
@@ -24,13 +25,16 @@
           <p class="notifications-counter"></p>
         </h3>
         <div class="profile">
-          <img src="user_icon.png" style="display: inline-block;" alt="User Icon" />
+          <img
+            src="user_icon.png"
+            style="display: inline-block"
+            alt="User Icon"
+          />
           <h4 id="username"></h4>
           <div class="profile-dropdown">
             <a href="profile.html">View Profile</a>
-            <a href="myapplications.html">My Applications</a>
             <a href="delete.html">Delete Account</a>
-            <a href="logout.html">logout</a>
+            <a href="../../index.html">Log Out</a>
           </div>
         </div>
       </article>
@@ -43,26 +47,43 @@
       <div class="overlay" id="overlay" style="display: none">
         <div class="modal">
           <h2 id="welcome"></h2>
-          <p class="animated-text">let's setup you account!.</p>
+          <p class="animated-text">let's setup your account!.</p>
           <section id="ApplicationForm">
             <article>
               <h2>Profile Setup</h2>
               <form id="uploadForm">
-                
-                <input type="text" id="number" name="Cellphone Number" placeholder="Cellphone Number" required /><br />
-                
-                <input type="text" id="university" name="University" placeholder="University" required /><br />
-
-                <textarea  id="address" name="address" rows="4" cols="50" placeholder="Address"  required></textarea><br/>
+                <input
+                  type="text"
+                  id="number"
+                  name="Cellphone Number"
+                  placeholder="Cellphone Number"
+                  required
+                /><br />
+                <input
+                  type="text"
+                  id="university"
+                  name="University"
+                  placeholder="University"
+                  required
+                /><br />
+                <textarea
+                  id="address"
+                  name="address"
+                  rows="4"
+                  cols="50"
+                  placeholder="Address"
+                  required
+                ></textarea
+                ><br />
                 <br />
-
-                <label for="applicantType">Type of Applicant:</label>
-                <select id="applicantType" name="applicantType" required>
-                  <option value="Student">Student</option>
-                  <option value="Business">Business</option>
-                  <option value="Event">Event</option></select><br />
-
-                
+                <label for="funding-type">Funding Type:</label><br />
+                <select id="funding-type" name="funding-type" required>
+                  <option value="educational">
+                    Educational (bursaries and scholarships)
+                  </option>
+                  <option value="business">Business</option>
+                  <option value="events">Events</option></select
+                ><br />
                 <button type="submit" id="finishSetupBtn">Finish Setup</button>
               </form>
             </article>
@@ -78,24 +99,33 @@
             <article>
               <h2>Application Form</h2>
               <form id="applicationForm">
-
-                <label for="university">Educational Background:</label>
-                <input type="text" id="university" name="university" required><br>
-
-                <label for="phone">Phone:</label>
-                <input type="tel" id="phone" name="phone" required><br>
-
                 <label for="payslip">Financial Documents:</label>
-                <input type="file" id="fileInput1" name="payslip" required accept=".pdf"><br>
-      
-                <label for="transcript">Supporting Documents(accademic records or Business/Event proposal):</label>
-                <input type="file" id="fileInput2" name="transcript" required accept=".pdf"><br>
-      
-                <label for="motivation">Motivation:</label><br>
-                <textarea id="motivation" name="motivation" rows="4" cols="50" placeholder="Motivation" required></textarea><br>
-      
+                <input
+                  type="file"
+                  id="fileInput1"
+                  name="payslip"
+                  required
+                  accept=".pdf"
+                /><br />
+                <label for="transcript">Academic Record:</label>
+                <input
+                  type="file"
+                  id="fileInput2"
+                  name="transcript"
+                  required
+                  accept=".pdf"
+                /><br />
+                <label for="motivation">Motivation:</label><br />
+                <textarea
+                  id="motivation"
+                  name="motivation"
+                  rows="4"
+                  cols="50"
+                  placeholder="Motivation"
+                  required
+                ></textarea
+                ><br />
                 <button type="submit">Submit Application</button>
-                
               </form>
               <button class="close-btn" id="closeButton">X</button>
             </article>
@@ -103,18 +133,17 @@
         </div>
       </div>
 
-      
-      
-    
-
       <section>
         <div id="dashview">
-          <article class="active">
+          <article class="active" id="availableFunding">
             <h1>AVAILABLE FUNDING OPPORTUNITIES</h1>
           </article>
-        
+          <article id="viewApplications">
+            <h1>VIEW MY APPLICATIONS</h1>
+          </article>
         </div>
       </section>
+
       <!-- Profile Setup Page -->
       <section id="profileSetupPage" class="widget" style="display: none">
         <h2>Profile Setup</h2>

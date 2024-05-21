@@ -17,10 +17,22 @@ const db = getDatabase(app);
 const storage = getStorage(app);
 const dbref = ref(db);
 
+let user = JSON.parse(sessionStorage.getItem("user"));
 var notificationList = document.querySelector('.notification-list');
 
 //get all bursary
 function RetrieveAllBursaries() {
+    let type = '';
+    // Get the type of user and know what to fetch
+    get(child(dbref, "Applicants/" + user.uid)).then((snapshot) => type = snapshot.val()['funding-type'])
+      .catch((error) => {
+        console.log("Error retrieving user details:", error);
+      });
+    
+
+
+    const container = document.getElementById("container");
+    container.innerHTML = ''; // Clear the container
     get(child(dbref, "funding-advertisements"))
         .then((snapshot) => {
 
@@ -29,7 +41,10 @@ function RetrieveAllBursaries() {
                 bursary["id"] = childSnapshot.key;
                 //console.log(bursary);
                 //display the bursaries to the user
-                addOpportunity(bursary);
+                if(type == bursary['funding-type']){
+                    addOpportunity(bursary);
+                }
+                
             });
 
         })
@@ -37,6 +52,100 @@ function RetrieveAllBursaries() {
             alert("A network issue is causing some errors with the operation");
             console.log(error);
         });
+}
+
+// Function to show user's applications
+function ShowMyApplications() {
+    const container = document.getElementById('container');
+    container.innerHTML = ''; // Clear previous content
+    // Retrieve and display user applications
+    const userId = user.uid;
+    get(child(dbref, `StudentApplicant`))
+        .then((snapshot) => {
+            if (snapshot.exists()) {
+                snapshot.forEach((childSnapshot) => {
+                    const application = childSnapshot.val();
+                    if(application.uid == user.uid){
+                    displayApplication(application);
+
+                    }
+                });
+            } else {
+                container.innerHTML = '<p>No applications found.</p>';
+            }
+        })
+        .catch((error) => {
+            console.error("Error retrieving applications:", error);
+        });
+}
+
+
+function displayApplication(application) {
+    const article = document.createElement("article");
+    article.classList.add("opportunity");
+
+    const detailsDiv = document.createElement("div");
+    detailsDiv.classList.add("opportunity-details");
+
+    const h3 = document.createElement("h3");
+    h3.textContent = application['bursary-title'];
+    detailsDiv.appendChild(h3);
+
+    const motivationP = document.createElement("p");
+    motivationP.textContent = `Motivation: ${application.motivation}`;
+    detailsDiv.appendChild(motivationP);
+
+    const transcriptLink = document.createElement("a");
+    transcriptLink.href = application.transcript;
+    transcriptLink.textContent = "View Transcript ";
+    transcriptLink.target = "_blank";
+    detailsDiv.appendChild(transcriptLink);
+
+    // Add a breakline
+    detailsDiv.appendChild(document.createElement("br"));
+
+    const payslipsLink = document.createElement("a");
+    payslipsLink.href = application.payslips;
+    payslipsLink.textContent = "View Payslips ";
+    payslipsLink.target = "_blank";
+    detailsDiv.appendChild(payslipsLink);
+
+    const statusP = document.createElement("p");
+    statusP.textContent = `Status: ${application.status}`;
+
+    if (application.status === "approved") {
+        statusP.style.color = "green";
+    } else if (application.status === "rejected") {
+        statusP.style.color = "red";
+    } else {
+        statusP.style.color = "orange";
+    }
+    detailsDiv.appendChild(statusP);
+
+    const viewMoreBtn = document.createElement("button");
+    viewMoreBtn.classList.add("view-more-btn");
+    viewMoreBtn.textContent = "View More";
+    detailsDiv.appendChild(viewMoreBtn);
+
+    viewMoreBtn.addEventListener("click", function () {
+        const additionalDetails = document.createElement("div");
+        additionalDetails.classList.add("additional-details");
+
+        const contact = document.createElement("p");
+        contact.textContent = `Contact: ${application.contact}`;
+        additionalDetails.appendChild(contact);
+
+        const deadline = document.createElement("p");
+        deadline.textContent = `Deadline: ${application.deadline}`;
+        additionalDetails.appendChild(deadline);
+
+        detailsDiv.appendChild(additionalDetails);
+
+        viewMoreBtn.style.display = "none";
+    });
+
+    article.appendChild(detailsDiv);
+    document.getElementById("container").appendChild(article);
 }
 
 // Function to create and append funding opportunity
@@ -63,11 +172,18 @@ function addOpportunity(bursary) {
     descriptionP.textContent = bursary.description;
     detailsDiv.appendChild(descriptionP);
 
-    // Check if amount is defined
     const amountP = document.createElement("p");
-    amountP.textContent = "Amount: " + (bursary.amount ? bursary.amount : "Not Disclosed");
+    const ZAR = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'ZAR', // Correct currency code for South African Rand
+    });
+    amountP.textContent = "Bursary budget: " + ZAR.format(bursary.budget);
     detailsDiv.appendChild(amountP);
-    
+
+    const totalAllowance = document.createElement("p");
+    totalAllowance.textContent = "Total Allowance: " + ZAR.format(bursary.totalAllowance);
+    detailsDiv.appendChild(totalAllowance);
+
     //view more button
     const viewMoreBtn = document.createElement("button");
     viewMoreBtn.classList.add("view-more-btn");
@@ -116,20 +232,16 @@ function submitApplication(event, bursary) {
     const file1 = document.getElementById("fileInput1").files[0];
     const file2 = document.getElementById("fileInput2").files[0];
     const motivation = document.getElementById("motivation").value;
-    const phone = document.getElementById('phone');
-    const university = document.getElementById('university');
 
     // User information
     let userInfo = {
-        university: university,
-        phone: phone,
+
         motivation: motivation
     };
 
-    const fundingId = bursary['id']; // Assuming 'id' holds the bursary ID
-    const bursaryTitle = bursary['bursary-title'];
-
-    let uid = user.uid; // Define uid here
+    const fundingId = bursary['id'];
+    console.log(bursary);
+    const uid = user.uid;
 
     const StoragePath = `fundingApplications/${fundingId}/${uid}`;
     Promise.all([
@@ -146,13 +258,14 @@ function submitApplication(event, bursary) {
             userInfo["payslips"] = urls[1];
             userInfo["name"] = user.displayName;
             userInfo["email"] = user.email;
+            userInfo["status"] = "pending";
+            userInfo = {...userInfo,...bursary};
             // Output the URLs
             // console.log('Uploaded both PDF files with unique ID:', uniqueId);
-            addToDatabase(userInfo, fundingId, bursaryTitle); // Pass the bursary title
-            const form = document.getElementById('applicationForm');
-            form.reset();
-            document.getElementById("bursaryApplicationForm").style.display = "none";
-            alert('submitted!');
+            addToDatabase(userInfo);
+            alert('submited!');
+            window.location.reload();
+
         }).catch((error) => {
             console.error("Error getting PDF URLs:", error);
         });
@@ -167,31 +280,28 @@ function submitApplication(event, bursary) {
         return uploadBytes(fileStorageRef, file);
     }
 
-    function addToDatabase(userInfo, fundingId, bursaryTitle) {
-        // Get a reference to the fundingOpportunity node
+    function addToDatabase(userInfo) {
+        const uid = user.uid;
         const uniqueId = Date.now(); //user ID for testing only
+        // Get a reference to the fundingOpportunity node
         const fundingRef = ref(db, "StudentApplicant/" + uniqueId);
+        userInfo['uid'] = uid; 
 
-        // Set the application data
-        set(fundingRef, {
-            name: userInfo.name,
-            university: userInfo.university,
-            email: userInfo.email,
-            phone: userInfo.phone,
-            motivation: userInfo.motivation,
-            transcript: userInfo.transcript,
-            payslips: userInfo.payslips,
-            uid: uid,
-            bursary: bursaryTitle // Add the funding opportunity name
-        }).then(() => {
+        set(fundingRef, userInfo).then(() => {
             console.log("Submission Received");
         }).catch((error) => {
             alert("Issue with Submission, please try again");
             console.log(error);
         });
     }
+
 }
 
+// Function to handle form submission
+function handleSubmit(event, bursary) {
+    event.preventDefault();
+    submitApplication(event, bursary);
+}
 
 function generateApplicationForm(bursary) {
     const formContainer = document.getElementById("bursaryApplicationForm");
@@ -199,54 +309,64 @@ function generateApplicationForm(bursary) {
     const closeButton = document.getElementById("closeButton");
 
     closeButton.addEventListener("click", function () {
-        const form = document.getElementById('applicationForm');
-        const overlay = document.getElementById("bursaryApplicationForm");
-        form.reset();
-        overlay.style.display = "none";
+        window.location.reload();
     });
 
     const bursaryName = document.getElementById('bursaryName');
     bursaryName.innerText = bursary['bursary-title'];
 
-    // Determine the type of funding opportunity
-    const fundingType = bursary.type; // Assuming 'type' holds the type of funding opportunity
+    const form = document.getElementById('applicationForm');
 
-    // Construct the file path based on the funding type
-    let filePath = '';
-    switch (fundingType) {
-        case 'Student':
-            filePath = 'student_funding_form.html';
-            break;
-        case 'Business':
-            filePath = 'business_funding_form.html';
-            break;
-        case 'Event':
-            filePath = 'event_funding_form.html';
-            break;
-        default:
-            console.error('Invalid funding type.');
-            return;
-    }
+    // Remove existing event listeners to prevent multiple submissions
+    form.removeEventListener('submit', handleSubmit);
 
-    // Fetch the HTML content of the appropriate form file
-    fetch(filePath)
-        .then(response => response.text())
-        .then(html => {
-            // Display the form in the overlay/modal
-            formContainer.innerHTML = html;
-            // Set the submit event listener for the form
-            const form = document.getElementById('applicationForm');
-            form.addEventListener('submit', function (event) {
-                submitApplication(event, bursary);
-            });
-        })
-        .catch(error => {
-            console.error('Error loading form:', error);
-        });
+    // Add new event listener
+    form.addEventListener('submit', function(event) {
+        handleSubmit(event, bursary);
+    });
 }
 
 
-let user = JSON.parse(sessionStorage.getItem("user"));
+
+
+
+// Function to set the active tab
+function setActiveTab(activeElement) {
+    const dashViewArticles = document.querySelectorAll("#dashview article");
+    dashViewArticles.forEach(article => article.classList.remove("active"));
+    activeElement.classList.add("active");
+}
+
+/*
+// Function to display an application
+function displayApplication(application) {
+    const article = document.createElement("article");
+    article.classList.add("application");
+
+    const h3 = document.createElement("h3");
+    h3.textContent = application.name;
+    article.appendChild(h3);
+
+    const motivationP = document.createElement("p");
+    motivationP.textContent = `Motivation: ${application.motivation}`;
+    article.appendChild(motivationP);
+
+    const transcriptLink = document.createElement("a");
+    transcriptLink.href = application.transcript;
+    transcriptLink.textContent = "View Transcript";
+    transcriptLink.target = "_blank";
+    article.appendChild(transcriptLink);
+
+    const payslipsLink = document.createElement("a");
+    payslipsLink.href = application.payslips;
+    payslipsLink.textContent = "View Payslips";
+    payslipsLink.target = "_blank";
+    article.appendChild(payslipsLink);
+
+    document.getElementById("container").appendChild(article);
+}
+
+*/
 
 if (!user) {
     window.location.href = '../../index.html';
@@ -258,16 +378,27 @@ else {
         const completeProfileBtn = document.getElementById("completeProfileBtn");
         const dashViewArticles = document.querySelectorAll("#dashview article");
         const name = user.displayName;
+        //making the navigation tabs work
         getMessages();
         try {
             document.getElementById('username').textContent = name.split(' ')[0];
             document.getElementById('welcome').textContent = 'Welcome ' + name.split(' ')[0] + '!';
 
-        } catch (error) {
-            alert('please login!');
-        }
 
         RetrieveAllBursaries();
+
+        document.getElementById('availableFunding').addEventListener('click', function () {
+            setActiveTab(this);
+            RetrieveAllBursaries();
+        });
+
+        document.getElementById('viewApplications').addEventListener('click', function () {
+            setActiveTab(this);
+            ShowMyApplications();
+        });
+
+        document.getElementById('username').textContent = name.split(' ')[0];
+        document.getElementById('welcome').textContent = 'Welcome ' + name.split(' ')[0] + '!';
 
         const isFirstLogin = sessionStorage.getItem('firstLogin');
 
@@ -291,9 +422,6 @@ else {
 
             applicantData.name = user.displayName;
             applicantData.email = user.email;
-
-            // Add the "Type of Applicant" field to the data
-            applicantData.type = document.getElementById('applicantType').value;;
 
             formData.forEach((value, key) => {
                 applicantData[key] = value;

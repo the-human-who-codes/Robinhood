@@ -109,17 +109,20 @@
                 const approveBtn = document.getElementById('approveBtn');
                 const rejectBtn = document.getElementById('rejectBtn');
 
-                approveBtn.addEventListener('click', () => updateStatus(applicantData.id, 'approved'));
-                rejectBtn.addEventListener('click', () => updateStatus(applicantData.id, 'rejected'));
+                approveBtn.addEventListener('click', () => updateStatus(applicantData, 'approved'));
+                rejectBtn.addEventListener('click', () => updateStatus(applicantData, 'rejected'));
             } else {
                 applicationDetailsDiv.innerHTML = "<p>Application details not found.</p>";
             }
         }
 
-        async function updateStatus(applicantId, status) {
-            const applicantRef = ref(db, `StudentApplicant/${applicantId}/status`);
+        async function updateStatus(applicantData, status) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const applicantId = urlParams.get('id');
+            const applicantRef = ref(db, `StudentApplicant/${applicantId}`);
+            applicantData['status'] = status;
             try {
-                await set(applicantRef, status);
+                await set(applicantRef, applicantData);
                 alert(`Application ${status}`);
                 window.location.href = "fundingmenager.html"; // Redirect to dashboard
             } catch (error) {
