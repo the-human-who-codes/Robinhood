@@ -57,7 +57,7 @@ googleLogin.addEventListener("click", function () {
                       data: {
                         url: "https://www.youtube.com/results?search_query=firebase+push+notification+with+php+and+javascript+for+web+development",
                       },
-                      icon: "query_logo-01.png",
+                      icon: "FRM.png",
                       tag: "this is new",
                     }
                   );
@@ -79,7 +79,7 @@ googleLogin.addEventListener("click", function () {
                       data: {
                         url: "https://www.youtube.com/results?search_query=firebase+push+notification+with+php+and+javascript+for+web+development",
                       },
-                      icon: "query_logo-01.png",
+                      icon: "FRM.png",
                       tag: "this is new",
                     }
                   );
@@ -109,7 +109,7 @@ googleLogin.addEventListener("click", function () {
                             data: {
                               url: "https://www.youtube.com/results?search_query=firebase+push+notification+with+php+and+javascript+for+web+development",
                             },
-                            icon: "query_logo-01.png",
+                            icon: "FRM.png",
                             tag: "this is new",
                           }
                         );
@@ -133,7 +133,7 @@ googleLogin.addEventListener("click", function () {
                               data: {
                                 url: "https://www.youtube.com/results?search_query=firebase+push+notification+with+php+and+javascript+for+web+development",
                               },
-                              icon: "query_logo-01.png",
+                              icon: "FRM.png",
                               tag: "this is new",
                             }
                           );
