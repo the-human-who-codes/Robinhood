@@ -387,15 +387,21 @@
             const uid = user.uid;
             return uid;
         }
+        function hasNotificationBeenShown() {
+    return sessionStorage.getItem("notificationShown") === "true";
+}
 
         // Function to show notification
         function showNotification(message) {
+            if(!hasNotificationBeenShown()){
             const notification = document.getElementById("notification");
             notification.innerText = message;
             notification.style.display = "block";
             setTimeout(() => {
                 notification.style.display = "none";
             }, 5000); // Hide notification after 5 seconds
+            sessionStorage.setItem("notificationShown", "true");
+        }
         }
 
         // Function to check fund manager application status

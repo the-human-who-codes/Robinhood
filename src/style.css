@@ -9,7 +9,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(90deg, #004aad 55%, #275e5f); /* Gradient background */
+    background: linear-gradient(90deg, #347576 55%, #7faaaa); /* Gradient background */
     font-family: Arial, sans-serif;
 }
 
@@ -62,7 +62,7 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #004aad; /* Use the background color for the logo container */
+    background-color:#347576; /* Use the background color for the logo container */
     padding: 20px;
     border-radius: 50%;
 }
