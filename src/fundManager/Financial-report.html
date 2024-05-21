@@ -1,373 +1,295 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Financial Report</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Financial Report</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-    <style>
-      /* CSS styles */
-      body {
-        font-family: Arial, sans-serif;
+  <style>
+    * {
+        box-sizing: border-box;
         margin: 0;
         padding: 0;
-      }
+    }
 
-      header {
-        background-color: #347576;
-        color: #fff;
-        padding: 20px;
-        text-align: center;
-      }
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+    }
 
-      h1,
-      h2,
-      h3 {
-        margin-top: 0;
-      }
-
-      #summary {
-        margin-bottom: 20px;
-      }
-
-      main {
-        padding: 20px;
-      }
-
-      ul {
-        list-style: none;
-        padding: 0;
-      }
-
-      li {
-        margin-bottom: 10px;
-      }
-      table {
-        width: 80%;
-        align-content: center;
-        padding-top: 10px;
-        margin-left: 250px;
-        transition: margin-left 0.5s;
-        border-collapse: collapse;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-      }
-
-      th,
-      td {
-        padding: 12px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
-      }
-
-      th {
+    header {
         background-color: #347576;
         color: white;
-      }
+        padding: 20px;
+        text-align: center;
+        position: fixed;
+        width: 100%;
+        z-index: 2;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
 
-      tr:hover {
+    nav {
+        background-color: #222;
+        padding: 10px 0;
+        text-align: center;
+    }
+
+    nav a {
+        color: white;
+        text-decoration: none;
+        margin: 0 10px;
+    }
+
+    main {
+        margin-top: 80px; /* Adjust for the fixed header */
+        padding: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    th, td {
+        padding: 12px 15px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #347576;
+        color: white;
+        cursor: pointer;
+    }
+
+    tr:nth-child(even) {
         background-color: #f2f2f2;
-      }
+    }
 
-      td:last-child button {
-        margin-right: 5px;
-        padding: 8px 12px;
+    tr:hover {
+        background-color: #ddd;
+    }
+
+    .export-buttons {
+        margin-top: 20px;
+    }
+
+    .export-buttons button {
+        padding: 10px 20px;
+        margin-right: 10px;
+        background-color: #347576;
+        color: white;
         border: none;
         border-radius: 5px;
         cursor: pointer;
         transition: background-color 0.3s;
-      }
+    }
 
-      td:last-child button:hover {
-        background-color: #ddd;
-      }
+    .export-buttons button:hover {
+        background-color: #285c4d;
+    }
 
-      .button-view {
-        background-color: #4caf50;
-        color: white;
-      }
-      .sidebar {
-        height: 100%;
-        width: 250px;
-        position: fixed;
-        top: 0;
-        left: 0;
-        background-color: #347576;
-        padding-top: 20px;
-        transition: left 0.5s;
-        overflow-x: hidden;
-        z-index: 1;
-        border-radius: 0 10px 10px 0;
-      }
+  </style>
+</head>
 
-      .sidebar a {
-        padding: 10px;
-        text-decoration: none;
-        font-size: 18px;
-        color: white;
-        display: block;
-        transition: 0.3s;
-        border-radius: 5px;
-        margin: 5px 0;
-        text-align: center;
-      }
+<body>
 
-      .sidebar a:hover {
-        background-color: #3e8e41;
-        transform: scale(1.05);
-      }
-      .openbtn {
-        font-size: 20px;
-        cursor: pointer;
-        background-color: #111;
-        color: white;
-        border: none;
-        padding: 10px;
-        position: fixed;
-        top: 10px;
-        left: 10px;
-        z-index: 2;
-        transition: 0.5s;
-        border-radius: 50%;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-      }
-
-      .openbtn:hover {
-        background-color: #444;
-      }
-
-      .arrow {
-        width: 20px;
-        height: 20px;
-        fill: white;
-      }
-      button {
-        margin-left: 280px;
-      }
-    </style>
-  </head>
-  <body>
     <header>
-      <h1 id="financialreport"></h1>
-      <div>
-        <h2 id="summary"></h2>
-        <p>
-          <span id="totalFunds"></span>
-        </p>
-        <p>
-          <span id="incomingMoney"></span>
-        </p>
-      </div>
+        <h1>Financial Report</h1>
     </header>
 
+    <nav>
+        <a href="#">Home</a>
+        <a href="#">Transactions</a>
+        <a href="#">Summary</a>
+    </nav>
+            
     <main>
-      <div id="mySidebar" class="sidebar">
-        <a href="fundmaneger.html" id="apply">Apply</a>
-        <a href="Applications.html" id="applications">View Applications</a>
-        <a href="Financial-report.html" id="finacialReport">Financial Report</a>
-        <a href="Advertisements.html" id="Adverts">Advertise</a>
-        <a href="FundingRecipients.html" id="Recipients">Funding Recipients</a>
-      </div>
-      <section id="detailedReport">
-        <h2 id="detailed report">Detailed Report</h2>
-        <table id="transactionsTable">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Application date</th>
-              <th>Amount</th>
-              <th>Type of Funding</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody id="user-table-body">
-            <!-- User data will be populated here -->
-          </tbody>
-        </table>
-      </section>
+        <article id="main">
+            <section id="summary">
+                <h2 id="summary-heading">Summary</h2>
+                <p id="totalFunds"></p>
+                <p id="incomingMoney"></p>
+
+            </section>
+            
+            <h2>Detailed Report</h2>
+            <table id="transactionsTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Type of Funding</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody id="user-table-body">
+                    <!-- User data will be populated here -->
+                </tbody>
+            </table>
+        </article>
+
+        <div class="export-buttons">
+            <button id="exportCSV">Export to CSV</button>
+            <button id="exportPDF">Export to PDF</button>
+            <button id="makePayment" onclick= "makePayment()">Make Payment</button>
+        </div>
     </main>
-
+        
     <script type="module">
-      // Import the functions you need from the SDKs you need
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-      // TODO: Add SDKs for Firebase products that you want to use
-      // https://firebase.google.com/docs/web/setup#available-libraries
+            
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+            import{ getDatabase,child, set, get, update,onValue, ref} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+            
+            const firebaseConfig = {
+              apiKey: "AIzaSyA41QF5gZ_12IdeQivH9mxH3tLXEyxZkRY",
+              authDomain: "finance-51da8.firebaseapp.com",
+              databaseURL: "https://finance-51da8-default-rtdb.firebaseio.com",
+              projectId: "finance-51da8",
+              storageBucket: "finance-51da8.appspot.com",
+              messagingSenderId: "416372129674",
+              appId: "1:416372129674:web:85d6cbca019f6d512dd273",
+              measurementId: "G-F9RS1E4LBV"
+            };
 
-      // Your web app's Firebase configuration
-      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-      const firebaseConfig = {
-        apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
-        authDomain: "fir-sd-22d1a.firebaseapp.com",
-        databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
-        projectId: "fir-sd-22d1a",
-        storageBucket: "fir-sd-22d1a.appspot.com",
-        messagingSenderId: "526172429927",
-        appId: "1:526172429927:web:51ae427f7acfa1d925bec2",
-      };
+            const app = initializeApp(firebaseConfig);
+            const db = getDatabase();
 
-      // Initialize Firebase
-      const app = initializeApp(firebaseConfig);
+            let totalFunds = document.getElementById('totalFunds');
+            let incomingMoney = document.getElementById('incomingMoney');
+            let financialreport = document.getElementById('header');
+            let summary = document.getElementById('summary-heading');
+            
+            function getSummaryData(){
+                const dbref = ref(db);
 
-      import {
-        getDatabase,
-        child,
-        set,
-        get,
-        update,
-        onValue,
-        ref,
-      } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+                get(child(dbref, "summary/"))
+                .then((snapshot)=>{
+                    if(snapshot.exists){
+                        totalFunds.textContent = "Available Funds : R" + snapshot.val().totalFunds;
+                        incomingMoney.textContent = "Initial Funds : R"+snapshot.val().incomingMoney;
+                    }else{
+                        alert("No data found")
+                    }
+                }).catch((error)=>{
+                    alert(error)
+                })
+            }
 
-      const db = getDatabase();
-      let totalFunds = document.getElementById("totalFunds");
-      let incomingMoney = document.getElementById("incomingMoney");
-      let financialreport = document.getElementById("financialreport");
-      let summary = document.getElementById("summary");
+            function createNewRow(data) {
+                let table = document.getElementById('transactionsTable');
+                data.forEach(transaction => {
+                    let newRow = document.createElement('tr');
 
-      // function insertData(){
-      //     set(ref(db,"transactions" + month.value),{
-      //         month: month.value,
-      //         amount: amount.value,
-      //         description: description.value,
-      //         type:type.value
-      //     })
-      //     .then(()=>{
-      //         arlet("Data added successfully")
-      //     })
-      //     .catch((error)=>{
-      //         arlet(error)
-      //     })
-      // }
+                    let nameCell = document.createElement('td');
+                    let emailCell = document.createElement('td');
+                    let dateCell = document.createElement('td');
+                    let amountCell = document.createElement('td');
+                    let typeCell = document.createElement('td');
+                    let descCell = document.createElement('td');
 
-      function getSummaryData() {
-        const dbref = ref(db);
+                    nameCell.textContent = transaction.name;
+                    emailCell.textContent = transaction.email;
+                    dateCell.textContent = transaction.date;
+                    amountCell.textContent = transaction.amount;
+                    typeCell.textContent = transaction.type;
+                    descCell.textContent = transaction.description;
 
-        get(child(dbref, "funding-advertisements/"))
-          .then((snapshot) => {
-            snapshot.forEach((ad) => {
-              let totalFunds = 0;
-              totalFunds += ad.budget ? ad.budget : 0;
+                    newRow.appendChild(nameCell);
+                    newRow.appendChild(emailCell);
+                    newRow.appendChild(dateCell);
+                    newRow.appendChild(amountCell);
+                    newRow.appendChild(typeCell);
+                    newRow.appendChild(descCell);
+
+                    table.appendChild(newRow);
+                });
+            }
+
+            function getAllData() {
+                const dbRef = ref(db);
+                get(child(dbRef, "transactions/"))
+                .then((snapshot) => {
+                    if (snapshot.exists()) {
+                        let transactions = [];
+                        snapshot.forEach(childSnapshot => {
+                            let data = childSnapshot.val();
+                            transactions.push(data);
+                        });
+
+                        if (transactions.length === 0) {
+                            const h2 = document.getElementById('pending');
+                            h2.innerText = "No Pending Applications";
+                        } else {
+                            createNewRow(transactions);
+                        }
+                    } else {
+                        const h2 = document.getElementById('detailed-report');
+                        h2.innerText = "No financial records";
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error fetching data:', error);
+                    alert('An error occurred while fetching data. Please try again later.');
+                });
+            }
+
+            function exportToCSV() {
+                const table = document.getElementById('transactionsTable');
+                const rows = table.querySelectorAll('tr');
+                let csv = [];
+
+                rows.forEach(row => {
+                    let csvRow = [];
+                    row.querySelectorAll('td').forEach(cell => {
+                        csvRow.push(cell.textContent.trim());
+                    });
+                    csv.push(csvRow.join(','));
+                });
+
+                const csvContent = csv.join('\n');
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
+                saveAs(blob, 'transactions.csv');
+            }
+
+            function exportToPDF() {
+                const invoiceElement = document.getElementById('main');
+                const options = {
+                    margin: 0.3,
+                    filename: 'transactions.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+                };
+                html2pdf().from(invoiceElement).set(options).save();
+            }
+
+            document.addEventListener('DOMContentLoaded',function(){
+                getSummaryData();
+                getAllData();
             });
 
-            financialreport.innerHTML = "Financial Report";
-            summary.innerHTML = "Summary";
-            totalFundsElement.innerHTML = "Used Funds: R" + totalFunds;
-          })
-          .catch((error) => {
-            alert(error);
-          });
-      }
+            const exportCSVButton = document.getElementById('exportCSV');
+            exportCSVButton.onclick = exportToCSV;
 
-      function createNewRow(data) {
-        let table = document.getElementById("transactionsTable");
-        data.forEach((transaction) => {
-          let newRow = document.createElement("tr");
+            const exportPDFButton = document.getElementById('exportPDF');
+            exportPDFButton.onclick = exportToPDF;
 
-          let nameCell = document.createElement("td");
-          let emailCell = document.createElement("td");
-          let dateCell = document.createElement("td");
-          let amountCell = document.createElement("td");
-          let typeCell = document.createElement("td");
-          let descCell = document.createElement("td");
-
-          nameCell.textContent = transaction.name;
-          emailCell.textContent = transaction.email;
-          dateCell.textContent = transaction.date;
-          amountCell.textContent = transaction.amount;
-          typeCell.textContent = transaction.type;
-          descCell.textContent = transaction.description;
-
-          newRow.appendChild(nameCell);
-          newRow.appendChild(emailCell);
-          newRow.appendChild(dateCell);
-          newRow.appendChild(amountCell);
-          newRow.appendChild(typeCell);
-          newRow.appendChild(descCell);
-
-          table.appendChild(newRow);
-        });
-      }
-
-      function getAllData() {
-        const dbRef = ref(db);
-        get(child(dbRef, "transactions/"))
-          .then((snapshot) => {
-            if (snapshot.exists()) {
-              let transactions = [];
-              snapshot.forEach((childSnapshot) => {
-                let data = childSnapshot.val();
-                transactions.push(data);
-              });
-
-              if (transactions.length === 0) {
-                const h2 = document.getElementById("pending");
-                h2.innerText = "No Pending Applications";
-              } else {
-                createNewRow(transactions);
-              }
-            } else {
-              const h2 = document.getElementById("detailed-report");
-              h2.innerText = "No financial records";
+            function makePayment(){
+                window.location.href = 'makePayment.html';
             }
-          })
-          .catch((error) => {
-            console.error("Error fetching data:", error);
-            alert(
-              "An error occurred while fetching data. Please try again later."
-            );
-          });
-      }
+            const make = document.getElementById("makePayment")
+            make.addEventListener('click',function(){
+                makePayment(); 
+            })
 
-      function exportToCSV() {
-        const table = document.getElementById("transactionsTable");
-        const rows = table.querySelectorAll("tr");
-        let csv = [];
-
-        rows.forEach((row) => {
-          let csvRow = [];
-          row.querySelectorAll("td").forEach((cell) => {
-            csvRow.push(cell.textContent.trim());
-          });
-          csv.push(csvRow.join(","));
-        });
-
-        const csvContent = csv.join("\n");
-        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
-        saveAs(blob, "transactions.csv");
-      }
-
-      function exportToPDF() {
-        const invoiceElement = document.getElementById("detailedReport");
-        const options = {
-          margin: 1,
-          filename: "transactions.pdf",
-          image: { type: "jpeg", quality: 0.98 },
-          html2canvas: { scale: 2 },
-          jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
-        };
-
-        // Call html2pdf with the element and options
-        html2pdf().from(invoiceElement).set(options).save();
-      }
-
-      document.addEventListener("DOMContentLoaded", function () {
-        getSummaryData();
-        getAllData();
-      });
-      // Create Export buttons
-      const exportCSVButton = document.createElement("button");
-      exportCSVButton.textContent = "Export to CSV";
-      exportCSVButton.onclick = exportToCSV;
-
-      const exportPDFButton = document.createElement("button");
-      exportPDFButton.textContent = "Export to PDF";
-      exportPDFButton.onclick = exportToPDF;
-
-      // Append buttons to the body
-      document.body.appendChild(exportCSVButton);
-      document.body.appendChild(exportPDFButton);
-    </script>
-  </body>
+          </script>
+    </body>
 </html>
