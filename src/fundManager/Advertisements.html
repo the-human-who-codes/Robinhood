@@ -160,7 +160,29 @@
           <option value="events">Events</option></select
         ><br /><br />
 
-        <button type="submit">Advertise Bursary</button>
+        <button onclick="pressed()" type="submit">Advertise Bursary</button>
+        <script defer>
+          function pressed() {
+            Notification.requestPermission().then((perm) => {
+              if (perm === "granted") {
+                const notification = new Notification(
+                  "Application Submission",
+                  {
+                    body: "Your application has been submitted please wait for your approval",
+                    data: {
+                      url: "https://www.youtube.com/results?search_query=firebase+push+notification+with+php+and+javascript+for+web+development",
+                    },
+                    icon: "query_logo-01.png",
+                    tag: "this is new",
+                  }
+                );
+                notification.addEventListener("error", (err) => {
+                  alert("error");
+                });
+              }
+            });
+          }
+        </script>
       </form>
     </main>
 
