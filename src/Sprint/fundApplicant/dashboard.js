@@ -172,8 +172,17 @@ function addOpportunity(bursary) {
     detailsDiv.appendChild(descriptionP);
 
     const amountP = document.createElement("p");
-    amountP.textContent = "Amount: " + bursary.amount;
+    const ZAR = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'ZAR', // Correct currency code for South African Rand
+    });
+    amountP.textContent = "Bursary budget: " + ZAR.format(bursary.budget);
     detailsDiv.appendChild(amountP);
+
+    const totalAllowance = document.createElement("p");
+    totalAllowance.textContent = "Total Allowance: " + ZAR.format(bursary.totalAllowance);
+    detailsDiv.appendChild(totalAllowance);
+
     //view more button
     const viewMoreBtn = document.createElement("button");
     viewMoreBtn.classList.add("view-more-btn");
