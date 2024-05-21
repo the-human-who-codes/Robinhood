@@ -1,287 +1,272 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Advertise Your Bursary</title>
-    <style>
-      /* CSS styles */
 
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f9f9f9;
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Advertise Your Bursary</title>
+  <style>
+    /* CSS styles */
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+
+    header {
+      background-color: #347576;
+      color: white;
+      text-align: center;
+      padding: 20px 0;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    main {
+      padding: 20px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    form {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 0.5s ease;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    textarea,
+    input[type="number"],
+    input[type="date"],
+    .select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #347576;
+      color: white;
+      padding: 14px 20px;
+      margin: 20px 0 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    footer {
+      color: black;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
       }
 
-      header {
-        background-color: #347576;
-        color: white;
-        text-align: center;
-        padding: 20px 0;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      to {
+        opacity: 1;
       }
+    }
+  </style>
+</head>
 
-      h1 {
-        font-size: 2rem;
-        margin: 0;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-      }
+<body>
+  <header>
+    <h1>Advertise Your Bursary</h1>
+  </header>
 
-      main {
-        padding: 20px;
-        max-width: 600px;
-        margin: 0 auto;
-      }
+  <main>
+    <form id="bursary-form">
+      <label for="bursary-title">Bursary Title:</label>
+      <input type="text" id="bursary-title" name="bursary-title" required /><br /><br />
 
-      form {
-        background-color: #fff;
-        padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        animation: fadeIn 0.5s ease;
-      }
+      <label for="budget">Budget (in Rands):</label>
+      <input type="number" id="budget" name="budget" required min="0" step="100000" /><br /><br />
 
-      label {
-        display: block;
-        margin-bottom: 10px;
-        font-weight: bold;
-      }
+      <label for="totalAllowance">Total Allowance:</label>
+      <input type="number" id="totalAllowance" name="totalAllowance" required min="90000" step="10000" /><br /><br />
 
-      input[type="text"],
-      textarea,
-      input[type="number"],
-      input[type="date"],
-      .select {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        box-sizing: border-box;
-      }
+      <label for="description">Description:</label><br />
+      <textarea id="description" name="description" rows="4" required></textarea><br /><br />
 
-      button {
-        background-color: #347576;
-        color: white;
-        padding: 14px 20px;
-        margin: 20px 0 10px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        width: 100%;
-        font-size: 1rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        transition: background-color 0.3s ease;
-      }
+      <label for="criteria">Criteria:</label><br />
+      <textarea id="criteria" name="criteria" rows="4" required></textarea><br /><br />
 
-      button:hover {
-        background-color: #45a049;
-      }
+      <label for="deadline">Deadline:</label>
+      <input type="date" id="deadline" name="deadline" required /><br /><br />
 
-      footer {
-        color: black;
-        text-align: center;
-        padding: 20px 0;
-      }
+      <label for="contact">Contact Information:</label><br />
+      <input type="text" id="contact" name="contact" required /><br /><br />
 
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <header>
-      <h1>Advertise Your Bursary</h1>
-    </header>
+      <label for="funding-type">Funding Type:</label><br />
+      <select id="funding-type" name="funding-type" required>
+        <option value="educational">
+          Educational (bursaries and scholarships)
+        </option>
+        <option value="business">Business</option>
+        <option value="events">Events</option>
+      </select><br /><br />
 
-    <main>
-      <form id="bursary-form">
-        <label for="bursary-title">Bursary Title:</label>
-        <input
-          type="text"
-          id="bursary-title"
-          name="bursary-title"
-          required
-        /><br /><br />
-
-        <label for="budget">Budget (in Rands):</label>
-        <input
-          type="number"
-          id="budget"
-          name="budget"
-          required
-          min="0"
-          step="100000"
-        /><br /><br />
-
-        <label for="totalAllowance">Total Allowance:</label>
-        <input
-          type="number"
-          id="totalAllowance"
-          name="totalAllowance"
-          required
-          min="90000"
-          step="10000"
-        /><br /><br />
-
-        <label for="description">Description:</label><br />
-        <textarea
-          id="description"
-          name="description"
-          rows="4"
-          required
-        ></textarea
-        ><br /><br />
-
-        <label for="criteria">Criteria:</label><br />
-        <textarea id="criteria" name="criteria" rows="4" required></textarea
-        ><br /><br />
-
-        <label for="deadline">Deadline:</label>
-        <input type="date" id="deadline" name="deadline" required /><br /><br />
-
-        <label for="contact">Contact Information:</label><br />
-        <input type="text" id="contact" name="contact" required /><br /><br />
-
-        <label for="funding-type">Funding Type:</label><br />
-        <select id="funding-type" name="funding-type" required>
-          <option value="educational">
-            Educational (bursaries and scholarships)
-          </option>
-          <option value="business">Business</option>
-          <option value="events">Events</option></select
-        ><br /><br />
-
-        <button onclick="pressed()" type="submit">Advertise Bursary</button>
-        <script defer>
-          function pressed() {
-            Notification.requestPermission().then((perm) => {
-              if (perm === "granted") {
-                const notification = new Notification(
-                  "Application Submission",
-                  {
-                    body: "Your application has been submitted please wait for your approval",
-                    data: {
-                      url: "https://www.youtube.com/results?search_query=firebase+push+notification+with+php+and+javascript+for+web+development",
-                    },
-                    icon: "query_logo-01.png",
-                    tag: "this is new",
-                  }
-                );
-                notification.addEventListener("error", (err) => {
-                  alert("error");
-                });
-              }
-            });
-          }
-        </script>
-      </form>
-    </main>
-
-    <footer>&copy; 2024 Advertise Your Bursary. All rights reserved.</footer>
-
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js";
-      import {
-        getDatabase,
-        ref,
-        push,
-        get,
-      } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js";
-
-      // Firebase configuration
-      const firebaseConfig = {
-        apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
-        authDomain: "fir-sd-22d1a.firebaseapp.com",
-        databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
-        projectId: "fir-sd-22d1a",
-        storageBucket: "fir-sd-22d1a.appspot.com",
-        messagingSenderId: "526172429927",
-        appId: "1:526172429927:web:51ae427f7acfa1d925bec2",
-      };
-
-      const firebaseApp = initializeApp(firebaseConfig);
-      const db = getDatabase(firebaseApp);
-      const fundingOpportunitiesRef = ref(db, "fund_manager-applications");
-      const fundingAdvertisementsRef = ref(db, "funding-advertisements");
-
-      async function createAdvertisement(event) {
-        event.preventDefault();
-        const status = await checkFundManagerStatus();
-        console.log(status);
-        console.log("Fund manager status:", status);
-        if (status === "accepted") {
-          const formData = new FormData(
-            document.getElementById("bursary-form")
-          );
-          const bursaryData = {};
-          formData.forEach((value, key) => {
-            bursaryData[key] = value;
-          });
-          bursaryData["owner_uid"] = JSON.parse(
-            sessionStorage.getItem("user")
-          ).uid;
-          console.log(bursaryData);
-          saveAdvertisementToDatabase(bursaryData);
-          alert("Bursary advertisement created successfully!");
-          document.getElementById("bursary-form").reset();
-        } else if (status === "pending") {
-          alert("Your application is still pending. Please wait for approval.");
-        } else {
-          alert(
-            "Your application has been rejected. You cannot create advertisements."
-          );
-        }
-      }
-
-      async function checkFundManagerStatus() {
-        try {
-          const user = JSON.parse(sessionStorage.getItem("user"));
-          if (!user || !user.uid) {
-            console.error("User ID not found in session storage.");
-            return "pending";
-          }
-
-          const snapshot = await get(fundingOpportunitiesRef);
-          if (snapshot.exists()) {
-            const applications = snapshot.val();
-            for (const key in applications) {
-              if (applications.hasOwnProperty(key)) {
-                const application = applications[key];
-                if (application.uid === user.uid) {
-                  const status = application.status || "pending";
-                  console.log("Status:", status);
-                  return status;
+      <button onclick="pressed()" type="submit">Advertise Bursary</button>
+      <script defer>
+        function pressed() {
+          Notification.requestPermission().then((perm) => {
+            if (perm === "granted") {
+              const notification = new Notification(
+                "Application Submission",
+                {
+                  body: "Your application has been submitted please wait for your approval",
+                  data: {
+                    url: "https://www.youtube.com/results?search_query=firebase+push+notification+with+php+and+javascript+for+web+development",
+                  },
+                  icon: "query_logo-01.png",
+                  tag: "this is new",
                 }
-              }
+              );
+              notification.addEventListener("error", (err) => {
+                alert("error");
+              });
             }
-            console.log("Application not found for user:", user.uid);
-            return "pending";
-          } else {
-            console.log("No data available");
-            return "pending";
-          }
-        } catch (error) {
-          console.error("Error getting fund manager status: ", error);
+          });
+        }
+      </script>
+    </form>
+    <button id='home' type="submit">Home</button>
+  </main>
+
+  <footer>&copy; 2024 Advertise Your Bursary. All rights reserved.</footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js";
+    import {
+      getDatabase,
+      ref,
+      push,
+      get,
+    } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js";
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
+      authDomain: "fir-sd-22d1a.firebaseapp.com",
+      databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
+      projectId: "fir-sd-22d1a",
+      storageBucket: "fir-sd-22d1a.appspot.com",
+      messagingSenderId: "526172429927",
+      appId: "1:526172429927:web:51ae427f7acfa1d925bec2",
+    };
+
+    const firebaseApp = initializeApp(firebaseConfig);
+    const db = getDatabase(firebaseApp);
+    const fundingOpportunitiesRef = ref(db, "fund_manager-applications");
+    const fundingAdvertisementsRef = ref(db, "funding-advertisements");
+
+    let homeButton = document.getElementById("home");
+    homeButton.addEventListener('click', function () {
+      window.location.href = './fundingmenager.html';
+    })
+
+    async function createAdvertisement(event) {
+      event.preventDefault();
+      const status = await checkFundManagerStatus();
+      console.log(status);
+      console.log("Fund manager status:", status);
+      if (status === "accepted") {
+        const formData = new FormData(
+          document.getElementById("bursary-form")
+        );
+        const bursaryData = {};
+        formData.forEach((value, key) => {
+          bursaryData[key] = value;
+        });
+        bursaryData["owner_uid"] = JSON.parse(
+          sessionStorage.getItem("user")
+        ).uid;
+        console.log(bursaryData);
+        saveAdvertisementToDatabase(bursaryData);
+        alert("Bursary advertisement created successfully!");
+        document.getElementById("bursary-form").reset();
+        window.location.href = './fundingmenager.html';
+      } else if (status === "pending") {
+        alert("Your application is still pending. Please wait for approval.");
+      } else {
+        alert(
+          "Your application has been rejected. You cannot create advertisements."
+        );
+      }
+    }
+
+    async function checkFundManagerStatus() {
+      try {
+        const user = JSON.parse(sessionStorage.getItem("user"));
+        if (!user || !user.uid) {
+          console.error("User ID not found in session storage.");
           return "pending";
         }
-      }
 
-      function saveAdvertisementToDatabase(advertisementData) {
-        push(fundingAdvertisementsRef, advertisementData);
+        const snapshot = await get(fundingOpportunitiesRef);
+        if (snapshot.exists()) {
+          const applications = snapshot.val();
+          for (const key in applications) {
+            if (applications.hasOwnProperty(key)) {
+              const application = applications[key];
+              if (application.uid === user.uid) {
+                const status = application.status || "pending";
+                console.log("Status:", status);
+                return status;
+              }
+            }
+          }
+          console.log("Application not found for user:", user.uid);
+          return "pending";
+        } else {
+          console.log("No data available");
+          return "pending";
+        }
+      } catch (error) {
+        console.error("Error getting fund manager status: ", error);
+        return "pending";
       }
+    }
 
-      document
-        .getElementById("bursary-form")
-        .addEventListener("submit", createAdvertisement);
-    </script>
-  </body>
+    function saveAdvertisementToDatabase(advertisementData) {
+      push(fundingAdvertisementsRef, advertisementData);
+    }
+
+    document
+      .getElementById("bursary-form")
+      .addEventListener("submit", createAdvertisement);
+  </script>
+</body>
+
 </html>
