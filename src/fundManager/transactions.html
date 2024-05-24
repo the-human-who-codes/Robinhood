@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Financial Report</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+    }
+
+    header {
+        background-color: #347576;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        position: fixed;
+        width: 100%;
+        z-index: 2;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    nav {
+        background-color: #222;
+        padding: 10px 0;
+        text-align: center;
+    }
+
+    nav a {
+        color: white;
+        text-decoration: none;
+        margin: 0 10px;
+    }
+
+    main {
+        margin-top: 80px; /* Adjust for the fixed header */
+        padding: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    th, td {
+        padding: 12px 15px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #347576;
+        color: white;
+        cursor: pointer;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #ddd;
+    }
+
+    .export-buttons {
+        margin-top: 20px;
+    }
+
+    .export-buttons button {
+        padding: 10px 20px;
+        margin-right: 10px;
+        background-color: #347576;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .export-buttons button:hover {
+        background-color: #285c4d;
+    }
+
+    /* Button styles */
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #347576;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .button:hover {
+        background-color: #285c4d;
+    }
+  </style>
+</head>
+<body>
+    <header>
+        <h1>Financial Report</h1>
+    </header>
+
+    <nav>
+        <a href="#">Home</a>
+        <a href="#">Transactions</a>
+        <a href="#">Summary</a>
+    </nav>
+            
+    <main>
+        <article id="main">
+            <section id="summary">
+                <h2 id="summary-heading">Summary</h2>
+                <p id="totalAmount"></p>
+                <script>
+                    // Function to parse URL query parameters
+                    function getUrlParameter(name) {
+                        name = name.replace(/[\[\]]/g, '\\$&');
+                        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                            results = regex.exec(window.location.href);
+                        if (!results) return null;
+                        if (!results[2]) return '';
+                        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+                    }
+                
+                    // Get updated allowance from URL query parameter
+                    var updatedAllowance = getUrlParameter('updatedAllowance');
+                
+                    // Display updated allowance
+                    if (updatedAllowance !== null) {
+                        document.getElementById('totalAllowance').textContent = updatedAllowance;
+                    } else {
+                        document.getElementById('totalAllowance').textContent = "N/A";
+                    }
+                </script>
+            </section>
+            
+            <h2>Detailed Report</h2>
+            <table id="transactionsTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Type of Funding</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody id="transactionsBody">
+                    <!-- Transactions will be populated here -->
+                </tbody>
+            </table>
+            </table>
+        </article>
+
+        <div class="export-buttons">
+            <button id="exportCSV" class="button">Export to CSV</button>
+            <button id="exportPDF" class="button">Export to PDF</button>
+            <button id="makePayment" class="button">Make Payment</button>
+        </div>
+    </main>
+        
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import {
+            getDatabase,
+            ref,
+            get,
+        } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
+            authDomain: "fir-sd-22d1a.firebaseapp.com",
+            databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
+            projectId: "fir-sd-22d1a",
+            storageBucket: "fir-sd-22d1a.appspot.com",
+            messagingSenderId: "526172429927",
+            appId: "1:526172429927:web:51ae427f7acfa1d925bec2",
+        };
+
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+
+        const transactionsTable = document.getElementById('transactionsTable');
+
+        function displayTransactions(bursaryId) {
+            const transactionsRef = ref(db, `transactions/${bursaryId}`);
+            const transactionsBody = document.getElementById('transactionsBody');
+            transactionsBody.innerHTML = ""; // Clear previous transactions
+
+            get(transactionsRef)
+                .then((snapshot) => {
+                    if (snapshot.exists()) {
+                        snapshot.forEach((childSnapshot) => {
+                            const transaction = childSnapshot.val();
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${transaction.name}</td>
+                                <td>${transaction.email}</td>
+                                <td>${transaction.date}</td>
+                                <td>${transaction.amount}</td>
+                                <td>${transaction.type}</td>
+                                <td>${transaction.description}</td>
+                            `;
+                            transactionsBody.appendChild(row);
+                        });
+                    } else {
+                        transactionsBody.innerHTML = "<tr><td colspan='6'>No transactions found for this bursary.</td></tr>";
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error retrieving transactions:", error);
+                });
+        }
+        function getSummaryData() {
+            const userId = JSON.parse(sessionStorage.getItem("user")).uid;
+            const advertisementsRef = ref(db, "funding-advertisements");
+
+            let totalAmount = 0;
+
+            get(advertisementsRef)
+                .then((snapshot) => {
+                    if (snapshot.exists()) {
+                        snapshot.forEach((childSnapshot) => {
+                            const advertisement = childSnapshot.val();
+                            if (advertisement.owner_uid === userId) {
+                                totalAmount += advertisement.totalAllowance;
+                            }
+                        });
+                        // Display the total allowance in the summary section
+                        document.getElementById('totalAmount').textContent = "Total Bursary Allowance: R" + totalAmount;
+                    } else {
+                        document.getElementById('totalAmount').textContent = "Total Bursary Allowance: R0"; // If no advertisements found
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error retrieving advertisements:", error);
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            getSummaryData();
+        });
+
+        function exportToCSV() {
+            const rows = transactionsTable.querySelectorAll('tr');
+            let csv = [];
+
+            rows.forEach(row => {
+                let csvRow = [];
+                row.querySelectorAll('td').forEach(cell => {
+                    csvRow.push(cell.textContent.trim());
+                });
+                csv.push(csvRow.join(','));
+            });
+
+            const csvContent = csv.join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
+            saveAs(blob, 'transactions.csv');
+        }
+
+        function exportToPDF() {
+            const invoiceElement = document.getElementById('main');
+            const options = {
+                margin: 0.3,
+                filename: 'transactions.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            html2pdf().from(invoiceElement).set(options).save();
+        }
+
+        function makePayment() {
+            window.location.href = 'makePayment.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Retrieve the bursary ID from session storage
+            const bursaryId = sessionStorage.getItem('selectedBursaryId');
+            if (bursaryId) {
+                // Display transactions for the retrieved bursary ID
+                displayTransactions(bursaryId);
+            } else {
+                // If no bursary ID is found, display a message or redirect to another page
+                console.error("No bursary ID found.");
+            }
+        });
+
+        document.getElementById('exportCSV').onclick = exportToCSV;
+        document.getElementById('exportPDF').onclick = exportToPDF;
+        document.getElementById('makePayment').onclick = makePayment;
+    </script>
+</body>
+</html>

@@ -93,9 +93,9 @@
     .export-buttons button:hover {
         background-color: #285c4d;
     }
-
   </style>
 </head>
+<body>
     <header>
         <h1>Financial Report</h1>
     </header>
@@ -107,186 +107,99 @@
     </nav>
             
     <main>
-        <article id="main">
-            <section id="summary">
-                <h2 id="summary-heading">Summary</h2>
-                <p id="totalFunds"></p>
-                <p id="incomingMoney"></p>
+        <h2>Your Advertisements</h2>
+        <table id="advertisementsTable">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Deadline</th>
+                    <th>Contact</th>
+                    <th>Criteria</th>
+                    <th>Funding Type</th>
+                    <th>Total Allowance</th>
+                </tr>
+            </thead>
+            <tbody id="advertisementsBody">
+                <!-- Advertisements will be populated here -->
+            </tbody>
+        </table>
 
-            </section>
-            
-            <h2>Detailed Report</h2>
-            <table id="transactionsTable">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Date</th>
-                        <th>Amount</th>
-                        <th>Type of Funding</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody id="user-table-body">
-                    <!-- User data will be populated here -->
-                </tbody>
-            </table>
-        </article>
-
-        <div class="export-buttons">
-            <button id="exportCSV">Export to CSV</button>
-            <button id="exportPDF">Export to PDF</button>
-            <button id="makePayment" onclick= "makePayment()">Make Payment</button>
-        </div>
     </main>
         
     <script type="module">
-            
-            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-            import{ getDatabase,child, set, get, update,onValue, ref} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
-            
-            const firebaseConfig = {
-              apiKey: "AIzaSyA41QF5gZ_12IdeQivH9mxH3tLXEyxZkRY",
-              authDomain: "finance-51da8.firebaseapp.com",
-              databaseURL: "https://finance-51da8-default-rtdb.firebaseio.com",
-              projectId: "finance-51da8",
-              storageBucket: "finance-51da8.appspot.com",
-              messagingSenderId: "416372129674",
-              appId: "1:416372129674:web:85d6cbca019f6d512dd273",
-              measurementId: "G-F9RS1E4LBV"
-            };
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import {
+            getDatabase,
+            ref,
+            get,
+        } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 
-            const app = initializeApp(firebaseConfig);
-            const db = getDatabase();
+        const firebaseConfig = {
+            apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
+            authDomain: "fir-sd-22d1a.firebaseapp.com",
+            databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
+            projectId: "fir-sd-22d1a",
+            storageBucket: "fir-sd-22d1a.appspot.com",
+            messagingSenderId: "526172429927",
+            appId: "1:526172429927:web:51ae427f7acfa1d925bec2",
+        };
 
-            let totalFunds = document.getElementById('totalFunds');
-            let incomingMoney = document.getElementById('incomingMoney');
-            let financialreport = document.getElementById('header');
-            let summary = document.getElementById('summary-heading');
-            
-            function getSummaryData(){
-                const dbref = ref(db);
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
 
-                get(child(dbref, "summary/"))
-                .then((snapshot)=>{
-                    if(snapshot.exists){
-                        totalFunds.textContent = "Available Funds : R" + snapshot.val().totalFunds;
-                        incomingMoney.textContent = "Initial Funds : R"+snapshot.val().incomingMoney;
-                    }else{
-                        alert("No data found")
-                    }
-                }).catch((error)=>{
-                    alert(error)
-                })
-            }
+        const advertisementsTable = document.getElementById('advertisementsTable');
 
-            function createNewRow(data) {
-                let table = document.getElementById('transactionsTable');
-                data.forEach(transaction => {
-                    let newRow = document.createElement('tr');
+        function displayAdvertisements() {
+            const advertisementsRef = ref(db, "funding-advertisements");
+            const userId = JSON.parse(sessionStorage.getItem("user")).uid;
 
-                    let nameCell = document.createElement('td');
-                    let emailCell = document.createElement('td');
-                    let dateCell = document.createElement('td');
-                    let amountCell = document.createElement('td');
-                    let typeCell = document.createElement('td');
-                    let descCell = document.createElement('td');
-
-                    nameCell.textContent = transaction.name;
-                    emailCell.textContent = transaction.email;
-                    dateCell.textContent = transaction.date;
-                    amountCell.textContent = transaction.amount;
-                    typeCell.textContent = transaction.type;
-                    descCell.textContent = transaction.description;
-
-                    newRow.appendChild(nameCell);
-                    newRow.appendChild(emailCell);
-                    newRow.appendChild(dateCell);
-                    newRow.appendChild(amountCell);
-                    newRow.appendChild(typeCell);
-                    newRow.appendChild(descCell);
-
-                    table.appendChild(newRow);
-                });
-            }
-
-            function getAllData() {
-                const dbRef = ref(db);
-                get(child(dbRef, "transactions/"))
+            get(advertisementsRef)
                 .then((snapshot) => {
                     if (snapshot.exists()) {
-                        let transactions = [];
-                        snapshot.forEach(childSnapshot => {
-                            let data = childSnapshot.val();
-                            transactions.push(data);
+                        snapshot.forEach((childSnapshot) => {
+                            const advertisement = childSnapshot.val();
+                            if (advertisement.owner_uid === userId) {
+                                const row = document.createElement('tr');
+                                row.innerHTML = `
+                                    <td>${advertisement["bursary-title"]}</td>
+                                    <td>${advertisement.description}</td>
+                                    <td>${advertisement.deadline}</td>
+                                    <td>${advertisement.contact}</td>
+                                    <td>${advertisement.criteria}</td>
+                                    <td>${advertisement["funding-type"]}</td>
+                                    <td>${advertisement.totalAllowance}</td>
+                                `;
+                                row.addEventListener('click', () => displayTransactions(advertisement.bursary_id));
+                                document.getElementById('advertisementsBody').appendChild(row);
+                            }
                         });
-
-                        if (transactions.length === 0) {
-                            const h2 = document.getElementById('pending');
-                            h2.innerText = "No Pending Applications";
-                        } else {
-                            createNewRow(transactions);
-                        }
                     } else {
-                        const h2 = document.getElementById('detailed-report');
-                        h2.innerText = "No financial records";
+                        document.getElementById('advertisementsBody').innerHTML = "<tr><td colspan='7'>No advertisements found.</td></tr>";
                     }
                 })
                 .catch((error) => {
-                    console.error('Error fetching data:', error);
-                    alert('An error occurred while fetching data. Please try again later.');
+                    console.error("Error retrieving advertisements:", error);
                 });
-            }
+        }
 
-            function exportToCSV() {
-                const table = document.getElementById('transactionsTable');
-                const rows = table.querySelectorAll('tr');
-                let csv = [];
+            function redirectToTransactionsPage(bursaryId) {
+            // Store the bursary ID in session storage
+            sessionStorage.setItem('selectedBursaryId', bursaryId);
+            // Redirect to the transactions page
+            window.location.href = 'transactions.html';
+        }   
 
-                rows.forEach(row => {
-                    let csvRow = [];
-                    row.querySelectorAll('td').forEach(cell => {
-                        csvRow.push(cell.textContent.trim());
-                    });
-                    csv.push(csvRow.join(','));
-                });
+        document.addEventListener('DOMContentLoaded', () => {
+            displayAdvertisements();
+        });
 
-                const csvContent = csv.join('\n');
-                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
-                saveAs(blob, 'transactions.csv');
-            }
-
-            function exportToPDF() {
-                const invoiceElement = document.getElementById('main');
-                const options = {
-                    margin: 0.3,
-                    filename: 'transactions.pdf',
-                    image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { scale: 2 },
-                    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-                };
-                html2pdf().from(invoiceElement).set(options).save();
-            }
-
-            document.addEventListener('DOMContentLoaded',function(){
-                getSummaryData();
-                getAllData();
-            });
-
-            const exportCSVButton = document.getElementById('exportCSV');
-            exportCSVButton.onclick = exportToCSV;
-
-            const exportPDFButton = document.getElementById('exportPDF');
-            exportPDFButton.onclick = exportToPDF;
-
-            function makePayment(){
-                window.location.href = 'makePayment.html';
-            }
-            const make = document.getElementById("makePayment")
-            make.addEventListener('click',function(){
-                makePayment(); 
-            })
-
-          </script>
-    </body>
+        advertisementsTable.addEventListener('click', (event) => {
+        const row = event.target.closest('tr');
+        if (!row) return; // If clicked outside of any row, do nothing
+        const bursaryId = row.dataset.bursaryId;
+        redirectToTransactionsPage(bursaryId);
+    });
+    </script>
+</body>
 </html>

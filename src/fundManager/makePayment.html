@@ -116,7 +116,12 @@
   const type = document.getElementById('type').value;
 
   try {
-    const totalFundsRef = ref(db, 'summary/totalFunds');
+    const bursaryId = sessionStorage.getItem('selectedBursaryId');
+            if (!bursaryId) {
+                throw new Error('Bursary ID not found.');
+            }
+
+    const totalFundsRef = ref(db, 'funding-advertisements/{bursaryId}/totalAllowance');
     const snapshot = await get(totalFundsRef);
     const totalFunds = snapshot.val();
 
@@ -127,7 +132,7 @@
       // Update the value of totalFunds directly
       await set(totalFundsRef, updatedFunds);
       
-      const transactionsRef = ref(db, 'transactions');
+      const transactionsRef = ref(db, 'transactions/{bursaryId}');
       const newTransactionKey = push(transactionsRef).key; // Generate a new key for the transaction
       const transactionData = {
         [newTransactionKey]: {
@@ -144,7 +149,7 @@
       await update(transactionsRef, transactionData);
 
       alert('Payment made successfully!');
-      window.location.href = `Financial-report.html?updatedFunds=${updatedFunds}`;
+      window.location.href = `transactions.html?updatedFunds=${updatedFunds}`;
     } else {
       console.error('totalFunds is null');
       alert('An error occurred while fetching totalFunds. Please try again later.');
