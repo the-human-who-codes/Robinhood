@@ -414,14 +414,32 @@ else {
             // Prevent the default form submission behavior
             event.preventDefault();
             const fundingForm = document.getElementById('uploadForm')
+            const number=document.getElementById('number');
+            const organization=document.getElementById('Organization');
+            const selectElement=document.getElementById('funding-type');
+            const selectedValue=selectElement.options[selectElement.selectedIndex].value;
             const formData = new FormData(fundingForm);
 
             let uid = user.uid;
 
             const applicantData = {};
+            if(selectedValue=="Student"){
+                applicantData["applicantType"]="Student";
+                applicantData["funding-type"]="educational";
+            }
+            if(selectedValue=="Event"){
+                applicantData["applicantType"]="Event";
+                applicantData["funding-type"]="events"
+            }
+            if(selectedValue=="Business"){
+                applicantData["applicantType"]="Business";
+                applicantData["funding-type"]="business";
+            }
+            
 
             applicantData.name = user.displayName;
             applicantData.email = user.email;
+            
 
             formData.forEach((value, key) => {
                 applicantData[key] = value;

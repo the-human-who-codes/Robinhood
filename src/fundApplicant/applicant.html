@@ -90,9 +90,9 @@
                 <section class="form-group">
                     <label for="options">Type of Applicant:</label>
                     <select id="type">
-                        <option value="educational">Educational</option>
+                        <option value="educational">Student</option>
                         <option value="business">Business</option>
-                        <option value="events">Events</option>
+                        <option value="events">Event</option>
                     </select>
                 </section>               
                 <section class="form-group">
@@ -148,7 +148,7 @@
             // Get the value of the "Type of Applicant" field
             const typeOfApplicant = document.getElementById('type').value;
             // Add the "Type of Applicant" field to the data
-            applicantData.type = typeOfApplicant;
+            applicantData.applicantType = typeOfApplicant;
         
             formData.forEach((value, key) => {
                 applicantData[key] = value;
