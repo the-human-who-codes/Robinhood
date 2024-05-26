@@ -93,11 +93,30 @@
     .export-buttons button:hover {
         background-color: #285c4d;
     }
+    .back {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: white;
+    color: #347576;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    position: absolute;
+    top: 15px;
+    left: 10px;
+}
   </style>
 </head>
 <body>
     <header>
         <h1>Financial Report</h1>
+        <button class="back" onclick="finance()">Back</button>
+  <script>
+    function finance(){
+        window.location.href = 'fundingmenager.html';
+      }
+  </script>
     </header>
 
     <nav>

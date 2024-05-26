@@ -94,7 +94,6 @@
         background-color: #285c4d;
     }
 
-    /* Button styles */
     .button {
         display: inline-block;
         padding: 10px 20px;
@@ -109,79 +108,96 @@
     .button:hover {
         background-color: #285c4d;
     }
+    .back {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: white;
+    color: #347576;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    position: absolute;
+    top: 15px;
+    left: 10px;
+}
+
   </style>
 </head>
 <body>
-    <header>
-        <h1>Financial Report</h1>
-    </header>
+  <header>
+      <h1>Financial Report</h1>
+      <button class="back" onclick="finance()">Back</button>
+  </header>
 
-    <nav>
-        <a href="#">Home</a>
-        <a href="#">Transactions</a>
-        <a href="#">Summary</a>
-    </nav>
-            
-    <main>
-        <article id="main">
-            <section id="summary">
-                <h2 id="summary-heading">Summary</h2>
-                <p id="totalAmount"></p>
-                <script>
-                    // Function to parse URL query parameters
-                    function getUrlParameter(name) {
-                        name = name.replace(/[\[\]]/g, '\\$&');
-                        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-                            results = regex.exec(window.location.href);
-                        if (!results) return null;
-                        if (!results[2]) return '';
-                        return decodeURIComponent(results[2].replace(/\+/g, ' '));
-                    }
-                
-                    // Get updated allowance from URL query parameter
-                    var updatedAllowance = getUrlParameter('updatedAllowance');
-                
-                    // Display updated allowance
-                    if (updatedAllowance !== null) {
-                        document.getElementById('totalAllowance').textContent = updatedAllowance;
-                    } else {
-                        document.getElementById('totalAllowance').textContent = "N/A";
-                    }
-                </script>
-            </section>
-            
-            <h2>Detailed Report</h2>
-            <table id="transactionsTable">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Date</th>
-                        <th>Amount</th>
-                        <th>Type of Funding</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody id="transactionsBody">
-                    <!-- Transactions will be populated here -->
-                </tbody>
-            </table>
-            </table>
-        </article>
-
-        <div class="export-buttons">
-            <button id="exportCSV" class="button">Export to CSV</button>
-            <button id="exportPDF" class="button">Export to PDF</button>
-            <button id="makePayment" class="button">Make Payment</button>
-        </div>
-    </main>
+  <nav>
+      <a href="#">Home</a>
+      <a href="#">Transactions</a>
+      <a href="#">Summary</a>
+  </nav>
         
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+  <main>
+      <article id="main">
+          <section id="summary">
+              <h2 id="summary-heading">Summary</h2>
+              <p id="totalAmount"></p>
+              <script>
+                  function getUrlParameter(name) {
+                      name = name.replace(/[\[\]]/g, '\\$&');
+                      var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                          results = regex.exec(window.location.href);
+                      if (!results) return null;
+                      if (!results[2]) return '';
+                      return decodeURIComponent(results[2].replace(/\+/g, ' '));
+                  }
+              
+                  var updatedAllowance = getUrlParameter('updatedAllowance');
+              
+                  if (updatedAllowance !== null) {
+                      document.getElementById('totalAmount').textContent = "Updated Allowance: R" + updatedAllowance;
+                  } else {
+                      document.getElementById('totalAmount').textContent = "N/A";
+                  }
+                  function finance(){
+            window.location.href = 'Financial-report.html'
+      }
+              </script>
+          </section>
+          
+          <h2>Detailed Report</h2>
+          <table id="transactionsTable">
+              <thead>
+                  <tr>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Date</th>
+                      <th>Amount</th>
+                      <th>Type of Funding</th>
+                      <th>Description</th>
+                  </tr>
+              </thead>
+              <tbody id="transactionsBody">
+                  <!-- Transactions will be populated here -->
+              </tbody>
+          </table>
+      </article>
+
+      <div class="export-buttons">
+          <button id="exportCSV" class="button">Export to CSV</button>
+          <button id="exportPDF" class="button">Export to PDF</button>
+          <button id="makePayment" class="button">Make Payment</button>
+      </div>
+  </main>
+    
+  <script type="module">
+          import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
         import {
             getDatabase,
             ref,
             get,
+            set,
+            push,
+            update,
         } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 
         const firebaseConfig = {
@@ -194,119 +210,128 @@
             appId: "1:526172429927:web:51ae427f7acfa1d925bec2",
         };
 
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase();
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase();
+      const transactionsTable = document.getElementById('transactionsTable');
 
-        const transactionsTable = document.getElementById('transactionsTable');
+      function displayTransactions(userId) {
+          const transactionsRef = ref(db, `transactions/${userId}`);
+          const transactionsBody = document.getElementById('transactionsBody');
+          transactionsBody.innerHTML = ""; // Clear previous transactions
 
-        function displayTransactions(bursaryId) {
-            const transactionsRef = ref(db, `transactions/${bursaryId}`);
-            const transactionsBody = document.getElementById('transactionsBody');
-            transactionsBody.innerHTML = ""; // Clear previous transactions
+          get(transactionsRef)
+              .then((snapshot) => {
+                  if (snapshot.exists()) {
+                      snapshot.forEach((childSnapshot) => {
+                          const transaction = childSnapshot.val();
+                          const row = document.createElement('tr');
+                          row.innerHTML = `
+                              <td>${transaction.name}</td>
+                              <td>${transaction.email}</td>
+                              <td>${transaction.date}</td>
+                              <td>${transaction.amount}</td>
+                              <td>${transaction.type}</td>
+                              <td>${transaction.description}</td>
+                          `;
+                          transactionsBody.appendChild(row);
+                      });
+                  } else {
+                      transactionsBody.innerHTML = "<tr><td colspan='6'>No transactions found.</td></tr>";
+                  }
+              })
+              .catch((error) => {
+                  console.error("Error retrieving transactions:", error);
+              });
+      }
 
-            get(transactionsRef)
-                .then((snapshot) => {
-                    if (snapshot.exists()) {
-                        snapshot.forEach((childSnapshot) => {
-                            const transaction = childSnapshot.val();
-                            const row = document.createElement('tr');
-                            row.innerHTML = `
-                                <td>${transaction.name}</td>
-                                <td>${transaction.email}</td>
-                                <td>${transaction.date}</td>
-                                <td>${transaction.amount}</td>
-                                <td>${transaction.type}</td>
-                                <td>${transaction.description}</td>
-                            `;
-                            transactionsBody.appendChild(row);
-                        });
-                    } else {
-                        transactionsBody.innerHTML = "<tr><td colspan='6'>No transactions found for this bursary.</td></tr>";
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error retrieving transactions:", error);
-                });
-        }
-        function getSummaryData() {
-            const userId = JSON.parse(sessionStorage.getItem("user")).uid;
-            const advertisementsRef = ref(db, "funding-advertisements");
+      function getSummaryData() {
+          const userId = JSON.parse(sessionStorage.getItem("user")).uid;
+          const advertisementsRef = ref(db, "funding-advertisements");
 
-            let totalAmount = 0;
+          let totalAmount = 0;
 
-            get(advertisementsRef)
-                .then((snapshot) => {
-                    if (snapshot.exists()) {
-                        snapshot.forEach((childSnapshot) => {
-                            const advertisement = childSnapshot.val();
-                            if (advertisement.owner_uid === userId) {
-                                totalAmount += advertisement.totalAllowance;
-                            }
-                        });
-                        // Display the total allowance in the summary section
-                        document.getElementById('totalAmount').textContent = "Total Bursary Allowance: R" + totalAmount;
-                    } else {
-                        document.getElementById('totalAmount').textContent = "Total Bursary Allowance: R0"; // If no advertisements found
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error retrieving advertisements:", error);
-                });
-        }
+          get(advertisementsRef)
+              .then((snapshot) => {
+                  if (snapshot.exists()) {
+                      snapshot.forEach((childSnapshot) => {
+                          const advertisement = childSnapshot.val();
+                          if (advertisement.owner_uid === userId) {
+                              totalAmount += advertisement.totalAllowance;
+                          }
+                      });
+                      document.getElementById('totalAmount').textContent = "Total Bursary Allowance: R" + totalAmount;
+                  } else {
+                      document.getElementById('totalAmount').textContent = "Total Bursary Allowance: R0";
+                  }
+              })
+              .catch((error) => {
+                  console.error("Error retrieving advertisements:", error);
+              });
+      }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            getSummaryData();
-        });
+      function updateTotalAmount(newTotalAmount) {
+          const userId = JSON.parse(sessionStorage.getItem("user")).uid;
+          const advertisementKey = "AD_KEY"; // Replace with the actual key of the advertisement
 
-        function exportToCSV() {
-            const rows = transactionsTable.querySelectorAll('tr');
-            let csv = [];
+          const advertisementRef = ref(db, `funding-advertisements/${advertisementKey}`);
+          update(advertisementRef, {
+              totalAllowance: newTotalAmount
+          }).then(() => {
+              console.log('Total amount updated successfully.');
+              document.getElementById('totalAmount').textContent = "Total Bursary Allowance: R" + newTotalAmount;
+          }).catch((error) => {
+              console.error('Error updating total amount:', error);
+          });
+      }
 
-            rows.forEach(row => {
-                let csvRow = [];
-                row.querySelectorAll('td').forEach(cell => {
-                    csvRow.push(cell.textContent.trim());
-                });
-                csv.push(csvRow.join(','));
-            });
+      document.addEventListener('DOMContentLoaded', () => {
+          getSummaryData();
 
-            const csvContent = csv.join('\n');
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
-            saveAs(blob, 'transactions.csv');
-        }
+          const userId = JSON.parse(sessionStorage.getItem("user")).uid;
+          if (userId) {
+              displayTransactions(userId);
+          } else {
+              console.error("No user ID found.");
+          }
+      });
 
-        function exportToPDF() {
-            const invoiceElement = document.getElementById('main');
-            const options = {
-                margin: 0.3,
-                filename: 'transactions.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-            html2pdf().from(invoiceElement).set(options).save();
-        }
+      function exportToCSV() {
+          const rows = transactionsTable.querySelectorAll('tr');
+          let csv = [];
 
-        function makePayment() {
-            window.location.href = 'makePayment.html';
-        }
+          rows.forEach(row => {
+              let csvRow = [];
+              row.querySelectorAll('td').forEach(cell => {
+                  csvRow.push(cell.textContent.trim());
+              });
+              csv.push(csvRow.join(','));
+          });
 
-        document.addEventListener('DOMContentLoaded', () => {
-            // Retrieve the bursary ID from session storage
-            const bursaryId = sessionStorage.getItem('selectedBursaryId');
-            if (bursaryId) {
-                // Display transactions for the retrieved bursary ID
-                displayTransactions(bursaryId);
-            } else {
-                // If no bursary ID is found, display a message or redirect to another page
-                console.error("No bursary ID found.");
-            }
-        });
+          const csvContent = csv.join('\n');
+          const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
+          saveAs(blob, 'transactions.csv');
+      }
 
-        document.getElementById('exportCSV').onclick = exportToCSV;
-        document.getElementById('exportPDF').onclick = exportToPDF;
-        document.getElementById('makePayment').onclick = makePayment;
-    </script>
+      function exportToPDF() {
+          const invoiceElement = document.getElementById('main');
+          const options = {
+              margin: 0.3,
+              filename: 'transactions.pdf',
+              image: { type: 'jpeg', quality: 0.98 },
+              html2canvas: { scale: 2 },
+              jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+          };
+          html2pdf().from(invoiceElement).set(options).save();
+      }
+
+      function makePayment() {
+          window.location.href = 'makePayment.html';
+      }
+
+      document.getElementById('exportCSV').onclick = exportToCSV;
+      document.getElementById('exportPDF').onclick = exportToPDF;
+      document.getElementById('makePayment').onclick = makePayment;
+  </script>
 </body>
 </html>

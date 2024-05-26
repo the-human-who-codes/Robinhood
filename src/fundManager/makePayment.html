@@ -36,7 +36,7 @@
       font-weight: bold;
     }
 
-    input[type="text"], input[type="number"], input[type="email"], input[type="submit"], select {
+    input[type="text"], input[type="number"], input[type="email"], input[type="submit"], select, input[type="date"] {
       width: 100%;
       padding: 10px;
       margin-bottom: 15px;
@@ -54,112 +54,144 @@
     input[type="submit"]:hover {
       background-color: #285c4d;
     }
+    .back {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #347576;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    position: absolute;
+    top: 15px;
+    left: 10px;
+}
   </style>
 </head>
 <body>
-    <main>
-        <div class="container">
-            <h1>Make Payment</h1>
-            <form id="paymentForm">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" required>
+  <button class="back" onclick="finance()">Back</button>
+  <script>
+    function finance(){
+        window.location.href = 'transactions.html';
+      }
+  </script>
+  <main>
+    <div class="container">
+      <h1>Make Payment</h1>
+      <form id="paymentForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
 
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
 
-                <label for="amount">Amount:</label>
-                <input type="number" id="amount" name="amount" required>
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" required>
 
-                <label for="description">Description</label>
-                <input type="text" id="description" name="description" required>
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="description" required>
 
-                <label for="date">Date:</label>
-                <input type="date" id="date" name="date" required>
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" required>
 
-                <label for="type">Type:</label>
-                <select id="type" name="type">
-                    <option value="student">Student</option>
-                    <option value="business">Business</option>
-                    <option value="event">event</option>
-                </select>
+        <label for="type">Type:</label>
+        <select id="type" name="type">
+          <option value="student">Student</option>
+          <option value="business">Business</option>
+          <option value="event">Event</option>
+        </select>
 
-                <input type="submit" value="Make Payment">
-            </form>
-        </div>
-    </main>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-        import { getDatabase, ref, update, get, push,set } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
-        
+        <input type="submit" value="Make Payment">
+      </form>
+    </div>
+  </main>
+  <script type="module">
+          import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import {
+            getDatabase,
+            ref,
+            get,
+            set,
+            push,
+            update,
+        } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+
         const firebaseConfig = {
-          apiKey: "AIzaSyA41QF5gZ_12IdeQivH9mxH3tLXEyxZkRY",
-          authDomain: "finance-51da8.firebaseapp.com",
-          databaseURL: "https://finance-51da8-default-rtdb.firebaseio.com",
-          projectId: "finance-51da8",
-          storageBucket: "finance-51da8.appspot.com",
-          messagingSenderId: "416372129674",
-          appId: "1:416372129674:web:85d6cbca019f6d512dd273",
-          measurementId: "G-F9RS1E4LBV"
+            apiKey: "AIzaSyD5aPXd4DjzXI-zU4_CbOur2q8BtJ1tr1Y",
+            authDomain: "fir-sd-22d1a.firebaseapp.com",
+            databaseURL: "https://fir-sd-22d1a-default-rtdb.firebaseio.com",
+            projectId: "fir-sd-22d1a",
+            storageBucket: "fir-sd-22d1a.appspot.com",
+            messagingSenderId: "526172429927",
+            appId: "1:526172429927:web:51ae427f7acfa1d925bec2",
         };
-    
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase();
-        document.getElementById('paymentForm').addEventListener('submit', async function(event) {
-  event.preventDefault(); // Prevent form submission
 
-  // Fetch values from form inputs
-  const name = document.getElementById('name').value;
-  const email = document.getElementById('email').value;
-  const amount = parseFloat(document.getElementById('amount').value);
-  const date = document.getElementById('date').value;
-  const description = document.getElementById('description').value;
-  const type = document.getElementById('type').value;
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase();
 
-  try {
-    const bursaryId = sessionStorage.getItem('selectedBursaryId');
-            if (!bursaryId) {
-                throw new Error('Bursary ID not found.');
+    document.getElementById('paymentForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const amount = parseFloat(document.getElementById('amount').value);
+      const date = document.getElementById('date').value;
+      const description = document.getElementById('description').value;
+      const type = document.getElementById('type').value;
+      const userId = JSON.parse(sessionStorage.getItem("user")).uid;
+
+      try {
+        const advertisementsRef = ref(db, "funding-advertisements");
+        const snapshot = await get(advertisementsRef);
+
+        if (snapshot.exists()) {
+          let totalAmount = 0;
+          let advertisementKeys = [];
+
+          snapshot.forEach((childSnapshot) => {
+            const advertisement = childSnapshot.val();
+            if (advertisement.owner_uid === userId) {
+              totalAmount += advertisement.totalAllowance;
+              advertisementKeys.push(childSnapshot.key);
             }
+          });
 
-    const totalFundsRef = ref(db, 'funding-advertisements/{bursaryId}/totalAllowance');
-    const snapshot = await get(totalFundsRef);
-    const totalFunds = snapshot.val();
+          const updatedAmount = totalAmount - amount;
 
-    if (totalFunds !== null) {
-      const totalFundsFloat = parseFloat(totalFunds);
-      const updatedFunds = totalFundsFloat - amount;
+          const updates = {};
+          advertisementKeys.forEach((key) => {
+            updates[`funding-advertisements/${key}/totalAllowance`] = updatedAmount;
+          });
 
-      // Update the value of totalFunds directly
-      await set(totalFundsRef, updatedFunds);
-      
-      const transactionsRef = ref(db, 'transactions/{bursaryId}');
-      const newTransactionKey = push(transactionsRef).key; // Generate a new key for the transaction
-      const transactionData = {
-        [newTransactionKey]: {
-          name: name,
-          email: email,
-          amount: amount,
-          date: date,
-          description: description,
-          type: type
+          await update(ref(db), updates);
+
+          const transactionsRef = ref(db, `transactions/${userId}`);
+          const newTransactionKey = push(transactionsRef).key;
+          const transactionData = {
+            [newTransactionKey]: {
+              name: name,
+              email: email,
+              amount: amount,
+              date: date,
+              description: description,
+              type: type
+            }
+          };
+
+          await update(transactionsRef, transactionData);
+
+          alert('Payment made successfully!');
+          window.location.href = `transactions.html?updatedFunds=${updatedAmount}`;
+        } else {
+          console.error('No funding advertisements found.');
+          alert('No funding advertisements found.');
         }
-      };
-
-      // Update the transactions node with the new transaction
-      await update(transactionsRef, transactionData);
-
-      alert('Payment made successfully!');
-      window.location.href = `transactions.html?updatedFunds=${updatedFunds}`;
-    } else {
-      console.error('totalFunds is null');
-      alert('An error occurred while fetching totalFunds. Please try again later.');
-    }
-  } catch (error) {
-    console.error('Error making payment:', error);
-    alert('An error occurred while making payment. Please try again later.');
-  }
-});
-
-    </script>
-    </body>
+      } catch (error) {
+        console.error('Error making payment:', error);
+        alert('An error occurred while making the payment. Please try again later.');
+      }
+    });
+  </script>
+</body>
 </html>
