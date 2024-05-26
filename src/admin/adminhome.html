@@ -30,10 +30,10 @@
                     <h3>Fund Managers</h3>
                     <canvas id="totalFundManagersChart"></canvas>
                 </div>
-                <div class="overview-item">
+                <!-- <div class="overview-item">
                     <h3>Applicant Status</h3>
                     <canvas id="applicantStatusChart"></canvas>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -70,8 +70,8 @@ const storage = getStorage(app);
 
         if (users) {
           Object.values(users).forEach(user => {
-            if (user.type in userCounts) {
-              userCounts[user.type]++;
+            if (user.applicantType in userCounts) {
+              userCounts[user.applicantType]++;
             }
           
         })}
@@ -145,20 +145,20 @@ const storage = getStorage(app);
         }
 
        
-        const applicantStatusData = {
-            labels: ['Pending', 'Approved', 'Rejected'],
-            datasets: [{
-                data: [100, 50, 50],
-                backgroundColor: ['#36A2EB', '#4BC0C0', '#FFCE56'],
-                hoverBackgroundColor: ['#36A2EB', '#4BC0C0', '#FFCE56']
-            }]
-        };
+        // const applicantStatusData = {
+        //     labels: ['Pending', 'Approved', 'Rejected'],
+        //     datasets: [{
+        //         data: [100, 50, 50],
+        //         backgroundColor: ['#36A2EB', '#4BC0C0', '#FFCE56'],
+        //         hoverBackgroundColor: ['#36A2EB', '#4BC0C0', '#FFCE56']
+        //     }]
+        // };
 
        
-        new Chart(document.getElementById('applicantStatusChart').getContext('2d'), {
-            type: 'pie',
-            data: applicantStatusData,
-        });
+        // new Chart(document.getElementById('applicantStatusChart').getContext('2d'), {
+        //     type: 'pie',
+        //     data: applicantStatusData,
+        // });
 
 
     </script>
