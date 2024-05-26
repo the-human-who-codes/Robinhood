@@ -60,7 +60,7 @@
             
             get(child(dbRef,'Applicants/'+uid)).then((snapshot)=>{
                 if(snapshot.exists()){
-                   const name =snapshot.val().name+snapshot.val().surname;
+                   const name =snapshot.val().name;
                    const eMail=snapshot.val().email;
                     const role1='Student';
                    
