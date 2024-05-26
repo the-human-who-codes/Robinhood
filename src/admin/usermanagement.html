@@ -130,18 +130,23 @@
             viewUserDetails1(id);
           };
           blockBtn.onclick = function () {
-            var userMessage='';
+            //var userMessage='';
 
             //blocking a user first check if they've been warned else block immediately
             let MessageId= Date.now().toString();
-              get(child(dbRef,'fundManagers/'+manager.id)).then((snapshot)=>{
+            
+            //Msg(warned,name,MessageID,UserId)
+              get(child(dbRef,'FundManagers/'+manager.id)).then((snapshot)=>{
                 if(snapshot.exists()){
                       let warned=snapshot.val().warning;
-                      if (warned==="false"){
-                        userMessage=prompt(`This user has not been warned yet, please leave a message for ${company}}`);
-                        
-                        const messagesRef = ref(db, "NewNotifications/"+MessageId);
-
+                      console.log(manager.company)
+                      if (!warned){
+                        let userMessage=prompt(`This user has not been warned yet, please leave a message for ${manager.name}`);
+                      if(userMessage===null){
+                          alert("Message cancelled")
+                      }
+                      else{
+                          const messagesRef = ref(db, "NewNotifications/"+MessageId);
                           // Set the application data
                           set(messagesRef, {
                               id:manager.id,
@@ -149,33 +154,31 @@
                               read: false,
                               readOn:""
                             
-                          }).then(() => {
-                              alert("Message Sent");
-                          }).catch((error) => {
-                              alert("Issue with sending Message, please try again later");
-                              console.log(error);
-                          });
+                      }).then(() => {
+                          alert("Message Sent");
+                      }).catch((error) => {
+                          alert("Issue with sending Message, please try again later");
+                          console.log(error);
+                      });
 
                           update(ref(db, "FundManagers/" + id), {
-                        warning: "true",
-                      })
-                        .then(() => {
-                          alert("User has been warned");
-                        })
-                        .catch((error) => {
-                          alert("unsuccesful");
-                        });
-                      
-
-                          
-                      }
-                      else{
+                            warning: true,
+                            status:"Warned"
+                          }).then(() => {
+                            alert("User has been warned");
+                            location.reload();
+                          }).catch((error) => {
+                            alert("unsuccesful");
+                          });
+                        }
+                      }else{
                         statusCell.textContent = "Blocked";
                         update(ref(db, "FundManagers/" + id), {
                         status: statusCell.textContent,
                       })
                         .then(() => {
                           alert("User blocked succesfully");
+                          Refresh();
                         })
                         .catch((error) => {
                           alert("unsuccesful");
@@ -193,21 +196,73 @@
              
           };
           changeStatusBtn.onclick = function () {
-            if (
-              statusCell.textContent == "Blocked" ||
-              statusCell.textContent != "Blocked"
-            ) {
-              statusCell.textContent = "Violation";
-            }
-            update(ref(db, "FundManagers/" + id), {
-              status: statusCell.textContent,
-            })
-              .then(() => {
-                alert("Data updated succesfully");
+            let MessageId= Date.now().toString();
+            get(child(dbRef,'FundManagers/'+manager.id)).then((snapshot)=>{
+                let MessageID= Date.now().toString();
+                let UserID=manager.id;
+                if(snapshot.exists()){
+                      let warned=snapshot.val().warning;
+                      let Verified=snapshot.val().status;
+                      if(Verified==="Verified"){
+                        alert("User already Verified");
+                        Refresh();
+                      }else{
+                        if (warned){
+                        //console.log("Heloow")
+                       let userMessage=prompt(`please leave a message for ${name} to infrom them of changes`);
+                        if(userMessage===null){
+                          alert("Warning Removed")
+                        }
+                      else{
+                          const messagesRef = ref(db, "NewNotifications/"+MessageId );
+                          // Set the application data
+                          set(messagesRef, {
+                            id:UserID,
+                            message: userMessage,
+                            read: false,
+                            sentOn:getCurrentDate(),
+                          }).then(() => {
+                              alert("Message Sent");
+                          }).catch((error) => {
+                              alert("Issue with sending Message, please try again later");
+                              console.log(error);
+                          });
+
+                          update(ref(db, "FundManagers/" +id), {
+                            warning: false,
+                            status:""
+                          }).then(() => {
+                              statusCell.textContent="";
+                              alert("Message Sent Successfully");
+                              Refresh();
+                          }).catch((error) => {
+                              alert("unsuccesful");
+                          }); 
+                        }
+                        
+                      }
+                      else{
+                        //statusCell.textContent = "Verified";
+                        update(ref(db, "FundManagers/" + id), {
+                          status: "Verified",
+                        }).then(() => {
+                            alert("User Verified");
+                            location.reload();
+                        }).catch((error) => {
+                            alert("unsuccesful");
+                        });
+                        Refresh();
+                      }
+                      }
+                      
+                  }  
+                      //MsgUpdate(warned,name,MessageID,id);  
+                   
+              }).catch((error)=>{
+                  alert("A network issue is causing some errors with the operation")  ;
+                  console.log(error);  
               })
-              .catch((error) => {
-                alert("unsuccesful");
-              });
+            
           };
 
           newTableRow.append(fundManagerCell);
@@ -280,79 +335,45 @@
             viewUserDetails2(id);
           };
           blockBtn.onclick = function () {
-            var userMessage='';
-
+            
             get(child(dbRef,'Applicants/'+student.id)).then((snapshot)=>{
-              let MessageId= Date.now().toString();
+              let MessageID= Date.now().toString();
                 if(snapshot.exists()){
                       let warned=snapshot.val().warning;
-                      console.log(typeof(warned));
-                      if (!warned){
-                        //console.log("Heloow")
-                        userMessage=prompt(`This user has not been warned yet, please leave a message for ${name}`);
-                        
-                        const messagesRef = ref(db, "NewNotifications/"+MessageId );
+                      //Msg(warned,name,MessageID,id)
+                      Msg(warned,name,MessageID,id);
+                      
 
-                          // Set the application data
-                          set(messagesRef, {
-                            id:student.id,
-                              message: userMessage,
-                              read: false,
-                              sentOn:getCurrentDate(),
-                            
-                          }).then(() => {
-                              alert("Message Sent");
-                          }).catch((error) => {
-                              alert("Issue with sending Message, please try again later");
-                              console.log(error);
-                          });
-
-                          update(ref(db, "Applicants/" + id), {
-                        warning: "true",
-                      })
-                        .then(() => {
-                          alert("User has been warned");
-                        })
-                        .catch((error) => {
-                          alert("unsuccesful");
-                        });
-                      }
-                      else{
-                        statusCell.textContent = "Blocked";
-                        update(ref(db, "Applicants/" + id), {
-                        status: statusCell.textContent,
-                      })
-                        .then(() => {
-                          alert("User blocked succesfully");
-                        })
-                        .catch((error) => {
-                          alert("unsuccesful");
-                        });
-                      }
-                }
-                
+                  } 
+                  Refresh(); 
               }).catch((error)=>{
                   alert("A network issue is causing some errors with the operation")  ;
                   console.log(error);  
               })
-
+              //Refresh();
+              
           };
           changeStatusBtn.onclick = function () {
-            if (
-              statusCell.textContent == "Blocked" ||
-              statusCell.textContent != "Blocked"
-            ) {
-              statusCell.textContent = "Violation";
-            }
-            update(ref(db, "Applicants/" + id), {
-              status: statusCell.textContent,
-            })
-              .then(() => {
-                alert("Data updated succesfully");
+              let userID=student.id;
+              get(child(dbRef,'Applicants/'+student.id)).then((snapshot)=>{
+                let MessageID= Date.now().toString();
+                if(snapshot.exists()){
+                      let warned=snapshot.val().warning;
+                      let Verified=snapshot.val().status;
+                      if(Verified==="Verified"){
+                        alert("User already Verified");
+                      }else{
+                        MsgUpdate(warned,name,MessageID,id);
+                      }
+                      
+                }
+                //Refresh();
+              }).catch((error)=>{
+                  alert("A network issue is causing some errors with the operation")  ;
+                  console.log(error);  
               })
-              .catch((error) => {
-                alert("unsuccesful");
-              });
+              
+              
           };
 
           newTableRow.append(nameCell);
@@ -399,15 +420,28 @@
           });
 
         // Populate table with students data
-        get(child(dbref, "Applicants/")).then((snapshot) => {
+                // Populate table with students data
+                get(child(dbref, "Applicants/")).then((snapshot) => {
           if (snapshot.exists()) {
             let studentsData = [];
-            let id1 = "";
+            let businessData=[];
+            let eventData=[];
             snapshot.forEach((childSnapShot) => {
-              id1 = childSnapShot.key;
+              let id1 = childSnapShot.key;
               let data = childSnapShot.val();
-              data.id = id1;
-              studentsData.push(data);
+              if(data.applicantType=='Event'){
+                data.id = id1;
+                eventData.push(data);
+              }
+              if(data.applicantType=='Business'){
+                data.id = id1;
+                businessData.push(data);
+              } 
+              if(data.applicantType=='Student'){
+                data.id = id1;
+                studentsData.push(data);
+              }
+              
             });
 
             if (studentsData.length === 0) {
@@ -416,12 +450,119 @@
             } else {
               createNewRowStudent(studentsData); // Assuming createNewRow function populates the table
             }
+
+            if (eventData.length === 0) {
+              const h2 = document.getElementById("students");
+              h2.innerText = "No Events Found";
+            } else {
+              createNewRowEvent(eventData); // Assuming createNewRow function populates the table
+            }
           } else {
             const h2 = document.getElementById("students");
             h2.innerText = "No Students Found";
           }
+
         });
+
+
       }
+
+      function Msg(warned,name,MessageID,UserId){
+                if (!warned){
+                        //console.log("Heloow")
+                       let userMessage=prompt(`This user has not been warned yet, please leave a message for ${name}`);
+                        if(userMessage===null){
+                          alert("Warning cancelled")
+                        }
+                        else{
+                          const messagesRef = ref(db, "NewNotifications/"+MessageID );
+                          // Set the application data
+                          set(messagesRef, {
+                            id:UserId,
+                            message: userMessage,
+                            read: false,
+                            sentOn:getCurrentDate(),
+                          }).then(() => {
+                              alert("Message Sent");
+                              Refresh();
+                          }).catch((error) => {
+                              alert("Issue with sending Message, please try again later");
+                              console.log(error);
+                          });
+
+                          update(ref(db, "Applicants/" + id), {
+                            warning: true,
+                          }).then(() => {
+                              alert("User has been warned");
+                              Refresh();
+                          }).catch((error) => {
+                              alert("unsuccesful");
+                          }); 
+                        }
+                        
+                      }
+                      else{
+                        //statusCell.textContent = "Blocked";
+                        update(ref(db, "Applicants/" + id), {
+                          status: "Blocked",
+                        }).then(() => {
+                            alert("User blocked succesfully");
+                            Refresh();
+                        }).catch((error) => {
+                            alert("unsuccesful");
+                        });
+                      }
+                      Refresh();
+                      
+      }
+
+      function MsgUpdate(warned,name,MessageID,UserID){
+                if (warned){
+                        //console.log("Heloow")
+                       let userMessage=prompt(`please leave a message for ${name} to infrom them of changes`);
+                        if(userMessage===null){
+                          alert("Warning cancelled")
+                        }
+                        else{
+                          const messagesRef = ref(db, "NewNotifications/"+MessageId );
+                          // Set the application data
+                          set(messagesRef, {
+                            id:UserID,
+                            message: userMessage,
+                            read: false,
+                            sentOn:getCurrentDate(),
+                          }).then(() => {
+                              alert("Message Sent");
+                          }).catch((error) => {
+                              alert("Issue with sending Message, please try again later");
+                              console.log(error);
+                          });
+
+                          update(ref(db, "Applicants/" + UserID), {
+                            warning: false,
+                            status:"No Issue"
+                          }).then(() => {
+                              statusCell.textContent="";
+                              alert("Message Sent Successfully");
+                          }).catch((error) => {
+                              alert("unsuccesful");
+                          }); 
+                        }
+                        
+                      }
+                      else{
+                        //statusCell.textContent = "Verified";
+                        update(ref(db, "Applicants/" + UserID), {
+                          status: "Verified",
+                        }).then(() => {
+                            alert("User Verified");
+                        }).catch((error) => {
+                            alert("unsuccesful");
+                        });
+                      }
+                      Refresh();
+      }
+
 
       //eventlistner fetches relevant student data to display on fundManager Dashboard
       document.addEventListener("DOMContentLoaded", function () {
@@ -454,6 +595,115 @@
     var formattedDate = day + '/' + month + '/' + year;
     return formattedDate;
 }
+
+function Refresh(){
+  window.location.href = 'usermanagement.html';
+}
+
+ function createNewRowEvent(data) {
+        let Table = document.getElementById("usersTable"); // Assuming there's a table with the ID 'usersTable'
+        data.forEach((Events) => {
+          let id = Events.id;
+          let Business = Events.Business;
+          let Address= Events.address;
+          let Email = Events.email;
+          let Status= Events.status;
+          let Name = Events.name;
+
+          let newTableRow = document.createElement("tr");
+
+          let BusinessCell = document.createElement("td");
+          let AddressCell = document.createElement("td");
+          let EmailCell = document.createElement("td");
+          let StatusCell = document.createElement("td");
+          let NameCell = document.createElement("td");
+          let ApplicantView = document.createElement("td");
+          let viewButton = document.createElement("button");
+          let changeStatusBtn = document.createElement("button");
+          let blockBtn = document.createElement("button");
+          
+
+          BusinessCell.textContent = "Event";
+          AddressCell.textContent = Address;
+          EmailCell.textContent = Email;
+          StatusCell.textContent = Status;
+          NameCell.textContent=Name;
+         // mell.textContent = major;
+          
+          viewButton.setAttribute("id", `${id}`);
+          viewButton.className = "button-view";
+          changeStatusBtn.className = "button-edit";
+          blockBtn.className = "button-toggle";
+          viewButton.textContent = "view";
+          changeStatusBtn.textContent = "Change Status";
+          blockBtn.textContent = "Block";
+
+          ApplicantView.append(viewButton);
+          ApplicantView.append(changeStatusBtn);
+          ApplicantView.append(blockBtn);
+
+
+          viewButton.onclick = function () {
+            let id = viewButton.id;
+            viewUserDetails2(id);
+          };
+          blockBtn.onclick = function () {
+            
+            get(child(dbRef,'Applicants/'+Events.id)).then((snapshot)=>{
+              let MessageID= Date.now().toString();
+                if(snapshot.exists()){
+                      let warned=snapshot.val().warning;
+                      //Msg(warned,name,MessageID,id)
+                      Msg(warned,name,MessageID,UserID);
+                      
+
+                  } 
+                  Refresh(); 
+              }).catch((error)=>{
+                  alert("A network issue is causing some errors with the operation")  ;
+                  console.log(error);  
+              })
+              //Refresh();
+              
+          };
+          changeStatusBtn.onclick = function () {
+              let userID=Events.id;
+              get(child(dbRef,'Applicants/'+userID)).then((snapshot)=>{
+                let MessageID= Date.now().toString();
+                if(snapshot.exists()){
+                      let warned=snapshot.val().warning;
+                      let Verified=snapshot.val().status;
+                      if(Verified==="Verified"){
+                        alert("User already Verified");
+                      }else{
+                        MsgUpdate(warned,name,MessageID,UserID);
+                      }
+                      
+                }
+                //Refresh();
+              }).catch((error)=>{
+                  alert("A network issue is causing some errors with the operation")  ;
+                  console.log(error);  
+              })
+              
+              
+          };
+
+          newTableRow.append(NameCell);
+          newTableRow.append(EmailCell);
+          newTableRow.append(BusinessCell);
+          newTableRow.append(StatusCell);
+          newTableRow.append(ApplicantView);
+
+          Table.append(newTableRow);
+        });
+      }
+
+      
+
+
+      
+
     </script>
   </body>
 </html>

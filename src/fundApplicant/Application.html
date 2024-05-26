@@ -150,8 +150,8 @@
       const app = initializeApp(firebaseConfig);
       const db = getDatabase();
       const storage1 = getStorage();
-
-      const uniqueId = Date.now(); //user ID for testing only
+      const uniqueID=getCurrentUserID();
+     // const uniqueId = Date.now(); //user ID for testing only
 
       const uploadForm = document.getElementById("uploadForm");
       uploadForm.addEventListener("submit", function (event) {
@@ -175,7 +175,7 @@
           about: aboutMe,
         };
 
-        const StoragePath = `Students/${uniqueId}/`;
+        const StoragePath = `Students/${uniqueID}/`;
         Promise.all([
           //uploading files to Students storage
           uploadFile(file1, file1.name),
@@ -212,10 +212,8 @@
         //add user to DB with associated pdfs
         function addToDatabase(userInfo) {
           const uid = getCurrentUserID();
-
-    // Add the UID to the userInfo object
-          console.log(userInfo);
-          set(ref(db, "StudentApplicant/" + uniqueId), {
+          // Add the UID to the userInfo object
+          set(ref(db, "StudentApplicant/" + uid), {
             name: userInfo.name,
             surname: userInfo.surname,
             university: userInfo.university,
@@ -224,27 +222,24 @@
             about: userInfo.about,
             transcript: userInfo.transcript,
             payslips: userInfo.payslips,
-            uid: uid
-          })
-            .then(() => {
+          }).then(() => {
               alert("Submission Recieved");
-            })
-            .catch((error) => {
-              alert("Issue with Submission try again");
-              console.log(error);
-            });
+          }).catch((error) => {
+            alert("Issue with Submission try again");
+            //console.log(error);
+          });
         }
       });
       function getCurrentUserID() {
     // Retrieve the user from session storage
-    let user = JSON.parse(sessionStorage.getItem("user"));
-    if (user && user.uid) {
-        return user.uid;
-    } else {
-        console.error("User ID not found in session storage.");
-        return null;
-    }
-}
+        let user = JSON.parse(sessionStorage.getItem("user"));
+        if (user && user.uid) {
+            return user.uid;
+        } else {
+            //console.error("User ID not found in session storage.");
+            return null;
+        }
+      }
     </script>
   </body>
 </html>
