@@ -80,8 +80,11 @@
     <div class="container">
       <h1>Make Payment</h1>
       <form id="paymentForm">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required>
+        <label for="student">Select Student:</label>
+        <select id="student" name="student" required>
+          <!-- Options will be dynamically populated from Firebase -->
+        </select>
+
 
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required>
@@ -130,16 +133,81 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase();
 
-    document.getElementById('paymentForm').addEventListener('submit', async function(event) {
-      event.preventDefault();
+    // Function to get the current bursary title
+    async function getCurrentBursaryTitle() {
+      const userId = JSON.parse(sessionStorage.getItem("user")).uid;
+      const advertisementsRef = ref(db, "funding-advertisements");
+      const snapshot = await get(advertisementsRef);
 
-      const name = document.getElementById('name').value;
+      if (snapshot.exists()) {
+        let currentBursaryTitle = null;
+        snapshot.forEach((childSnapshot) => {
+          const advertisement = childSnapshot.val();
+          if (advertisement.owner_uid === userId) {
+            currentBursaryTitle = advertisement["bursary-title"];
+            console.log(currentBursaryTitle)
+            return; // Exit loop after finding the first matching advertisement
+          }
+        });
+        console.log(currentBursaryTitle)
+        return currentBursaryTitle;
+      } else {
+        console.error('No funding advertisements found.');
+        alert('No funding advertisements found.');
+        return null;
+      }
+    }
+
+    // Function to populate the select element with approved students for the current bursary title
+    async function populateStudentsForCurrentBursary() {
+      const currentBursaryTitle = await getCurrentBursaryTitle();
+      if (currentBursaryTitle) {
+        populateStudents(currentBursaryTitle);
+      }
+    }
+    async function populateStudents(bursaryTitle) {
+      const studentsRef = ref(db, "StudentApplicant");
+      const snapshot = await get(studentsRef);
+
+      if (snapshot.exists()) {
+        const studentSelect = document.getElementById("student");
+        snapshot.forEach((childSnapshot) => {
+          const student = childSnapshot.val();
+          // Assuming each student has a property "bursaryTitle"
+          if (student["bursary-title"] === bursaryTitle) {
+            const option = document.createElement("option");
+            option.value = student.id;
+            option.textContent = student.name;
+            studentSelect.appendChild(option);
+          }
+        });
+      } else {
+        console.error("No students found.");
+        alert("No students found.");
+      }
+    }
+
+    // Call this function to populate the students for the current bursary title
+    populateStudentsForCurrentBursary();
+
+
+    document.getElementById('paymentForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const selectedStudentId = document.getElementById('student').value;
+      //const name = document.getElementById('name').value;
       const email = document.getElementById('email').value;
       const amount = parseFloat(document.getElementById('amount').value);
       const date = document.getElementById('date').value;
       const description = document.getElementById('description').value;
       const type = document.getElementById('type').value;
       const userId = JSON.parse(sessionStorage.getItem("user")).uid;
+
+      // Check if a student is selected
+      if (!selectedStudentId) {
+        alert('Please select a student.');
+        return;
+      }
 
       try {
         const advertisementsRef = ref(db, "funding-advertisements");
@@ -168,9 +236,10 @@
 
           const transactionsRef = ref(db, `transactions/${userId}`);
           const newTransactionKey = push(transactionsRef).key;
+          const selectedStudentName = document.getElementById('student').selectedOptions[0].textContent;
           const transactionData = {
             [newTransactionKey]: {
-              name: name,
+              name: selectedStudentName,
               email: email,
               amount: amount,
               date: date,
@@ -178,6 +247,7 @@
               type: type
             }
           };
+
 
           await update(transactionsRef, transactionData);
 
