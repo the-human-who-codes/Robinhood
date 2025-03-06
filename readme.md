@@ -1,4 +1,4 @@
-# Funding Request Manager
+# Funding Request Manager.
 
 The Funding Request Manager is a web application built to help Wits students and organizations apply for funding or sponsorships, ranging from bursaries to event sponsorships. Users can participate as applicants seeking funds or as funders offering support. 
 
